@@ -145,6 +145,52 @@ body,
 .portal {
   font-family: "Inter", sans-serif;
 }
+.writing-body {
+  background: #000;
+  color: #d4d4d4;
+  font-family: "Playfair Display", serif;
+}
+
+.act {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem;
+  text-align: center;
+  font-size: 1.6rem;
+  line-height: 1.8;
+}
+
+/* WHISPER */
+.whisper {
+  color: #e8e8e8;
+  background: radial-gradient(circle at top, #111, #000);
+}
+
+/* WEIGHT */
+.weight {
+  color: #b3b3b3;
+  background: linear-gradient(#000, #050505);
+  font-family: "Inter", sans-serif;
+}
+
+/* HEAT */
+.heat {
+  color: #d6b36a;
+  background: radial-gradient(circle, #120c05, #000);
+  font-style: italic;
+}
+
+/* FRACTURE */
+.fracture {
+  color: #3b6cff;
+  background: #000;
+  font-family: monospace;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+}
+
 
 
 
