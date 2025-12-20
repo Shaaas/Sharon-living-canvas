@@ -198,6 +198,20 @@ body,
   opacity: 0;
   transition: opacity 1.5s ease;
 }
+.exit {
+  position: absolute;       /* place it relative to the section */
+  bottom: 3rem;             /* a little above the bottom edge */
+  width: 100%;              /* center horizontally */
+  text-align: center;       /* center the text */
+  opacity: 0.3;             /* subtle, barely there */
+  font-size: 0.9rem;        /* small, delicate */
+  cursor: pointer;          /* hint it’s clickable */
+  transition: opacity 0.4s ease;  /* smooth hover effect */
+}
+
+.exit:hover {
+  opacity: 0.9;             /* brightens when hovered */
+}
 
 
 
