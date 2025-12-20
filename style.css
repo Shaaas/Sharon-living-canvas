@@ -135,5 +135,16 @@ canvas {
   background: var(--electric-blue);
   box-shadow: 0 0 30px rgba(59,108,255,0.7);
 }
+.hero-text,
+.hub-title {
+  font-family: "Playfair Display", serif;
+}
+
+body,
+.hero-sub,
+.portal {
+  font-family: "Inter", sans-serif;
+}
+
 
 
