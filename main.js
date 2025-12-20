@@ -1,5 +1,4 @@
 // Interactions live here (scroll, hover, portal clicks)
-
 btn.addEventListener("mouseenter", () => {
   btn.textContent = "Let’s go →";
 });
