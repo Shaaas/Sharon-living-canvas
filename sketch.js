@@ -1,76 +1,40 @@
-:root {
-  --black: #0b0b0f;
-  --gold: #d4af37;
-  --silver: #cfd3da;
-  --electric-blue: #3b6cff;
+let dots = [];
+
+function setup() {
+  const canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent(document.body);
+
+  for (let i = 0; i < 140; i++) {
+    dots.push({
+      x: random(width),
+      y: random(height),
+      r: random(1, 3),
+      dx: random(-0.25, 0.25),
+      dy: random(-0.25, 0.25)
+    });
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+function draw() {
+  clear();
+
+  dots.forEach(dot => {
+    dot.x += dot.dx;
+    dot.y += dot.dy;
+
+    if (dot.x < 0 || dot.x > width) dot.dx *= -1;
+    if (dot.y < 0 || dot.y > height) dot.dy *= -1;
+
+    const d = dist(mouseX, mouseY, dot.x, dot.y);
+    const alpha = d < 120 ? 200 : 120;
+
+    noStroke();
+    fill(255, 255, 255, alpha);
+    circle(dot.x, dot.y, dot.r);
+  });
 }
 
-html, body {
-  height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--black);
-  color: var(--silver);
-  overflow: hidden;
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-
-#app {
-  position: relative;
-  z-index: 1;
-}
-
-.hero {
-  height: 100vh;
-  padding: 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.hero-text {
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: 700;
-  line-height: 1.05;
-  max-width: 900px;
-  color: var(--gold);
-}
-
-.hero-sub {
-  margin-top: 1.5rem;
-  font-size: 1.1rem;
-  color: var(--silver);
-  opacity: 0.75;
-}
-
-.portal-btn {
-  margin-top: 3rem;
-  align-self: flex-start;
-  padding: 1rem 2.4rem;
-  font-size: 1rem;
-  border: 1px solid var(--electric-blue);
-  border-radius: 999px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--electric-blue);
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
-
-.portal-btn:hover {
-  background: var(--electric-blue);
-  color: var(--black);
-  box-shadow:
-    0 0 20px rgba(59, 108, 255, 0.6),
-    0 0 40px rgba(59, 108, 255, 0.3);
-}
