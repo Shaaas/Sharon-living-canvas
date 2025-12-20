@@ -212,6 +212,11 @@ body,
 .exit:hover {
   opacity: 0.9;             /* brightens when hovered */
 }
+/* Optional: hub-specific tweak */
+body.hub .exit {
+  bottom: 2rem;       /* slightly higher if needed */
+  color: var(--electric-blue);  /* subtle thematic hint */
+}
 
 
 
