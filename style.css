@@ -227,6 +227,28 @@ body.hub .exit {
   color: var(--electric-blue);
   text-shadow: 0 0 8px var(--electric-blue);
 }
+.hub-portals {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3rem;
+  margin-top: 5rem;
+}
+
+.portal {
+  background: black;
+  border: 2px solid var(--gold);
+  padding: 2rem;
+  width: 200px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.portal:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--electric-blue);
+}
 
 
 
