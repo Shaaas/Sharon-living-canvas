@@ -218,6 +218,16 @@ body.hub .exit {
   color: var(--electric-blue);  /* subtle thematic hint */
 }
 
+.exit span {
+  color: var(--gold); /* default subtle gold */
+  transition: all 0.4s ease;
+}
+
+.exit:hover span {
+  color: var(--electric-blue);
+  text-shadow: 0 0 8px var(--electric-blue);
+}
+
 
 
 
