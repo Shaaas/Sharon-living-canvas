@@ -29,7 +29,7 @@ function draw() {
     const alpha = d < 120 ? 200 : 120;
 
     noStroke();
-    fill(255, 255, 255, alpha);
+    fill(212, 175, 55, alpha); // gold particles
     circle(dot.x, dot.y, dot.r);
   });
 }
