@@ -190,6 +190,14 @@ body,
   letter-spacing: 2px;
   text-transform: lowercase;
 }
+.hidden-line {
+  display: block;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
 
 
 
