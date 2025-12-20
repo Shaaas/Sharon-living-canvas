@@ -10,3 +10,16 @@ if (enterBtnClick) {
     }, 1200);
   });
 }
+let portals = document.querySelectorAll(".portal");
+
+portals.forEach((p) => {
+  p.addEventListener("click", () => {
+    document.body.style.transition = "opacity 1s ease";
+    document.body.style.opacity = 0;
+
+    setTimeout(() => {
+      const target = p.getAttribute("data-target");
+      window.location.href = target;
+    }, 1000);
+  });
+});
