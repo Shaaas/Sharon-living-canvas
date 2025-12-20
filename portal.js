@@ -1,9 +1,12 @@
-const btn = document.getElementById("enterBtn");
+// ===== Enter Button Click / Portal =====
+let enterBtnClick = document.getElementById("enterBtn");
 
-btn.addEventListener("click", () => {
-  document.body.classList.add("portal-open");
+if (enterBtnClick) {
+  enterBtnClick.addEventListener("click", () => {
+    document.body.classList.add("portal-open");
 
-  setTimeout(() => {
-    window.location.href = "hub.html";
-  }, 1200);
-});
+    setTimeout(() => {
+      window.location.href = "hub.html";
+    }, 1200);
+  });
+}
