@@ -1,8 +1,12 @@
-// Interactions live here (scroll, hover, portal clicks)
-btn.addEventListener("mouseenter", () => {
-  btn.textContent = "Let’s go →";
-});
+// ===== Enter Button Hover =====
+let enterBtn = document.getElementById("enterBtn");
 
-btn.addEventListener("mouseleave", () => {
-  btn.textContent = "Enter my worlds";
-});
+if (enterBtn) {
+  enterBtn.addEventListener("mouseenter", () => {
+    enterBtn.textContent = "Let’s go →";
+  });
+
+  enterBtn.addEventListener("mouseleave", () => {
+    enterBtn.textContent = "Enter my worlds";
+  });
+}
