@@ -2,14 +2,18 @@ let exit = document.querySelector(".exit");
 
 if (exit) {
   exit.addEventListener("click", () => {
-    // Fade out the page
     document.body.style.transition = "opacity 1s ease";
     document.body.style.opacity = 0;
 
     setTimeout(() => {
-      // Use the data attribute to go to the correct page
-      const target = document.body.getAttribute("data-exit-target") || "index.html";
-      window.location.href = target;
+      // Decide where to go based on current page
+      const page = window.location.pathname.split("/").pop();
+
+      if (page === "writing.html") {
+        window.location.href = "hub.html";   // writing world → back to hub
+      } else {
+        window.location.href = "index.html"; // hub or others → landing page
+      }
     }, 1000);
   });
 }
