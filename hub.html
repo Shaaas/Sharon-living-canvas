@@ -7,48 +7,64 @@
 </head>
 <body>
 
-<div class="hub">
-  <h2 class="hub-title">Choose a world</h2>
+  <!-- Hub header -->
+  <div class="hub">
+    <h2 class="hub-title">Choose a world</h2>
 
-  <!-- Optional top links -->
-  <div class="portals-links">
-    <a href="writing.html" class="portal-link">Writing</a>
-    <a href="#" class="portal-link">Music</a>
-    <a href="#" class="portal-link">Experimental</a>
-  </div>
-</div>
-
-<!-- Main portal section with images -->
-<section class="hub-portals">
-
-  <div class="portal" data-target="writing.html">
-    <img src="writing.png" alt="Writing Portal">
-    <h2>Writing</h2>
-    <p>Enter my worlds of poetry and stories.</p>
+    <!-- Optional top links -->
+    <div class="portals-links">
+      <a href="writing.html" class="portal-link">Writing</a>
+      <a href="music.html" class="portal-link">Music</a>
+      <a href="experimental.html" class="portal-link">Experimental</a>
+    </div>
   </div>
 
-  <div class="portal" data-target="music.html">
-    <img src="music.png" alt="Music Portal">
-    <h2>Music</h2>
-    <p>Experience sounds and rhythms I love.</p>
+  <!-- Main portals section -->
+  <section class="hub-portals">
+
+    <div class="portal" data-target="writing.html">
+      <img src="writing.png" alt="Writing Portal">
+      <h2>Writing</h2>
+      <p>Enter my worlds of poetry and stories.</p>
+    </div>
+
+    <div class="portal" data-target="music.html">
+      <img src="music.png" alt="Music Portal">
+      <h2>Music</h2>
+      <p>Experience sounds and rhythms I love.</p>
+    </div>
+
+    <div class="portal" data-target="experimental.html">
+      <img src="experimental.png" alt="Experimental Portal">
+      <h2>Experimental</h2>
+      <p>Interactive surprises and playful chaos.</p>
+    </div>
+
+  </section>
+
+  <!-- Exit button -->
+  <div class="exit">
+    <span>Leave Quietly</span>
   </div>
 
+  <!-- Scripts -->
+  <script>
+    // Make portals clickable
+    const portals = document.querySelectorAll('.portal');
+    portals.forEach(portal => {
+      portal.addEventListener('click', () => {
+        const target = portal.getAttribute('data-target');
+        if (target) window.location.href = target;
+      });
+    });
 
-  <div class="portal" data-target="experimental.html">
-    <img src="experimental.png" alt="Experimental Portal">
-    <h2>Experimental</h2>
-    <p>Interactive surprises and playful chaos.</p>
-  </div>
-
-</section>
-
-<!-- Exit button -->
-<div class="exit">
-  <span>Leave Quietly</span>
-</div>
-
-<!-- Scripts -->
-<script src="exit.js"></script>
+    // Exit button functionality
+    const exit = document.querySelector('.exit');
+    exit.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+  </script>
 
 </body>
 </html>
+
