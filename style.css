@@ -16,9 +16,10 @@ html, body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--black);
   color: var(--silver);
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
+/* Canvas / app layering */
 canvas {
   position: fixed;
   inset: 0;
@@ -30,6 +31,7 @@ canvas {
   z-index: 1;
 }
 
+/* ---------- HERO SECTION ---------- */
 .hero {
   height: 100vh;
   padding: 4rem;
@@ -44,6 +46,7 @@ canvas {
   line-height: 1.05;
   max-width: 900px;
   color: var(--gold);
+  font-family: "Playfair Display", serif;
 }
 
 .hero-sub {
@@ -70,10 +73,10 @@ canvas {
 .portal-btn:hover {
   background: var(--electric-blue);
   color: var(--black);
-  box-shadow:
-    0 0 20px rgba(59, 108, 255, 0.6),
-    0 0 40px rgba(59, 108, 255, 0.3);
+  box-shadow: 0 0 20px rgba(59,108,255,0.6),
+              0 0 40px rgba(59,108,255,0.3);
 }
+
 .portal-open {
   animation: portalCollapse 1.2s ease-in forwards;
 }
@@ -89,194 +92,22 @@ canvas {
   100% {
     filter: blur(40px);
     transform: scale(0.92);
-    background: radial-gradient(
-      circle,
-      rgba(59,108,255,0.8),
-      #000 70%
-    );
+    background: radial-gradient(circle, rgba(59,108,255,0.8), #000 70%);
   }
 }
-.hub {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
 
-.hub-title {
-  color: var(--gold);
-  font-size: 2.5rem;
-  margin-bottom: 4rem;
-}
-
-.portals {
-  display: flex;
-  gap: 3rem;
-}
-
-.portal {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  color: var(--silver);
-  font-size: 1.1rem;
-  border: 1px solid var(--electric-blue);
-  transition: all 0.4s ease;
-}
-
-.portal:hover {
-  transform: scale(1.15);
-  color: var(--black);
-  background: var(--electric-blue);
-  box-shadow: 0 0 30px rgba(59,108,255,0.7);
-}
-.hero-text,
-.hub-title {
-  font-family: "Playfair Display", serif;
-}
-
-body,
-.hero-sub,
-.portal {
-  font-family: "Inter", sans-serif;
-}
-.writing-body {
-  background: #000;
-  color: #d4d4d4;
-  font-family: "Playfair Display", serif;
-}
-
-.act {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem;
-  text-align: center;
-  font-size: 1.6rem;
-  line-height: 1.8;
-}
-
-/* WHISPER */
-.whisper {
-  color: #e8e8e8;
-  background: radial-gradient(circle at top, #111, #000);
-}
-
-/* WEIGHT */
-.weight {
-  color: #b3b3b3;
-  background: linear-gradient(#000, #050505);
-  font-family: "Inter", sans-serif;
-}
-
-/* HEAT */
-.heat {
-  color: #d6b36a;
-  background: radial-gradient(circle, #120c05, #000);
-  font-style: italic;
-}
-
-/* FRACTURE */
-.fracture {
-  color: #3b6cff;
-  background: #000;
-  font-family: monospace;
-  letter-spacing: 2px;
-  text-transform: lowercase;
-}
-.hidden-line {
-  display: block;
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  color: var(--gold);
-  opacity: 0;
-  transition: opacity 1.5s ease;
-}
-.exit {
-  position: absolute;       /* place it relative to the section */
-  bottom: 3rem;             /* a little above the bottom edge */
-  width: 100%;              /* center horizontally */
-  text-align: center;       /* center the text */
-  opacity: 0.3;             /* subtle, barely there */
-  font-size: 0.9rem;        /* small, delicate */
-  cursor: pointer;          /* hint it’s clickable */
-  transition: opacity 0.4s ease;  /* smooth hover effect */
-}
-
-.exit:hover {
-  opacity: 0.9;             /* brightens when hovered */
-}
-/* Optional: hub-specific tweak */
-body.hub .exit {
-  bottom: 2rem;       /* slightly higher if needed */
-  color: var(--electric-blue);  /* subtle thematic hint */
-}
-
-.exit span {
-  color: var(--gold); /* default subtle gold */
-  transition: all 0.4s ease;
-}
-
-.exit:hover span {
-  color: var(--electric-blue);
-  text-shadow: 0 0 8px var(--electric-blue);
-}
-.hub-portals {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 3rem;
-  margin-top: 5rem;
-}
-
-.portal {
-  background: black;
-  border: 2px solid var(--gold);
-  padding: 2rem;
-  width: 200px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.portal:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px var(--electric-blue);
-}
-.exit span {
-  color: var(--gold);
-  transition: all 0.4s ease;
-}
-
-.exit:hover span {
-  color: var(--electric-blue);
-  text-shadow: 0 0 8px var(--electric-blue);
-}
-/* ---------- HUB STYLING ---------- */
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Georgia', serif;
-  background-color: #000; /* black background */
-  color: #fff;
-}
-
+/* ---------- HUB ---------- */
 .hub {
   text-align: center;
   padding: 2rem 1rem;
+  min-height: 100vh;
 }
 
 .hub-title {
   font-size: 2.5rem;
-  color: #FFD700; /* gold */
+  color: var(--gold);
   margin-bottom: 2rem;
+  font-family: "Playfair Display", serif;
 }
 
 /* Optional top links */
@@ -285,7 +116,7 @@ body {
 }
 
 .portal-link {
-  color: #C0C0C0; /* silver */
+  color: var(--silver);
   text-decoration: none;
   margin: 0 1rem;
   font-weight: bold;
@@ -293,16 +124,16 @@ body {
 }
 
 .portal-link:hover {
-  color: #00FFFF; /* electric blue */
+  color: var(--electric-blue);
 }
 
-/* ---------- PORTALS GRID ---------- */
-
+/* ---------- HUB PORTALS GRID ---------- */
 .hub-portals {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   padding: 0 2rem 4rem 2rem;
+  justify-items: center;
 }
 
 /* Each portal */
@@ -315,38 +146,35 @@ body {
   position: relative;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
   cursor: pointer;
+  width: 200px;
 }
 
-/* Portal images */
 .portal img {
   width: 100%;
   height: 180px;
   object-fit: cover;
   border-radius: 0.8rem;
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
-  display: block;
   margin-bottom: 1rem;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
-/* Portal hover effect */
 .portal:hover {
   transform: scale(1.05) translateY(-5px);
-  box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.6); /* electric blue glow */
+  box-shadow: 0 0 20px 5px var(--electric-blue);
 }
 
 .portal:hover img {
   transform: scale(1.08) rotateZ(1.5deg);
-  box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 20px 5px rgba(59,108,255,0.4);
 }
 
-/* Portal text */
 .portal h2 {
-  color: #FFD700; /* gold */
+  color: var(--gold);
   margin-bottom: 0.5rem;
 }
 
 .portal p {
-  color: #C0C0C0; /* silver */
+  color: var(--silver);
   font-size: 0.9rem;
   line-height: 1.3;
 }
@@ -367,22 +195,65 @@ body {
   opacity: 1;
 }
 
-/* Exit button */
+/* ---------- EXIT BUTTON ---------- */
 .exit {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
   background: #111;
-  color: #FFD700;
+  color: var(--gold);
   padding: 0.8rem 1.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
+  text-align: center;
   transition: background 0.3s ease, color 0.3s ease;
+  z-index: 10;
+}
+
+.exit span {
+  transition: all 0.4s ease;
 }
 
 .exit:hover {
   background: #000;
-  color: #00FFFF; /* electric blue hover */
+}
+
+.exit:hover span {
+  color: var(--electric-blue);
+  text-shadow: 0 0 8px var(--electric-blue);
+}
+
+/* ---------- TEXT STYLES ---------- */
+.writing-body {
+  background: #000;
+  color: #d4d4d4;
+  font-family: "Playfair Display", serif;
+}
+
+.act {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem;
+  text-align: center;
+  font-size: 1.6rem;
+  line-height: 1.8;
+}
+
+/* ---------- VARIOUS STYLES ---------- */
+.whisper { color: #e8e8e8; background: radial-gradient(circle at top, #111, #000); }
+.weight { color: #b3b3b3; background: linear-gradient(#000, #050505); font-family: "Inter", sans-serif; }
+.heat { color: #d6b36a; background: radial-gradient(circle, #120c05, #000); font-style: italic; }
+.fracture { color: var(--electric-blue); background: #000; font-family: monospace; letter-spacing: 2px; text-transform: lowercase; }
+
+.hidden-line {
+  display: block;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 1.5s ease;
 }
 
 /* ---------- RESPONSIVE ---------- */
@@ -397,7 +268,3 @@ body {
     grid-template-columns: 1fr;
   }
 }
-
-
-
-
