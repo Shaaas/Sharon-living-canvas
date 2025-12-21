@@ -6,9 +6,10 @@ if (exit) {
     document.body.style.transition = "opacity 1s ease";
     document.body.style.opacity = 0;
 
-    // After fade, go to index.html directly
     setTimeout(() => {
-      window.location.href = "index.html"; // always goes to landing page
-    }, 1000); // matches 1s fade
+      // Use the data attribute to go to the correct page
+      const target = document.body.getAttribute("data-exit-target") || "index.html";
+      window.location.href = target;
+    }, 1000);
   });
 }
