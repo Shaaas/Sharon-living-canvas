@@ -19,83 +19,6 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Canvas / app layering */
-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-}
-
-#app {
-  position: relative;
-  z-index: 1;
-}
-
-/* ---------- HERO SECTION ---------- */
-.hero {
-  height: 100vh;
-  padding: 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.hero-text {
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: 700;
-  line-height: 1.05;
-  max-width: 900px;
-  color: var(--gold);
-  font-family: "Playfair Display", serif;
-}
-
-.hero-sub {
-  margin-top: 1.5rem;
-  font-size: 1.1rem;
-  color: var(--silver);
-  opacity: 0.75;
-}
-
-.portal-btn {
-  margin-top: 3rem;
-  align-self: flex-start;
-  padding: 1rem 2.4rem;
-  font-size: 1rem;
-  border: 1px solid var(--electric-blue);
-  border-radius: 999px;
-  cursor: pointer;
-  background: transparent;
-  color: var(--electric-blue);
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
-}
-
-.portal-btn:hover {
-  background: var(--electric-blue);
-  color: var(--black);
-  box-shadow: 0 0 20px rgba(59,108,255,0.6),
-              0 0 40px rgba(59,108,255,0.3);
-}
-
-.portal-open {
-  animation: portalCollapse 1.2s ease-in forwards;
-}
-
-@keyframes portalCollapse {
-  0% {
-    filter: blur(0px);
-    transform: scale(1);
-  }
-  40% {
-    filter: blur(6px);
-  }
-  100% {
-    filter: blur(40px);
-    transform: scale(0.92);
-    background: radial-gradient(circle, rgba(59,108,255,0.8), #000 70%);
-  }
-}
-
 /* ---------- HUB ---------- */
 .hub {
   text-align: center;
@@ -138,23 +61,25 @@ canvas {
 
 /* Each portal */
 .portal {
-  background: #111; /* dark background for each card */
+  width: 100%;
+  max-width: 250px;
+  background: #111;
   border-radius: 1rem;
   overflow: hidden;
   text-align: center;
   padding: 1rem;
   position: relative;
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
   cursor: pointer;
-  width: 200px;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
 .portal img {
   width: 100%;
-  height: 180px;
+  max-height: 180px;
   object-fit: cover;
   border-radius: 0.8rem;
   margin-bottom: 1rem;
+  display: block;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
@@ -221,39 +146,6 @@ canvas {
 .exit:hover span {
   color: var(--electric-blue);
   text-shadow: 0 0 8px var(--electric-blue);
-}
-
-/* ---------- TEXT STYLES ---------- */
-.writing-body {
-  background: #000;
-  color: #d4d4d4;
-  font-family: "Playfair Display", serif;
-}
-
-.act {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4rem;
-  text-align: center;
-  font-size: 1.6rem;
-  line-height: 1.8;
-}
-
-/* ---------- VARIOUS STYLES ---------- */
-.whisper { color: #e8e8e8; background: radial-gradient(circle at top, #111, #000); }
-.weight { color: #b3b3b3; background: linear-gradient(#000, #050505); font-family: "Inter", sans-serif; }
-.heat { color: #d6b36a; background: radial-gradient(circle, #120c05, #000); font-style: italic; }
-.fracture { color: var(--electric-blue); background: #000; font-family: monospace; letter-spacing: 2px; text-transform: lowercase; }
-
-.hidden-line {
-  display: block;
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  color: var(--gold);
-  opacity: 0;
-  transition: opacity 1.5s ease;
 }
 
 /* ---------- RESPONSIVE ---------- */
