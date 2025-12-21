@@ -249,6 +249,15 @@ body.hub .exit {
   transform: scale(1.1);
   box-shadow: 0 0 15px var(--electric-blue);
 }
+.exit span {
+  color: var(--gold);
+  transition: all 0.4s ease;
+}
+
+.exit:hover span {
+  color: var(--electric-blue);
+  text-shadow: 0 0 8px var(--electric-blue);
+}
 
 
 
