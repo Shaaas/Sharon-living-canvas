@@ -17,4 +17,30 @@ window.addEventListener("scroll", () => {
   }
 
   lastScroll = currentScroll;
+}
+// Folder-based content reveal
+const folders = document.querySelectorAll('.folder');
+const acts = document.querySelectorAll('.act');
+
+folders.forEach(folder => {
+  folder.addEventListener('click', () => {
+    const target = folder.dataset.target;
+
+    acts.forEach(act => {
+      if (act.classList.contains(target)) {
+        act.style.display = 'flex';
+        requestAnimationFrame(() => {
+          act.style.opacity = '1';
+        });
+      } else {
+        act.style.opacity = '0';
+        setTimeout(() => {
+          act.style.display = 'none';
+        }, 400);
+      }
+    });
+  });
 });
+                       
+                       
+                       );
