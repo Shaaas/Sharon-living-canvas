@@ -215,6 +215,27 @@
         folder.classList.add('active');
         document.querySelector('.collection.' + folder.dataset.target).classList.add('active');
       });
+      <script>
+  const entries = document.querySelectorAll('.entry');
+  const viewer = document.getElementById('pdf-viewer');
+  const frame = document.getElementById('pdf-frame');
+  const title = document.getElementById('pdf-title');
+  const closeBtn = document.getElementById('close-pdf');
+
+  entries.forEach(entry => {
+    entry.addEventListener('click', () => {
+      const pdf = entry.dataset.pdf;
+      frame.src = pdf;
+      title.textContent = entry.textContent;
+      viewer.classList.remove('hidden');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    frame.src = '';
+    viewer.classList.add('hidden');
+  });
+</script>
     });
   </script>
 
