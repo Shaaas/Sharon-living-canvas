@@ -4,6 +4,114 @@
   <meta charset="UTF-8" />
   <title>The Hub</title>
   <link rel="stylesheet" href="style.css" />
+   <style> 
+    :root { 
+      --black: #0b0b0f; 
+      --gold: #d4af37; 
+      --silver: #cfd3da; 
+      --electric-blue: #3b6cff; 
+    } 
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    } 
+    body { 
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
+      background: var(--black); 
+      color: var(--silver); 
+    } 
+    .hub { 
+      text-align: center; 
+      padding: 2rem 1rem; 
+    } 
+    .hub-title { 
+      font-size: 2.5rem; 
+      color: var(--gold); 
+      margin-bottom: 2rem; 
+      font-family: "Playfair Display", serif; 
+    } 
+    .portals-links { 
+      margin-bottom: 3rem; 
+    } 
+    .portal-link { 
+      color: var(--silver); 
+      text-decoration: none; 
+      margin: 0 1rem; 
+      font-weight: bold; 
+      transition: color 0.3s ease; 
+    } 
+    .portal-link:hover { 
+      color: var(--electric-blue); 
+    } 
+    .hub-portals { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+      gap: 2rem;
+      padding: 0 2rem 4rem 2rem; 
+      justify-items: center; 
+    } 
+    .portal { 
+      background: #111; 
+      border-radius: 1rem; 
+      overflow: hidden; 
+      text-align: center; 
+      padding: 1rem; 
+      position: relative; 
+      transition: transform 0.5s ease, box-shadow 0.5s ease; 
+      cursor: pointer; 
+      width: 250px; 
+    } 
+    .portal img { 
+      width: 100%; 
+      height: 180px; 
+      object-fit: cover; 
+      border-radius: 0.8rem; 
+      margin-bottom: 1rem; 
+      transition: transform 0.5s ease, box-shadow 0.5s ease; 
+    } 
+    .portal:hover { 
+      transform: scale(1.05) translateY(-5px); 
+      box-shadow: 0 0 20px 5px var(--electric-blue); 
+    } 
+    .portal:hover img { 
+      transform: scale(1.08) rotateZ(1.5deg); 
+      box-shadow: 0 0 20px 5px rgba(59,108,255,0.4); 
+    } 
+    .portal h2 { 
+      color: var(--gold); 
+      margin-bottom: 0.5rem; 
+    } 
+    .portal p { 
+      color: var(--silver); 
+      font-size: 0.9rem; 
+      line-height: 1.3; 
+    } 
+    .exit { 
+      position: fixed; 
+      bottom: 2rem; 
+      right: 2rem; 
+      background: #111; 
+      color: var(--gold); 
+      padding: 0.8rem 1.5rem; 
+      border-radius: 0.5rem; 
+      cursor: pointer; 
+      text-align: center; 
+      transition: background 0.3s ease, color 0.3s ease; 
+      z-index: 10; 
+    } 
+    .exit span { 
+      transition: all 0.4s ease; 
+    } 
+    .exit:hover { 
+      background: #000; 
+    } 
+    .exit:hover span { 
+      color: var(--electric-blue); 
+      text-shadow: 0 0 8px var(--electric-blue); 
+    } 
+
+  </style> 
 </head>
 <body>
 
