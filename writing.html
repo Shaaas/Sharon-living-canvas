@@ -2,105 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Writing</title>
-
+  <title>Writing Portal</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-</head>
+  <style>
+    /* --- Folders / top navigation --- */
+    .writing-portal {
+      display: flex;
+      gap: 1rem;
+      padding: 2rem;
+      justify-content: flex-start;
+      background: #111;
+    }
+    .folder {
+      padding: 0.8rem 1.5rem;
+      background: #222;
+      color: #d4af37;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    .folder.active, .folder:hover {
+      background: #d4af37;
+      color: #111;
+    }
 
+    /* --- Writing space / cards --- */
+    .writing-space {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .collection {
+      display: none;
+      grid-column: 1 / -1;
+      gap: 1rem;
+    }
+    .collection.active {
+      display: grid;
+    }
+    .item-card {
+      background: #111;
+      color: #d4af37;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 0 10px rgba(59,108,255,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .item-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(59,108,255,0.6);
+    }
+    .item-card h3 {
+      margin-bottom: 0.5rem;
+      font-family: "Playfair Display", serif;
+      color: #d4af37;
+    }
+    .item-card p {
+      font-size: 0.9rem;
+      color: #cfd3da;
+      margin-bottom: 0.5rem;
+    }
+    .item-card a {
+      text-decoration: none;
+      color: #3b6cff;
+      font-weight: bold;
+    }
+    .item-card a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
 <body class="writing-body">
 
-  <!-- FOLDERS / PORTAL -->
+  <!-- Folders / top navigation -->
   <nav class="writing-portal">
-    <div class="folder active" data-target="poems"><span>Poems</span></div>
-    <div class="folder" data-target="articles"><span>Articles</span></div>
-    <div class="folder" data-target="books"><span>Books</span></div>
+    <div class="folder active" data-target="poems">Poems</div>
+    <div class="folder" data-target="articles">Articles</div>
+    <div class="folder" data-target="books">Books</div>
   </nav>
 
-  <!-- WRITING SPACE -->
+  <!-- Writing space -->
   <main class="writing-space">
 
-    <!-- POEMS -->
+    <!-- Poems Collection -->
     <section class="collection poems active">
-      <ul>
-        <li><a href="pdfs/poems/poem1.pdf" target="_blank">Poem 1</a></li>
-        <li><a href="pdfs/poems/poem2.pdf" target="_blank">Poem 2</a></li>
-      </ul>
-      <section class="act whisper">
-        <p>
-          I write the way some people breathe:
-          quietly, instinctively,
-          as if silence would kill me.
-        </p>
-        <span class="hidden-line">
-          some things only show up when you linger
-        </span>
-      </section>
-
-      <section class="act weight">
-        <p>
-          There are words I carry
-          like unslept nights.
-          Heavy. Repetitive.
-          Refusing to resolve.
-        </p>
-      </section>
+      <div class="item-card">
+        <h3>Poem 1</h3>
+        <p>A short snippet or description of poem 1...</p>
+        <a href="pdfs/poems/poem1.pdf" target="_blank">Open PDF</a>
+      </div>
+      <div class="item-card">
+        <h3>Poem 2</h3>
+        <p>A short snippet or description of poem 2...</p>
+        <a href="pdfs/poems/poem2.pdf" target="_blank">Open PDF</a>
+      </div>
     </section>
 
-    <!-- ARTICLES -->
+    <!-- Articles Collection -->
     <section class="collection articles">
-      <ul>
-        <li><a href="pdfs/articles/article1.pdf" target="_blank">Article 1</a></li>
-        <li><a href="pdfs/articles/article2.pdf" target="_blank">Article 2</a></li>
-      </ul>
-      <section class="act heat">
-        <p>
-          Some sentences are not meant to be read.
-          They lean closer.
-          They wait for permission.
-        </p>
-      </section>
+      <div class="item-card">
+        <h3>Article 1</h3>
+        <p>Brief description or teaser for Article 1...</p>
+        <a href="pdfs/articles/article1.pdf" target="_blank">Open PDF</a>
+      </div>
+      <div class="item-card">
+        <h3>Article 2</h3>
+        <p>Brief description or teaser for Article 2...</p>
+        <a href="pdfs/articles/article2.pdf" target="_blank">Open PDF</a>
+      </div>
     </section>
 
-    <!-- BOOKS -->
+    <!-- Books Collection -->
     <section class="collection books">
-      <ul>
-        <li><a href="pdfs/books/book1.pdf" target="_blank">Book 1</a></li>
-        <li><a href="pdfs/books/book2.pdf" target="_blank">Book 2</a></li>
-      </ul>
-      <section class="act fracture">
-        <p>
-          This is where the rules
-          stop working
-          and the page
-          starts answering back.
-        </p>
-
-        <div class="exit">
-          <span>leave quietly</span>
-        </div>
-      </section>
+      <div class="item-card">
+        <h3>Book 1</h3>
+        <p>Short description or snippet from Book 1...</p>
+        <a href="pdfs/books/book1.pdf" target="_blank">Open PDF</a>
+      </div>
+      <div class="item-card">
+        <h3>Book 2</h3>
+        <p>Short description or snippet from Book 2...</p>
+        <a href="pdfs/books/book2.pdf" target="_blank">Open PDF</a>
+      </div>
     </section>
 
   </main>
 
-  <!-- FOLDER TOGGLE LOGIC -->
+  <!-- Folder toggle JS -->
   <script>
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
 
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
+        // Remove active state
         folders.forEach(f => f.classList.remove('active'));
         collections.forEach(c => c.classList.remove('active'));
 
+        // Add active to clicked folder
         folder.classList.add('active');
         document.querySelector('.collection.' + folder.dataset.target).classList.add('active');
       });
     });
   </script>
 
-  <!-- Existing scripts -->
   <script src="reading.js"></script>
   <script src="exit.js"></script>
 
