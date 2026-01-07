@@ -73,6 +73,31 @@
     .item-card a:hover {
       text-decoration: underline;
     }
+
+    .exit {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #111;
+  color: #d4af37;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.3s ease, color 0.3s ease;
+  z-index: 100;
+}
+.exit span {
+  transition: all 0.4s ease;
+}
+.exit:hover {
+  background: #000;
+}
+.exit:hover span {
+  color: #3b6cff;
+  text-shadow: 0 0 8px #3b6cff;
+}
+
   </style>
 </head>
 <body class="writing-body">
