@@ -3,67 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <title>Writing</title>
+
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 </head>
+
 <body class="writing-body">
+
+  <!-- FOLDERS / PORTAL -->
   <nav class="writing-portal">
-  <div class="folder" data-target="articles">
-    <span>Articles</span>
-  </div>
+    <div class="folder active" data-target="poems"><span>Poems</span></div>
+    <div class="folder" data-target="articles"><span>Articles</span></div>
+    <div class="folder" data-target="books"><span>Books</span></div>
+  </nav>
 
-  <div class="folder" data-target="poems">
-    <span>Poems</span>
-  </div>
+  <!-- WRITING SPACE -->
+  <main class="writing-space">
 
-  <div class="folder" data-target="books">
-    <span>Books</span>
-  </div>
-</nav>
+    <!-- POEMS -->
+    <section class="collection poems active">
 
+      <section class="act whisper">
+        <p>
+          I write the way some people breathe —
+          quietly, instinctively,
+          as if silence would kill me.
+        </p>
+        <span class="hidden-line">
+          some things only show up when you linger
+        </span>
+      </section>
 
-<section class="act whisper">
-  <p>
-    I write the way some people breathe —
-    quietly, instinctively,
-    as if silence would kill me.
-  </p>
-  <span class="hidden-line">
-  some things only show up when you linger
-</span>
+      <section class="act weight">
+        <p>
+          There are words I carry
+          like unslept nights.
+          Heavy. Repetitive.
+          Refusing to resolve.
+        </p>
+      </section>
 
-</section>
+    </section>
 
-<section class="act weight">
-  <p>
-    There are words I carry
-    like unslept nights.
-    Heavy. Repetitive.
-    Refusing to resolve.
-  </p>
-</section>
+    <!-- ARTICLES -->
+    <section class="collection articles">
 
-<section class="act heat">
-  <p>
-    Some sentences are not meant to be read.
-    They lean closer.
-    They wait for permission.
-  </p>
-</section>
+      <section class="act heat">
+        <p>
+          Some sentences are not meant to be read.
+          They lean closer.
+          They wait for permission.
+        </p>
+      </section>
 
-<section class="act fracture">
-  <p>
-    this is where the rules
-    stop working
-    and the page
-    starts answering back
-  </p>
-  <div class="exit">
-  <span>leave quietly</span>
-</div>
-</section>
+    </section>
 
-<script src="reading.js"></script>
+    <!-- BOOKS -->
+    <section class="collection books">
+
+      <section class="act fracture">
+        <p>
+          this is where the rules
+          stop working
+          and the page
+          starts answering back
+        </p>
+
+        <div class="exit">
+          <span>leave quietly</span>
+        </div>
+      </section>
+
+    </section>
+
+  </main>
+
+  <!-- FOLDER LOGIC -->
+  <script>
+    const folders = document.querySelectorAll('.folder');
+    const collections = document.querySelectorAll('.collection');
+
+    folders.forEach(folder => {
+      folder.addEventListener('click', () => {
+        folders.forEach(f => f.classList.remove('active'));
+        collections.forEach(c => c.classList.remove('active'));
+
+        folder.classList.add('active');
+        document
+          .querySelector('.collection.' + folder.dataset.target)
+          .classList.add('active');
+      });
+    });
+  </script>
+
+  <!-- YOUR EXISTING SCRIPTS -->
+  <script src="reading.js"></script>
   <script src="exit.js"></script>
+
 </body>
 </html>
