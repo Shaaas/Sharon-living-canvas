@@ -277,4 +277,7 @@ canvas {
 .collection.active {
   display: block;
 }
+.act {
+  transition: opacity 0.6s ease;
+}
 
