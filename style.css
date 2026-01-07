@@ -268,3 +268,13 @@ canvas {
     grid-template-columns: 1fr;
   }
 }
+/* Writing folders logic */
+
+.collection {
+  display: none;
+}
+
+.collection.active {
+  display: block;
+}
+
