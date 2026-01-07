@@ -22,10 +22,13 @@
 
     <!-- POEMS -->
     <section class="collection poems active">
-
+      <ul>
+        <li><a href="pdfs/poems/poem1.pdf" target="_blank">Poem 1</a></li>
+        <li><a href="pdfs/poems/poem2.pdf" target="_blank">Poem 2</a></li>
+      </ul>
       <section class="act whisper">
         <p>
-          I write the way some people breathe —
+          I write the way some people breathe:
           quietly, instinctively,
           as if silence would kill me.
         </p>
@@ -42,12 +45,14 @@
           Refusing to resolve.
         </p>
       </section>
-
     </section>
 
     <!-- ARTICLES -->
     <section class="collection articles">
-
+      <ul>
+        <li><a href="pdfs/articles/article1.pdf" target="_blank">Article 1</a></li>
+        <li><a href="pdfs/articles/article2.pdf" target="_blank">Article 2</a></li>
+      </ul>
       <section class="act heat">
         <p>
           Some sentences are not meant to be read.
@@ -55,30 +60,31 @@
           They wait for permission.
         </p>
       </section>
-
     </section>
 
     <!-- BOOKS -->
     <section class="collection books">
-
+      <ul>
+        <li><a href="pdfs/books/book1.pdf" target="_blank">Book 1</a></li>
+        <li><a href="pdfs/books/book2.pdf" target="_blank">Book 2</a></li>
+      </ul>
       <section class="act fracture">
         <p>
-          this is where the rules
+          This is where the rules
           stop working
           and the page
-          starts answering back
+          starts answering back.
         </p>
 
         <div class="exit">
           <span>leave quietly</span>
         </div>
       </section>
-
     </section>
 
   </main>
 
-  <!-- FOLDER LOGIC -->
+  <!-- FOLDER TOGGLE LOGIC -->
   <script>
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
@@ -89,14 +95,12 @@
         collections.forEach(c => c.classList.remove('active'));
 
         folder.classList.add('active');
-        document
-          .querySelector('.collection.' + folder.dataset.target)
-          .classList.add('active');
+        document.querySelector('.collection.' + folder.dataset.target).classList.add('active');
       });
     });
   </script>
 
-  <!-- YOUR EXISTING SCRIPTS -->
+  <!-- Existing scripts -->
   <script src="reading.js"></script>
   <script src="exit.js"></script>
 
