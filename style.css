@@ -280,4 +280,45 @@ canvas {
 .act {
   transition: opacity 0.6s ease;
 }
+/* PDF VIEWER */
+.pdf-viewer {
+  position: fixed;
+  inset: 0;
+  background: #0f0f0f;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+}
+
+.pdf-viewer.hidden {
+  display: none;
+}
+
+.pdf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  color: #eee;
+  font-family: Inter, sans-serif;
+  background: #0a0a0a;
+}
+
+.pdf-header button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.pdf-header button:hover {
+  color: #fff;
+}
+
+#pdf-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+}
 
