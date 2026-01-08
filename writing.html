@@ -2,244 +2,313 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing Portal</title>
-  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  
   <style>
-    /* --- Folders / top navigation --- */
+    :root {
+      --gold: #d4af37;
+      --bg-dark: #111;
+      --card-bg: #1a1a1a;
+      --accent-blue: #3b6cff;
+      --text-gray: #cfd3da;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0a0a0a;
+      color: var(--text-gray);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* --- Navigation --- */
     .writing-portal {
       display: flex;
       gap: 1rem;
       padding: 2rem;
-      justify-content: flex-start;
-      background: #111;
+      justify-content: center;
+      background: var(--bg-dark);
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
+
     .folder {
-      padding: 0.8rem 1.5rem;
+      padding: 0.8rem 1.8rem;
       background: #222;
-      color: #d4af37;
+      color: var(--gold);
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: bold;
+      border: 1px solid transparent;
     }
+
     .folder.active, .folder:hover {
-      background: #d4af37;
+      background: var(--gold);
       color: #111;
     }
 
     /* --- Writing space / cards --- */
     .writing-space {
-      padding: 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-    }
-    .collection {
-      display: none;
-      grid-column: 1 / -1;
-      gap: 1rem;
-    }
-    .collection.active {
-      display: grid;
-    }
-    .item-card {
-      background: #111;
-      color: #d4af37;
-      border-radius: 10px;
-      padding: 1rem;
-      box-shadow: 0 0 10px rgba(59,108,255,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .item-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(59,108,255,0.6);
-    }
-    .item-card h3 {
-      margin-bottom: 0.5rem;
-      font-family: "Playfair Display", serif;
-      color: #d4af37;
-    }
-    .item-card p {
-      font-size: 0.9rem;
-      color: #cfd3da;
-      margin-bottom: 0.5rem;
-    }
-    .item-card a {
-      text-decoration: none;
-      color: #3b6cff;
-      font-weight: bold;
-    }
-    .item-card a:hover {
-      text-decoration: underline;
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
+    .collection {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .collection.active {
+      display: grid;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .item-card {
+      background: var(--card-bg);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .item-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-blue);
+      box-shadow: 0 10px 20px rgba(59, 108, 255, 0.15);
+    }
+
+    .item-card h3 {
+      font-family: "Playfair Display", serif;
+      color: var(--gold);
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .item-card p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .open-text {
+      color: var(--accent-blue);
+      font-weight: bold;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* --- PDF Viewer Overlay --- */
+    .pdf-viewer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.3s ease;
+    }
+
+    .pdf-header {
+      padding: 1rem 2rem;
+      background: #111;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+
+    #pdf-title {
+      color: var(--gold);
+      font-family: "Playfair Display", serif;
+      font-size: 1.2rem;
+    }
+
+    #close-pdf {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+
+    #close-pdf:hover {
+      background: var(--gold);
+      color: #000;
+    }
+
+    #pdf-frame {
+      flex-grow: 1;
+      width: 100%;
+      border: none;
+      background: #fff; /* Some PDFs look better on white */
+    }
+
+    .hidden {
+      display: none !important;
+      pointer-events: none;
+    }
+
+    /* --- Exit Button --- */
     .exit {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  background: #111;
-  color: #d4af37;
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  text-align: center;
-  transition: background 0.3s ease, color 0.3s ease;
-  z-index: 100;
-}
-.exit span {
-  transition: all 0.4s ease;
-}
-.exit:hover {
-  background: #000;
-}
-.exit:hover span {
-  color: #3b6cff;
-  text-shadow: 0 0 8px #3b6cff;
-}
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111;
+      color: var(--gold);
+      padding: 0.8rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      border: 1px solid #333;
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    .exit:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
 
   </style>
 </head>
-<body class="writing-body">
+<body>
 
-  <!-- Folders / top navigation -->
   <nav class="writing-portal">
     <div class="folder active" data-target="poems">Poems</div>
     <div class="folder" data-target="articles">Articles</div>
     <div class="folder" data-target="books">Books</div>
   </nav>
 
-  <!-- Writing space -->
   <main class="writing-space">
 
-    <!-- Poems Collection -->
-    
     <section class="collection poems active">
-<div class="item-card" onclick="openPDF('How%20I%20love%20you.pdf')">
-  <h3>How I love you</h3>
-  <p>Fear that limits me.</p>
-  <span class="open-text">Read</span>
-</div>
+      <div class="item-card entry" data-pdf="How I love you.pdf">
+        <h3>How I love you</h3>
+        <p>Fear that limits me.</p>
+        <span class="open-text">Read Poem</span>
+      </div>
 
-     
-      <div class="item-card">
+      <div class="item-card entry" data-pdf="pdfs/poems/poem2.pdf">
         <h3>Poem 2</h3>
-        <p>Fear that limits me.</p>
-        <a href="pdfs/poems/poem2.pdf" target="_blank">Open PDF</a>
-      </div>
-    </section>
-    <div class="item-card">
-        <h3>Poem 2</h3>
-        <p>Fear that limits me.</p>
-        <a href="pdfs/poems/poem2.pdf" target="_blank">Open PDF</a>
-      </div>
-    </section>
-    <div class="item-card">
-        <h3>Poem 2</h3>
-        <p>Fear that limits me.</p>
-        <a href="pdfs/poems/poem2.pdf" target="_blank">Open PDF</a>
+        <p>Whispers in the dark.</p>
+        <span class="open-text">Read Poem</span>
       </div>
     </section>
 
-    <!-- Articles Collection -->
     <section class="collection articles">
-      <div class="item-card">
-        <h3>  Growing Up</h3>
-        <p>Teaser</p>
-        <a href="pdfs/articles/article1.pdf" target="_blank">Open PDF</a>
+      <div class="item-card entry" data-pdf="pdfs/articles/article1.pdf">
+        <h3>Growing Up</h3>
+        <p>A reflection on the passage of time and the loss of innocence.</p>
+        <span class="open-text">Read Article</span>
       </div>
-      <div class="item-card">
+      <div class="item-card entry" data-pdf="pdfs/articles/article2.pdf">
         <h3>Fireworks</h3>
-        <p>Teaser</p>
-        <a href="pdfs/articles/article2.pdf" target="_blank">Open PDF</a>
-      </div>
-      <div class="item-card">
-        <h3>  Growing Up</h3>
-        <p>Teaser</p>
-        <a href="pdfs/articles/article1.pdf" target="_blank">Open PDF</a>
-      </div>
-      <div class="item-card">
-        <h3>  Growing Up</h3>
-        <p>Teaser</p>
-        <a href="pdfs/articles/article1.pdf" target="_blank">Open PDF</a>
+        <p>Explosions of color against a canvas of void.</p>
+        <span class="open-text">Read Article</span>
       </div>
     </section>
 
-    <!-- Books Collection -->
     <section class="collection books">
-      <div class="item-card">
-        <h3>Almost,Always</h3>
+      <div class="item-card entry" data-pdf="pdfs/books/book1.pdf">
+        <h3>Almost, Always</h3>
         <p>A book about two people who choose each other in the wrong ways.</p>
-        <a href="pdfs/books/book1.pdf" target="_blank">Open PDF</a>
+        <span class="open-text">Open Book</span>
       </div>
-      <div class="item-card">
-        <h3>Book 2</h3>
-        <p>Romance in words unspoken</p>
-        <a href="pdfs/books/book2.pdf" target="_blank">Open PDF</a>
-      </div>
-        <div class="item-card">
-        <h3>Book 2</h3>
-        <p>Romance in words unspoken</p>
-        <a href="pdfs/books/book2.pdf" target="_blank">Open PDF</a>
-      </div>
-        <div class="item-card">
-        <h3>Book 2</h3>
-        <p>Romance in words unspoken</p>
-        <a href="pdfs/books/book2.pdf" target="_blank">Open PDF</a>
-      </div>
-<!-- PDF VIEWER -->
-<div id="pdf-viewer" class="pdf-viewer hidden">
-  <div class="pdf-header">
-    <span id="pdf-title">Reading</span>
-    <button id="close-pdf">×</button>
-  </div>
-
-  <iframe id="pdf-frame" src="" loading="lazy"></iframe>
-</div>
+    </section>
 
   </main>
-    <div class="exit">
+
+  <div id="pdf-viewer" class="pdf-viewer hidden">
+    <div class="pdf-header">
+      <span id="pdf-title">Reading</span>
+      <button id="close-pdf">&times;</button>
+    </div>
+    <iframe id="pdf-frame" src=""></iframe>
+  </div>
+
+  <div class="exit" onclick="window.location.href='index.html'">
     <span>Leave Quietly</span>
   </div>
-    </section>
 
-  <!-- Folder toggle JS -->
   <script>
+    // 1. Tab Navigation Logic
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
 
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
-        // Remove active state
+        // Switch Tabs
         folders.forEach(f => f.classList.remove('active'));
         collections.forEach(c => c.classList.remove('active'));
 
-        // Add active to clicked folder
         folder.classList.add('active');
-        document.querySelector('.collection.' + folder.dataset.target).classList.add('active');
+        const targetClass = folder.getAttribute('data-target');
+        document.querySelector(`.collection.${targetClass}`).classList.add('active');
       });
-      <script>
-  const entries = document.querySelectorAll('.entry');
-  const viewer = document.getElementById('pdf-viewer');
-  const frame = document.getElementById('pdf-frame');
-  const title = document.getElementById('pdf-title');
-  const closeBtn = document.getElementById('close-pdf');
-
-  entries.forEach(entry => {
-    entry.addEventListener('click', () => {
-      const pdf = entry.dataset.pdf;
-      frame.src = pdf;
-      title.textContent = entry.textContent;
-      viewer.classList.remove('hidden');
     });
 
-  closeBtn.addEventListener('click', () => {
-    frame.src = '';
-    viewer.classList.add('hidden');
-  });
-</script>
-  <script src="reading.js"></script>
-  <script src="exit.js"></script>
+    // 2. PDF Viewer Logic
+    const entries = document.querySelectorAll('.entry');
+    const viewer = document.getElementById('pdf-viewer');
+    const frame = document.getElementById('pdf-frame');
+    const title = document.getElementById('pdf-title');
+    const closeBtn = document.getElementById('close-pdf');
+
+    entries.forEach(entry => {
+      entry.addEventListener('click', () => {
+        const pdfFile = entry.getAttribute('data-pdf');
+        const pdfName = entry.querySelector('h3').innerText;
+        
+        // Update viewer content
+        title.textContent = pdfName;
+        frame.src = pdfFile;
+        
+        // Show viewer
+        viewer.classList.remove('hidden');
+        // Prevent body scrolling while reading
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    closeBtn.addEventListener('click', () => {
+      viewer.classList.add('hidden');
+      frame.src = ''; // Clear source to stop loading
+      document.body.style.overflow = 'auto'; // Restore scroll
+    });
+
+    // Close on 'Esc' key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "Escape") closeBtn.click();
+    });
+  </script>
 
 </body>
 </html>
