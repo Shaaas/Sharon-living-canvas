@@ -9,29 +9,58 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-
   <!-- p5.js -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; color: #d4af37; background: #111; overflow-x: hidden;}
+    .hero { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; z-index: 1; position: relative;}
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 3rem; margin: 0 1rem 1rem; }
+    .hero p { font-size: 1.2rem; margin-bottom: 2rem; color: #cfd3da; }
+    .portal-btn { padding: 1rem 2rem; font-weight: bold; border-radius: 10px; background: #d4af37; color: #111; border: none; cursor: pointer; transition: all 0.3s ease; }
+    .portal-btn:hover { background: #111; color: #d4af37; box-shadow: 0 0 15px #d4af37; }
+    .social-links { position: fixed; bottom: 2rem; right: 2rem; display: flex; gap: 1rem; z-index: 2; }
+    .social-links a { text-decoration: none; color: #d4af37; font-weight: bold; transition: color 0.3s; }
+    .social-links a:hover { color: #3b6cff; }
+    .teaser-worlds { display: flex; justify-content: center; gap: 2rem; margin-top: 3rem; flex-wrap: wrap; z-index: 1; position: relative; }
+    .teaser-worlds .card { background: #222; padding: 1rem 1.5rem; border-radius: 12px; text-align: center; width: 180px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; }
+    .teaser-worlds .card:hover { transform: translateY(-5px); box-shadow: 0 0 15px #3b6cff; }
+    .teaser-worlds .card h3 { font-family: 'Playfair Display', serif; margin-bottom: 0.5rem; color: #d4af37; }
+    .teaser-worlds .card p { font-size: 0.9rem; color: #cfd3da; }
+  </style>
 </head>
 
 <body>
   <canvas id="bg"></canvas>
+
   <main id="app">
     <section class="hero">
-      <h1 class="hero-text">
-        I build worlds<br />
-        with words & code.
-      </h1>
+      <h1>I build worlds<br />with words & code.</h1>
+      <p>Writing • Technology • Presence</p>
+      <button class="portal-btn" id="enterBtn">Enter the Hub</button>
 
-      <p class="hero-sub">
-        Writing • Technology • Presence
-      </p>
-
-      <button class="portal-btn" id="enterBtn">
-        Enter 
-      </button>
+      <div class="teaser-worlds">
+        <div class="card" onclick="location.href='writing.html'">
+          <h3>Writing</h3>
+          <p>Poems, stories, and creative worlds.</p>
+        </div>
+        <div class="card" onclick="location.href='music.html'">
+          <h3>Music</h3>
+          <p>Spoken word, playlists, and rhythms.</p>
+        </div>
+        <div class="card" onclick="location.href='experimental.html'">
+          <h3>Experimental</h3>
+          <p>Interactive projects & playful chaos.</p>
+        </div>
+      </div>
     </section>
   </main>
+
+  <div class="social-links">
+    <a href="https://www.instagram.com/shaaas" target="_blank">Instagram</a>
+    <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank">LinkedIn</a>
+    <a href="mailto:sharon@example.com">Email</a>
+  </div>
 
   <!-- Scripts -->
   <script src="sketch.js"></script>
