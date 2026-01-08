@@ -36,10 +36,10 @@
       margin-bottom: 2rem;
     }
     .btn {
-      padding: 0.8rem 2rem;
-      background: #d4af37;
-      color: #111;
-      border: none;
+      padding: 0.6rem 1.5rem;
+      background: #222;
+      color: #d4af37;
+      border: 1px solid #d4af37;
       border-radius: 5px;
       font-weight: bold;
       cursor: pointer;
@@ -49,7 +49,7 @@
       display: inline-block;
     }
     .btn:hover {
-      background: #fff;
+      background: #d4af37;
       color: #111;
     }
 
@@ -120,10 +120,21 @@
       color: #3b6cff;
     }
 
-    /* Footer / exit */
+    /* Subtle footer / back button */
     .exit {
       text-align: center;
       padding: 2rem;
+    }
+    .exit a {
+      text-decoration: none;
+      color: #d4af37;
+      border-bottom: 1px dashed #d4af37;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .exit a:hover {
+      color: #3b6cff;
+      border-bottom-color: #3b6cff;
     }
   </style>
 </head>
@@ -173,9 +184,9 @@
     <a href="mailto:sharon@example.com"><i class="fas fa-envelope"></i></a>
   </section>
 
-  <!-- Exit / back button -->
+  <!-- Subtle Back to Landing Page -->
   <div class="exit">
-    <a href="index.html" class="btn">Back to Landing Page</a>
+    <a href="index.html">Back to Landing Page</a>
   </div>
 
 </body>
