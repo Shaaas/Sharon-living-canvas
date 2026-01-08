@@ -13,17 +13,17 @@
       --card-bg: #111;
       --accent-blue: #3b6cff;
       --text-gray: #cfd3da;
-      --glass: rgba(15, 15, 15, 0.85);
+      --glass: rgba(15, 15, 15, 0.95);
     }
 
-    /* --- General Reset --- */
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
       background: var(--bg-dark);
       color: var(--text-gray);
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
-      user-select: none; /* Prevents text highlighting */
+      user-select: none;
     }
 
     /* --- Navigation --- */
@@ -36,7 +36,6 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      flex-wrap: wrap;
       border-bottom: 1px solid #1a1a1a;
     }
 
@@ -46,7 +45,7 @@
       color: var(--gold);
       border-radius: 30px;
       cursor: pointer;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: 0.3s;
       font-weight: 600;
       border: 1px solid #222;
       font-size: 0.85rem;
@@ -55,8 +54,6 @@
     .folder.active {
       background: var(--gold);
       color: #000;
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     }
 
     /* --- Grid Layout --- */
@@ -64,7 +61,6 @@
       padding: 2rem;
       max-width: 1200px;
       margin: 0 auto;
-      min-height: 80vh;
     }
 
     .collection {
@@ -75,53 +71,26 @@
 
     .collection.active {
       display: grid;
-      animation: slideUp 0.6s ease forwards;
+      animation: fadeIn 0.5s ease forwards;
     }
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* --- Item Cards --- */
     .item-card {
-      background: linear-gradient(145deg, #111, #080808);
+      background: #111;
       border: 1px solid #1a1a1a;
       border-radius: 15px;
       padding: 2rem;
       cursor: pointer;
-      position: relative;
       transition: 0.3s;
     }
 
     .item-card:hover {
       border-color: var(--accent-blue);
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
 
-    .item-card h3 {
-      font-family: "Playfair Display", serif;
-      color: var(--gold);
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .item-card p {
-      font-size: 0.85rem;
-      color: #888;
-      margin-bottom: 1.5rem;
-    }
-
-    .open-text {
-      font-size: 0.75rem;
-      font-weight: bold;
-      letter-spacing: 2px;
-      color: var(--accent-blue);
-      text-transform: uppercase;
-    }
-
-    /* --- SECURE PDF VIEWER --- */
+    /* --- THE SECURE VIEWER --- */
     .pdf-viewer {
       position: fixed;
       inset: 0;
@@ -129,12 +98,9 @@
       z-index: 2000;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
-      padding: 10px;
     }
 
     .pdf-viewer.visible {
@@ -142,23 +108,36 @@
       pointer-events: auto;
     }
 
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      height: 4px;
+      background: #222;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent-blue);
+      width: 0%;
+      transition: width 0.2s ease;
+      box-shadow: 0 0 10px var(--accent-blue);
+    }
+
     .viewer-window {
       width: 100%;
       max-width: 1100px;
       height: 90vh;
-      background: #111;
+      margin: auto;
+      background: #fff;
       border-radius: 20px;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
       box-shadow: 0 0 50px rgba(0,0,0,1);
-      transform: scale(0.95);
-      transition: 0.5s cubic-bezier(0.2, 1, 0.3, 1);
-    }
-
-    .pdf-viewer.visible .viewer-window {
-      transform: scale(1);
     }
 
     .pdf-header {
@@ -169,102 +148,61 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid #222;
-      z-index: 30;
-    }
-
-    #pdf-title {
-      font-family: "Playfair Display", serif;
-      color: var(--gold);
-      font-size: 1.1rem;
+      color: white;
+      position: relative;
     }
 
     #close-pdf {
-      background: #222;
+      background: #333;
       border: none;
-      color: #fff;
-      font-size: 1.5rem;
-      width: 35px;
-      height: 35px;
+      color: white;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       cursor: pointer;
     }
 
-    /* --- Security Layers --- */
     #reader-container {
-      position: relative;
       flex-grow: 1;
-      overflow: hidden;
-      background: #fff; /* Most PDFs look best on white */
-    }
-
-    .glass-shield {
-      position: absolute;
-      inset: 0;
-      z-index: 25;
-      background: transparent;
+      position: relative;
+      overflow-y: auto; /* Enable container scroll */
+      -webkit-overflow-scrolling: touch;
     }
 
     .watermark {
       position: absolute;
       inset: 0;
-      z-index: 20;
+      z-index: 10;
       pointer-events: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      opacity: 0.08;
+      opacity: 0.05;
     }
 
     .watermark span {
       transform: rotate(-30deg);
+      padding: 50px;
       font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: #000;
-      font-weight: bold;
+    }
+
+    /* The Glass Shield - prevents clicks but lets scroll pass */
+    .glass-shield {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      background: transparent;
     }
 
     #pdf-frame {
       width: 100%;
-      height: 100%;
+      min-height: 2000px; /* Force internal height for scrolling */
       border: none;
     }
 
-    /* Blur for Screenshot attempts */
-    .content-blur {
-      filter: blur(30px) !important;
-    }
+    .content-blur { filter: blur(30px); }
 
-    /* --- Exit Button --- */
-    .exit {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      padding: 0.8rem 1.5rem;
-      background: #111;
-      color: var(--gold);
-      border: 1px solid #333;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      z-index: 100;
-      transition: 0.3s;
-    }
-
-    .exit:hover { border-color: var(--gold); }
-
-    /* --- Print Protection --- */
-    @media print {
-      body { display: none !important; }
-    }
-
-    /* Mobile Tweaks */
-    @media (max-width: 600px) {
-      .viewer-window { height: 95vh; border-radius: 10px; }
-      .writing-portal { gap: 0.5rem; padding: 1rem; }
-      .folder { padding: 0.5rem 1rem; font-size: 0.75rem; }
-    }
+    @media print { body { display: none !important; } }
   </style>
 </head>
 <body>
@@ -279,31 +217,16 @@
     <section class="collection poems active">
       <div class="item-card entry" data-pdf="How I love you.pdf">
         <h3>How I love you</h3>
-        <p>A deep dive into the fear and beauty of love.</p>
-        <span class="open-text">Begin Reading →</span>
-      </div>
-      <div class="item-card entry" data-pdf="poem2.pdf">
-        <h3>The Silent Hour</h3>
-        <p>What happens when the noise finally stops.</p>
+        <p>A journey through the mechanics of affection.</p>
         <span class="open-text">Begin Reading →</span>
       </div>
     </section>
-
+    
     <section class="collection articles">
-      <div class="item-card entry" data-pdf="growing-up.pdf">
-        <h3>Growing Up</h3>
-        <p>The transition from dreams to reality.</p>
-        <span class="open-text">Read Article →</span>
-      </div>
-    </section>
+      </section>
 
     <section class="collection books">
-      <div class="item-card entry" data-pdf="almost-always.pdf">
-        <h3>Almost, Always</h3>
-        <p>A novel about timing and choices.</p>
-        <span class="open-text">Open Manuscript →</span>
-      </div>
-    </section>
+      </section>
   </main>
 
   <div id="pdf-viewer" class="pdf-viewer">
@@ -311,25 +234,21 @@
       <div class="pdf-header">
         <span id="pdf-title">Loading...</span>
         <button id="close-pdf">&times;</button>
+        <div class="progress-container">
+          <div id="scroll-bar" class="progress-bar"></div>
+        </div>
       </div>
       
       <div id="reader-container">
         <div class="watermark">
-          <span>PRIVATE CONTENT</span><span>PRIVATE CONTENT</span><span>PRIVATE CONTENT</span>
-          <span>DO NOT COPY</span><span>DO NOT COPY</span><span>DO NOT COPY</span>
-          <span>© AUTHOR NAME</span><span>© AUTHOR NAME</span><span>© AUTHOR NAME</span>
-          <span>PRIVATE CONTENT</span><span>PRIVATE CONTENT</span><span>PRIVATE CONTENT</span>
+          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
+          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
+          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
         </div>
-
         <div class="glass-shield"></div>
-        
         <iframe id="pdf-frame" src=""></iframe>
       </div>
     </div>
-  </div>
-
-  <div class="exit" onclick="window.location.href='index.html'">
-    <span>Leave Quietly</span>
   </div>
 
   <script>
@@ -338,44 +257,49 @@
     const viewer = document.getElementById('pdf-viewer');
     const readerContainer = document.getElementById('reader-container');
     const frame = document.getElementById('pdf-frame');
-    const title = document.getElementById('pdf-title');
+    const progressBar = document.getElementById('scroll-bar');
     const closeBtn = document.getElementById('close-pdf');
-    const entries = document.querySelectorAll('.entry');
 
-    // 1. Tab Switching logic
+    // Tab Switching
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
         folders.forEach(f => f.classList.remove('active'));
         collections.forEach(c => c.classList.remove('active'));
         folder.classList.add('active');
-        const target = folder.getAttribute('data-target');
-        document.querySelector(`.collection.${target}`).classList.add('active');
+        document.querySelector(`.collection.${folder.dataset.target}`).classList.add('active');
       });
     });
 
-    // 2. Open PDF with Security
-    entries.forEach(entry => {
+    // Scroll Progress Logic
+    readerContainer.addEventListener('scroll', () => {
+      const winScroll = readerContainer.scrollTop;
+      const height = readerContainer.scrollHeight - readerContainer.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      progressBar.style.width = scrolled + "%";
+    });
+
+    // Open PDF
+    document.querySelectorAll('.entry').forEach(entry => {
       entry.addEventListener('click', () => {
         const file = entry.getAttribute('data-pdf');
-        const name = entry.querySelector('h3').innerText;
+        document.getElementById('pdf-title').textContent = entry.querySelector('h3').innerText;
         
-        title.textContent = name;
-        // The URL parameters hide the default browser UI
-        frame.src = `${file}#toolbar=0&navpanes=0&scrollbar=0`;
+        // Use #view=FitH to ensure the PDF expands to its full scrollable height
+        frame.src = `${file}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`;
         
         viewer.classList.add('visible');
-        document.body.style.overflow = 'hidden'; 
+        document.body.style.overflow = 'hidden';
       });
     });
 
-    // 3. Close Logic
     closeBtn.addEventListener('click', () => {
       viewer.classList.remove('visible');
-      setTimeout(() => { frame.src = ''; }, 400);
+      frame.src = '';
+      progressBar.style.width = "0%";
       document.body.style.overflow = 'auto';
     });
 
-    // 4. ANTI-SCREENSHOT: Blur when mouse leaves window
+    // Security
     document.addEventListener('mouseleave', () => {
       if(viewer.classList.contains('visible')) readerContainer.classList.add('content-blur');
     });
@@ -383,25 +307,8 @@
       readerContainer.classList.remove('content-blur');
     });
 
-    // 5. SECURITY: Block Keys (Ctrl+S, Ctrl+P, F12)
-    document.addEventListener('keydown', (e) => {
-      if (viewer.classList.contains('visible')) {
-        // Block Save, Print, Source, Inspect
-        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'u')) {
-          e.preventDefault();
-          alert("Protected Content: Downloading and Printing is disabled.");
-        }
-        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-          e.preventDefault();
-        }
-        if (e.key === "Escape") closeBtn.click();
-      }
-    });
-
-    // Block Right Click
-    document.addEventListener('contextmenu', (e) => {
-      if (viewer.classList.contains('visible')) e.preventDefault();
-    });
+    // Block right-click on the viewer
+    viewer.addEventListener('contextmenu', (e) => e.preventDefault());
   </script>
 
 </body>
