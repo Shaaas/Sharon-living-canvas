@@ -9,6 +9,8 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
   <style>
     /* Base Styles */
     body { 
@@ -16,17 +18,17 @@
       font-family: 'Inter', sans-serif; 
       color: #d4af37; 
       background: #111; 
-      overflow-x: hidden;
+      overflow: hidden; /* Prevent scrollbars from interfering with canvas */
     }
 
-    /* Background Canvas */
+    /* RESTORED: Floating Canvas Setup */
     canvas { 
       position: fixed; 
       top: 0; 
       left: 0; 
-      width: 100%; 
-      height: 100%; 
-      z-index: 0; 
+      width: 100vw; 
+      height: 100vh; 
+      z-index: -1; /* Keeps it behind your text */
     }
 
     /* Hero Section */
@@ -38,7 +40,8 @@
       height: 100vh; 
       text-align: center; 
       position: relative; 
-      z-index: 1;
+      z-index: 1; /* Sits above the floating things */
+      background: transparent;
       padding: 0 20px;
     }
     
@@ -47,26 +50,23 @@
       font-size: 2rem;
       margin-bottom: 1rem;
       color: #d4af37;
-      letter-spacing: 2px;
     }
 
     .hero h1 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 5vw, 3rem); /* Responsive sizing */
-      margin: 0 0 1.5rem;
-      max-width: 800px;
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      margin: 0 0 1rem;
+      color: #d4af37;
     }
 
     .hero p { 
       font-size: 1.2rem; 
       margin-bottom: 2.5rem; 
       color: #cfd3da; 
-      font-weight: 300;
-      letter-spacing: 3px;
-      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
-    /* Button Container & Symmetrical Buttons */
+    /* Button Container & PERFECT SYMMETRY */
     .hero-btns {
       display: flex;
       gap: 1.5rem;
@@ -75,61 +75,47 @@
     }
 
     .portal-btn, .portfolio-btn {
-      /* Fixed Dimensions for Symmetry */
-      width: 200px;
-      height: 55px;
-      padding: 0; 
-      
-      font-family: 'Inter', sans-serif;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      width: 200px;           /* Exact same width */
+      height: 55px;          /* Exact same height */
+      padding: 0;            /* Reset padding */
+      font-weight: bold;
       border-radius: 10px;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       
-      /* Perfect Centering */
-      display: inline-flex;
+      display: inline-flex;  /* Flex for perfect text alignment */
       align-items: center;
       justify-content: center;
       
-      /* Resetting defaults */
       border: 2px solid #d4af37;
-      box-sizing: border-box;
+      box-sizing: border-box; /* Crucial: Keeps border inside the 55px */
       line-height: 1;
     }
 
-    /* Primary Style */
     .portal-btn {
       background: #d4af37;
       color: #111;
     }
 
-    /* Secondary/Outline Style */
     .portfolio-btn {
       background: transparent;
       color: #d4af37;
     }
 
-    /* Hover Effects */
-    .portal-btn:hover {
-      background: transparent;
+    .portal-btn:hover, .portfolio-btn:hover {
+      background: #111;
       color: #d4af37;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 15px #d4af37;
     }
 
-    .portfolio-btn:hover {
-      background: #d4af37;
-      color: #111;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-    }
-
-    /* Social Links Overlay */
+    /* Social Links */
     .social-links {
       position: fixed;
-      bottom: 2.5rem;
-      right: 2.5rem;
+      bottom: 2rem;
+      right: 2rem;
       display: flex;
       gap: 1.5rem;
       z-index: 10;
@@ -138,7 +124,7 @@
     .social-links a {
       color: #d4af37;
       font-size: 1.6rem;
-      transition: all 0.3s ease;
+      transition: color 0.3s, transform 0.3s;
       text-decoration: none;
     }
 
@@ -147,17 +133,13 @@
       transform: translateY(-5px);
     }
 
-    /* Mobile adjustments */
     @media (max-width: 480px) {
-      .hero-btns { flex-direction: column; align-items: center; }
-      .social-links { right: 50%; transform: translateX(50%); bottom: 1.5rem; }
+      .hero-btns { flex-direction: column; }
     }
   </style>
 </head>
 
 <body>
-
-  <div id="canvas-container"></div>
 
   <main id="app">
     <section class="hero">
@@ -173,26 +155,20 @@
   </main>
 
   <div class="social-links">
-    <a href="https://www.instagram.com/sha.ta.nu" target="_blank" aria-label="Instagram">
-      <i class="fa-brands fa-instagram"></i>
-    </a>
-    <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank" aria-label="LinkedIn">
-      <i class="fa-brands fa-linkedin"></i>
-    </a>
-    <a href="mailto:mutanu.sharon@yahoo.com" aria-label="Email">
-      <i class="fa-solid fa-envelope"></i>
-    </a>
+    <a href="https://www.instagram.com/shaaas" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+    <a href="mailto:sharon@example.com"><i class="fa-solid fa-envelope"></i></a>
   </div>
 
   <script>
-    // Navigation Logic
-    document.getElementById('enterHubBtn').onclick = function() {
+    // Navigation
+    document.getElementById('enterHubBtn').addEventListener('click', () => {
       window.location.href = 'hub.html';
-    };
+    });
 
-    document.getElementById('portfolioBtn').onclick = function() {
+    document.getElementById('portfolioBtn').addEventListener('click', () => {
       window.location.href = 'portfolio.html';
-    };
+    });
   </script>
 
   <script src="sketch.js"></script>
