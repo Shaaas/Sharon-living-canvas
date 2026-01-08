@@ -31,6 +31,13 @@
       z-index: 1;
       padding: 0 20px;
     }
+    * Typewriter Cursor Effect */
+    .typewriter {
+      font-size: 1.1rem; min-height: 1.5em; margin-bottom: 3rem; 
+      color: #cfd3da; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .cursor { animation: blink 0.7s infinite; color: #d4af37; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
     /* --- NEW: Profile Picture Style --- */
     .profile-wrap {
@@ -155,7 +162,7 @@
       <div class="hero-name">Sharon Mutanu</div>
       <h1>I build worlds with words & code.</h1>
       <p>Writing • Technology • Presence</p>
-
+<div class="typewriter"><span id="type-text"></span><span class="cursor">|</span></div>
       <div class="hero-btns">
         <button class="portal-btn" id="enterHubBtn">Enter the Hub</button>
         <button class="portfolio-btn" id="portfolioBtn">Portfolio</button>
@@ -170,6 +177,18 @@
   </main>
 
   <script>
+    // Typewriter Logic
+    const text = "Writing • Technology • Presence";
+    let i = 0;
+    function typeWriter() {
+      if (i < text.length) {
+        document.getElementById("type-text").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 100);
+      }
+    }
+    window.onload = typeWriter;
+  
     document.getElementById('enterHubBtn').onclick = () => window.location.href = 'hub.html';
     document.getElementById('portfolioBtn').onclick = () => window.location.href = 'portfolio.html';
   </script>
