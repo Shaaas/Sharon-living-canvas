@@ -3,204 +3,193 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Writing Portal | Secure Reader</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Writing Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
   
   <style>
-    :root {
-      --gold: #d4af37;
-      --bg-dark: #0a0a0a;
-      --card-bg: #111;
-      --accent-blue: #3b6cff;
-      --text-gray: #cfd3da;
-      --glass: rgba(15, 15, 15, 0.95);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+    /* --- RESTORED ORIGINAL STYLES --- */
     body {
-      background: var(--bg-dark);
-      color: var(--text-gray);
+      background: #0a0a0a;
+      color: #cfd3da;
       font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+      margin: 0;
       user-select: none;
     }
 
-    /* --- Navigation --- */
     .writing-portal {
       display: flex;
       gap: 1rem;
-      padding: 1.5rem;
-      justify-content: center;
-      background: #000;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid #1a1a1a;
+      padding: 2rem;
+      justify-content: flex-start;
+      background: #111;
+      border-bottom: 1px solid #222;
     }
 
     .folder {
-      padding: 0.6rem 1.4rem;
-      background: #151515;
-      color: var(--gold);
-      border-radius: 30px;
+      padding: 0.8rem 1.5rem;
+      background: #222;
+      color: #d4af37;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.3s;
-      font-weight: 600;
-      border: 1px solid #222;
-      font-size: 0.85rem;
+      transition: all 0.3s ease;
+      font-weight: bold;
     }
 
-    .folder.active {
-      background: var(--gold);
-      color: #000;
+    .folder.active, .folder:hover {
+      background: #d4af37;
+      color: #111;
     }
 
-    /* --- Grid Layout --- */
+    /* --- Writing space / cards --- */
     .writing-space {
       padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      display: block; /* Changed from grid to block for section handling */
     }
 
     .collection {
-      display: none;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      display: none; /* Hidden by default */
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
     }
 
     .collection.active {
-      display: grid;
-      animation: fadeIn 0.5s ease forwards;
+      display: grid; /* Shown when folder is clicked */
     }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     .item-card {
       background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 15px;
-      padding: 2rem;
+      color: #d4af37;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 0 10px rgba(59,108,255,0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      transition: 0.3s;
     }
 
     .item-card:hover {
-      border-color: var(--accent-blue);
-      transform: translateY(-5px);
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(59,108,255,0.6);
     }
 
-    /* --- THE SECURE VIEWER --- */
+    .item-card h3 {
+      margin-top: 0;
+      font-family: "Playfair Display", serif;
+      color: #d4af37;
+    }
+
+    .item-card p {
+      font-size: 0.9rem;
+      color: #cfd3da;
+    }
+
+    .open-text {
+      color: #3b6cff;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    /* --- SECURE PDF VIEWER (Fixed Scrolling) --- */
     .pdf-viewer {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.98);
       z-index: 2000;
-      display: flex;
+      display: none; /* Hidden via JS */
       flex-direction: column;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s ease;
-    }
-
-    .pdf-viewer.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-      width: 100%;
-      height: 4px;
-      background: #222;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: var(--accent-blue);
-      width: 0%;
-      transition: width 0.2s ease;
-      box-shadow: 0 0 10px var(--accent-blue);
+      align-items: center;
+      justify-content: center;
     }
 
     .viewer-window {
-      width: 100%;
+      width: 95%;
       max-width: 1100px;
       height: 90vh;
-      margin: auto;
       background: #fff;
-      border-radius: 20px;
+      border-radius: 15px;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 0 50px rgba(0,0,0,1);
     }
 
     .pdf-header {
-      padding: 1rem 1.5rem;
-      background: var(--glass);
-      backdrop-filter: blur(15px);
+      padding: 1rem;
+      background: #111;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #222;
-      color: white;
+      color: #d4af37;
+      border-bottom: 2px solid #3b6cff;
       position: relative;
     }
 
+    #progress-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #222;
+    }
+
+    #progress-bar {
+      width: 0%;
+      height: 100%;
+      background: #3b6cff;
+      box-shadow: 0 0 8px #3b6cff;
+    }
+
     #close-pdf {
-      background: #333;
+      background: #d4af37;
       border: none;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+      color: #111;
+      font-weight: bold;
       cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
     }
 
     #reader-container {
       flex-grow: 1;
+      overflow-y: auto; /* This is what makes scrolling work */
       position: relative;
-      overflow-y: auto; /* Enable container scroll */
-      -webkit-overflow-scrolling: touch;
     }
 
     .watermark {
       position: absolute;
       inset: 0;
-      z-index: 10;
+      z-index: 5;
       pointer-events: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       opacity: 0.05;
     }
 
-    .watermark span {
-      transform: rotate(-30deg);
-      padding: 50px;
-      font-size: 12px;
-      color: #000;
-    }
-
-    /* The Glass Shield - prevents clicks but lets scroll pass */
-    .glass-shield {
-      position: absolute;
-      inset: 0;
-      z-index: 20;
-      background: transparent;
-    }
+    .watermark span { transform: rotate(-30deg); padding: 60px; font-size: 10px; color: black; }
 
     #pdf-frame {
       width: 100%;
-      min-height: 2000px; /* Force internal height for scrolling */
+      min-height: 2500px; /* Forces the iframe to be long so the container scrolls */
       border: none;
     }
 
-    .content-blur { filter: blur(30px); }
+    .content-blur { filter: blur(40px) !important; }
+
+    /* Exit Button */
+    .exit {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111;
+      color: #d4af37;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 100;
+      border: 1px solid #d4af37;
+    }
 
     @media print { body { display: none !important; } }
   </style>
@@ -217,38 +206,54 @@
     <section class="collection poems active">
       <div class="item-card entry" data-pdf="How I love you.pdf">
         <h3>How I love you</h3>
-        <p>A journey through the mechanics of affection.</p>
-        <span class="open-text">Begin Reading →</span>
+        <p>Fear that limits me.</p>
+        <span class="open-text">Read Poem</span>
+      </div>
+      <div class="item-card entry" data-pdf="poem2.pdf">
+        <h3>Poem 2</h3>
+        <p>Fear that limits me.</p>
+        <span class="open-text">Read Poem</span>
       </div>
     </section>
-    
+
     <section class="collection articles">
-      </section>
+      <div class="item-card entry" data-pdf="article1.pdf">
+        <h3>Growing Up</h3>
+        <p>A reflection on time.</p>
+        <span class="open-text">Read Article</span>
+      </div>
+    </section>
 
     <section class="collection books">
-      </section>
+      <div class="item-card entry" data-pdf="book1.pdf">
+        <h3>Almost, Always</h3>
+        <p>A book about choices.</p>
+        <span class="open-text">Open Book</span>
+      </div>
+    </section>
   </main>
 
   <div id="pdf-viewer" class="pdf-viewer">
     <div class="viewer-window">
       <div class="pdf-header">
-        <span id="pdf-title">Loading...</span>
-        <button id="close-pdf">&times;</button>
-        <div class="progress-container">
-          <div id="scroll-bar" class="progress-bar"></div>
-        </div>
+        <span id="pdf-title">Reading</span>
+        <button id="close-pdf">CLOSE</button>
+        <div id="progress-container"><div id="progress-bar"></div></div>
       </div>
       
       <div id="reader-container">
         <div class="watermark">
-          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
-          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
-          <span>PRIVATE CONTENT</span><span>© YOUR NAME</span><span>DO NOT COPY</span>
+          <span>PRIVATE CONTENT</span><span>© AUTHOR</span><span>DO NOT COPY</span>
+          <span>PRIVATE CONTENT</span><span>© AUTHOR</span><span>DO NOT COPY</span>
+          <span>PRIVATE CONTENT</span><span>© AUTHOR</span><span>DO NOT COPY</span>
         </div>
-        <div class="glass-shield"></div>
         <iframe id="pdf-frame" src=""></iframe>
       </div>
     </div>
+  </div>
+
+  <div class="exit" onclick="window.location.href='index.html'">
+    <span>Leave Quietly</span>
   </div>
 
   <script>
@@ -257,57 +262,65 @@
     const viewer = document.getElementById('pdf-viewer');
     const readerContainer = document.getElementById('reader-container');
     const frame = document.getElementById('pdf-frame');
-    const progressBar = document.getElementById('scroll-bar');
+    const progressBar = document.getElementById('progress-bar');
     const closeBtn = document.getElementById('close-pdf');
 
-    // Tab Switching
+    // 1. FIXED TAB LOGIC: Restore your original behavior
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
+        // Remove active class from all
         folders.forEach(f => f.classList.remove('active'));
-        collections.forEach(c => c.classList.remove('active'));
+        collections.forEach(c => {
+            c.classList.remove('active');
+            c.style.display = 'none'; // Ensure they hide
+        });
+
+        // Add to current
         folder.classList.add('active');
-        document.querySelector(`.collection.${folder.dataset.target}`).classList.add('active');
+        const target = folder.getAttribute('data-target');
+        const activeCollection = document.querySelector('.collection.' + target);
+        activeCollection.classList.add('active');
+        activeCollection.style.display = 'grid'; // Force grid layout
       });
     });
 
-    // Scroll Progress Logic
-    readerContainer.addEventListener('scroll', () => {
-      const winScroll = readerContainer.scrollTop;
-      const height = readerContainer.scrollHeight - readerContainer.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      progressBar.style.width = scrolled + "%";
-    });
-
-    // Open PDF
+    // 2. OPEN PDF LOGIC
     document.querySelectorAll('.entry').forEach(entry => {
       entry.addEventListener('click', () => {
-        const file = entry.getAttribute('data-pdf');
+        const pdfFile = entry.getAttribute('data-pdf');
         document.getElementById('pdf-title').textContent = entry.querySelector('h3').innerText;
         
-        // Use #view=FitH to ensure the PDF expands to its full scrollable height
-        frame.src = `${file}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`;
+        // Load PDF with parameters
+        frame.src = `${pdfFile}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`;
         
-        viewer.classList.add('visible');
+        viewer.style.display = 'flex';
         document.body.style.overflow = 'hidden';
       });
     });
 
+    // 3. CLOSE LOGIC
     closeBtn.addEventListener('click', () => {
-      viewer.classList.remove('visible');
+      viewer.style.display = 'none';
       frame.src = '';
-      progressBar.style.width = "0%";
+      progressBar.style.width = '0%';
       document.body.style.overflow = 'auto';
     });
 
-    // Security
+    // 4. SCROLL PROGRESS
+    readerContainer.addEventListener('scroll', () => {
+      const scrolled = (readerContainer.scrollTop / (readerContainer.scrollHeight - readerContainer.clientHeight)) * 100;
+      progressBar.style.width = scrolled + '%';
+    });
+
+    // 5. SECURITY BLUR
     document.addEventListener('mouseleave', () => {
-      if(viewer.classList.contains('visible')) readerContainer.classList.add('content-blur');
+      if(viewer.style.display === 'flex') readerContainer.classList.add('content-blur');
     });
     document.addEventListener('mouseenter', () => {
       readerContainer.classList.remove('content-blur');
     });
 
-    // Block right-click on the viewer
+    // 6. BLOCK RIGHT CLICK
     viewer.addEventListener('contextmenu', (e) => e.preventDefault());
   </script>
 
