@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Writing Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <title>The Writing Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   
   <style>
     :root {
       --gold: #d4af37;
-      --bg-dark: #111;
-      --card-bg: #1a1a1a;
+      --bg-dark: #0a0a0a;
+      --card-bg: #111;
       --accent-blue: #3b6cff;
       --text-gray: #cfd3da;
+      --glass: rgba(20, 20, 20, 0.8);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: #0a0a0a;
+      background: var(--bg-dark);
       color: var(--text-gray);
       font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+      line-height: 1.6;
     }
 
     /* --- Navigation --- */
@@ -30,151 +31,177 @@
       gap: 1rem;
       padding: 2rem;
       justify-content: center;
-      background: var(--bg-dark);
-      border-bottom: 1px solid #222;
+      background: #000;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
+      flex-wrap: wrap;
     }
 
     .folder {
-      padding: 0.8rem 1.8rem;
-      background: #222;
+      padding: 0.6rem 1.4rem;
+      background: #151515;
       color: var(--gold);
-      border-radius: 8px;
+      border-radius: 30px; /* Pill shape */
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-weight: bold;
-      border: 1px solid transparent;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-weight: 600;
+      border: 1px solid #222;
+      font-size: 0.9rem;
     }
 
-    .folder.active, .folder:hover {
+    .folder.active {
       background: var(--gold);
-      color: #111;
+      color: #000;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     }
 
-    /* --- Writing space / cards --- */
+    /* --- Grid Layout --- */
     .writing-space {
-      padding: 3rem 2rem;
+      padding: 2rem;
       max-width: 1200px;
       margin: 0 auto;
+      min-height: 80vh;
     }
 
     .collection {
       display: none;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
+      gap: 1.5rem;
     }
 
     .collection.active {
       display: grid;
-      animation: fadeIn 0.5s ease;
+      animation: slideUp 0.6s ease forwards;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* --- Unique Cards --- */
     .item-card {
-      background: var(--card-bg);
-      border: 1px solid #222;
-      border-radius: 12px;
-      padding: 1.5rem;
+      background: linear-gradient(145deg, #111, #080808);
+      border: 1px solid #1a1a1a;
+      border-radius: 15px;
+      padding: 2rem;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
     }
 
+    .item-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+      transform: translateX(-100%);
+      transition: 0.5s;
+    }
+
+    .item-card:hover::before { transform: translateX(100%); }
+
     .item-card:hover {
+      background: #151515;
+      border-color: #333;
       transform: translateY(-5px);
-      border-color: var(--accent-blue);
-      box-shadow: 0 10px 20px rgba(59, 108, 255, 0.15);
     }
 
     .item-card h3 {
       font-family: "Playfair Display", serif;
       color: var(--gold);
-      font-size: 1.4rem;
-      margin-bottom: 0.8rem;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
     }
 
     .item-card p {
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 0.85rem;
+      color: #888;
       margin-bottom: 1.5rem;
     }
 
     .open-text {
-      color: var(--accent-blue);
+      font-size: 0.75rem;
       font-weight: bold;
-      font-size: 0.9rem;
+      letter-spacing: 2px;
+      color: var(--accent-blue);
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
 
-    /* --- PDF Viewer Overlay --- */
+    /* --- THE EXTRA PDF VIEWER --- */
     .pdf-viewer {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(10px);
+      inset: 0;
+      background: rgba(0, 0, 0, 0.98);
       z-index: 2000;
       display: flex;
       flex-direction: column;
-      transition: opacity 0.3s ease;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.5s ease;
+      padding: 20px;
+    }
+
+    .pdf-viewer.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .viewer-window {
+      width: 90%;
+      max-width: 1000px;
+      height: 85vh;
+      background: #111;
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 50px rgba(0,0,0,1), 0 0 20px rgba(59, 108, 255, 0.2);
+      transform: scale(0.9) translateY(20px);
+      transition: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .pdf-viewer.visible .viewer-window {
+      transform: scale(1) translateY(0);
     }
 
     .pdf-header {
-      padding: 1rem 2rem;
-      background: #111;
+      padding: 1.2rem 2rem;
+      background: var(--glass);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid #222;
     }
 
     #pdf-title {
-      color: var(--gold);
       font-family: "Playfair Display", serif;
-      font-size: 1.2rem;
+      color: var(--gold);
+      font-size: 1.3rem;
     }
 
     #close-pdf {
-      background: transparent;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-    }
-
-    #close-pdf:hover {
-      background: var(--gold);
-      color: #000;
+      line-height: 1;
     }
 
     #pdf-frame {
       flex-grow: 1;
       width: 100%;
       border: none;
-      background: #fff; /* Some PDFs look better on white */
-    }
-
-    .hidden {
-      display: none !important;
-      pointer-events: none;
+      /* Using a slight brightness filter for better reading on dark theme */
+      filter: sepia(10%) contrast(110%);
     }
 
     /* --- Exit Button --- */
@@ -182,21 +209,29 @@
       position: fixed;
       bottom: 2rem;
       right: 2rem;
-      background: #111;
+      padding: 1rem 2rem;
+      background: #000;
       color: var(--gold);
-      padding: 0.8rem 1.5rem;
-      border-radius: 0.5rem;
+      border: 1px solid var(--gold);
+      border-radius: 50px;
       cursor: pointer;
-      border: 1px solid #333;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
       transition: 0.3s;
-      z-index: 100;
     }
 
     .exit:hover {
-      border-color: var(--accent-blue);
-      color: var(--accent-blue);
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
     }
 
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+      .viewer-window { width: 100%; height: 95vh; border-radius: 10px; }
+      .writing-portal { padding: 1rem; }
+    }
   </style>
 </head>
 <body>
@@ -208,74 +243,67 @@
   </nav>
 
   <main class="writing-space">
-
     <section class="collection poems active">
       <div class="item-card entry" data-pdf="How I love you.pdf">
         <h3>How I love you</h3>
-        <p>Fear that limits me.</p>
-        <span class="open-text">Read Poem</span>
+        <p>A journey through the mechanics of affection.</p>
+        <span class="open-text">Begin Reading →</span>
       </div>
-
       <div class="item-card entry" data-pdf="pdfs/poems/poem2.pdf">
-        <h3>Poem 2</h3>
-        <p>Whispers in the dark.</p>
-        <span class="open-text">Read Poem</span>
+        <h3>Second Sight</h3>
+        <p>A look at what remains when light fades.</p>
+        <span class="open-text">Begin Reading →</span>
       </div>
     </section>
 
     <section class="collection articles">
       <div class="item-card entry" data-pdf="pdfs/articles/article1.pdf">
         <h3>Growing Up</h3>
-        <p>A reflection on the passage of time and the loss of innocence.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="pdfs/articles/article2.pdf">
-        <h3>Fireworks</h3>
-        <p>Explosions of color against a canvas of void.</p>
-        <span class="open-text">Read Article</span>
+        <p>The quiet tragedy of maturing.</p>
+        <span class="open-text">Read Article →</span>
       </div>
     </section>
 
     <section class="collection books">
       <div class="item-card entry" data-pdf="pdfs/books/book1.pdf">
         <h3>Almost, Always</h3>
-        <p>A book about two people who choose each other in the wrong ways.</p>
-        <span class="open-text">Open Book</span>
+        <p>The definitive collection of unspoken words.</p>
+        <span class="open-text">Open Manuscript →</span>
       </div>
     </section>
-
   </main>
 
-  <div id="pdf-viewer" class="pdf-viewer hidden">
-    <div class="pdf-header">
-      <span id="pdf-title">Reading</span>
-      <button id="close-pdf">&times;</button>
+  <div id="pdf-viewer" class="pdf-viewer">
+    <div class="viewer-window">
+      <div class="pdf-header">
+        <span id="pdf-title">Loading...</span>
+        <button id="close-pdf">&times;</button>
+      </div>
+      <iframe id="pdf-frame" src=""></iframe>
     </div>
-    <iframe id="pdf-frame" src=""></iframe>
   </div>
 
-  <div class="exit" onclick="window.location.href='index.html'">
+  <div class="exit" onclick="alert('Returning to home...')">
     <span>Leave Quietly</span>
   </div>
 
   <script>
-    // 1. Tab Navigation Logic
+    // Tab Switching Logic
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
 
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
-        // Switch Tabs
         folders.forEach(f => f.classList.remove('active'));
         collections.forEach(c => c.classList.remove('active'));
 
         folder.classList.add('active');
-        const targetClass = folder.getAttribute('data-target');
-        document.querySelector(`.collection.${targetClass}`).classList.add('active');
+        const target = folder.getAttribute('data-target');
+        document.querySelector(`.collection.${target}`).classList.add('active');
       });
     });
 
-    // 2. PDF Viewer Logic
+    // Unique Viewer Logic
     const entries = document.querySelectorAll('.entry');
     const viewer = document.getElementById('pdf-viewer');
     const frame = document.getElementById('pdf-frame');
@@ -287,24 +315,21 @@
         const pdfFile = entry.getAttribute('data-pdf');
         const pdfName = entry.querySelector('h3').innerText;
         
-        // Update viewer content
         title.textContent = pdfName;
         frame.src = pdfFile;
         
-        // Show viewer
-        viewer.classList.remove('hidden');
-        // Prevent body scrolling while reading
-        document.body.style.overflow = 'hidden';
+        viewer.classList.add('visible');
+        document.body.style.overflow = 'hidden'; // Lock background
       });
     });
 
     closeBtn.addEventListener('click', () => {
-      viewer.classList.add('hidden');
-      frame.src = ''; // Clear source to stop loading
-      document.body.style.overflow = 'auto'; // Restore scroll
+      viewer.classList.remove('visible');
+      setTimeout(() => { frame.src = ''; }, 500); // Clear after fade out
+      document.body.style.overflow = 'auto';
     });
 
-    // Close on 'Esc' key
+    // Close on Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === "Escape") closeBtn.click();
     });
