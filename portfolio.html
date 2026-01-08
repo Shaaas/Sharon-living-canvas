@@ -1,193 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Sharon Mutanu | Portfolio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
-  <!-- Icons (Font Awesome for social links) -->
-  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
   <style>
-    body {
-      background: #111;
-      color: #d4af37;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+    body { font-family: "Inter", sans-serif; margin:0; padding:0; background:#111; color:#d4af37; }
+    main { padding:2rem; max-width:1000px; margin:auto; }
 
-    header {
-      text-align: center;
-      padding: 4rem 2rem 2rem 2rem;
-    }
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-    header p {
-      font-size: 1.2rem;
-      color: #cfd3da;
-      margin-bottom: 2rem;
-    }
-    .btn {
-      padding: 0.6rem 1.5rem;
-      background: #222;
-      color: #d4af37;
-      border: 1px solid #d4af37;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin: 0 0.5rem;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn:hover {
-      background: #d4af37;
-      color: #111;
-    }
+    h1, h2 { font-family: "Playfair Display", serif; color:#d4af37; }
+    h1 { margin-bottom:0.5rem; }
+    p { line-height:1.5; margin-bottom:1rem; color:#cfd3da; }
 
-    /* About section */
-    .about {
-      max-width: 800px;
-      margin: 0 auto 3rem auto;
-      text-align: center;
-      padding: 0 1rem;
+    /* Back button */
+    .back-btn {
+      display:inline-block;
+      margin:1rem 0;
+      padding:0.6rem 1.2rem;
+      background:#222;
+      color:#d4af37;
+      border-radius:0.5rem;
+      text-decoration:none;
+      transition:0.3s;
     }
-    .about p {
-      color: #cfd3da;
-      line-height: 1.6;
-    }
+    .back-btn:hover { background:#d4af37; color:#111; }
 
     /* Portfolio grid */
     .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:1.5rem;
+      margin-top:2rem;
     }
     .project-card {
-      background: #222;
-      border-radius: 10px;
-      padding: 1.5rem;
-      box-shadow: 0 0 10px rgba(59,108,255,0.3);
+      background:#222;
+      padding:1.2rem;
+      border-radius:10px;
+      box-shadow:0 0 10px rgba(59,108,255,0.3);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .project-card:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(59,108,255,0.6);
+      box-shadow:0 0 15px rgba(59,108,255,0.6);
     }
-    .project-card h3 {
-      margin-bottom: 0.5rem;
-      color: #d4af37;
-      font-family: 'Playfair Display', serif;
-    }
-    .project-card p {
-      font-size: 0.9rem;
-      color: #cfd3da;
-      margin-bottom: 1rem;
-    }
-    .project-card a {
-      text-decoration: none;
-      color: #3b6cff;
-      font-weight: bold;
-    }
-    .project-card a:hover {
-      text-decoration: underline;
-    }
+    .project-card h3 { margin-top:0; margin-bottom:0.5rem; }
+    .project-card p { font-size:0.9rem; margin-bottom:0.5rem; color:#cfd3da; }
+    .project-card a { text-decoration:none; color:#3b6cff; font-weight:bold; }
+    .project-card a:hover { text-decoration:underline; }
 
-    /* Social links */
+    /* Social icons */
     .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 3rem 0;
+      display:flex;
+      gap:1rem;
+      margin-top:2rem;
     }
-    .social-links a {
-      color: #d4af37;
-      font-size: 1.8rem;
-      transition: color 0.3s ease;
-    }
-    .social-links a:hover {
-      color: #3b6cff;
-    }
-
-    /* Subtle footer / back button */
-    .exit {
-      text-align: center;
-      padding: 2rem;
-    }
-    .exit a {
-      text-decoration: none;
-      color: #d4af37;
-      border-bottom: 1px dashed #d4af37;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-    .exit a:hover {
-      color: #3b6cff;
-      border-bottom-color: #3b6cff;
-    }
+    .social-links a { color:#d4af37; font-size:1.5rem; transition:0.3s; }
+    .social-links a:hover { color:#3b6cff; }
   </style>
 </head>
-
 <body>
-
-  <!-- Header / Name + Intro -->
-  <header>
+  <main>
     <h1>Sharon Mutanu</h1>
-    <p>Welcome to my portfolio. Explore my projects, writing, and services.</p>
-    <a href="hub.html" class="btn">Enter Hub</a>
-    <a href="#portfolio" class="btn">See Portfolio</a>
-  </header>
+    <p>Hi! I’m Sharon — a creative technologist and writer. I build websites, craft digital experiences, and create worlds with words and code. Below are a few projects I’ve built for clients and personal work.</p>
 
-  <!-- About Me -->
-  <section class="about">
-    <p>
-      I am a creative writer and web developer, blending words and code to craft engaging experiences. 
-      I build digital worlds, tell stories, and offer services to help others present their ideas online.
-    </p>
-  </section>
+    <a href="index.html" class="back-btn">← Back to Landing Page</a>
 
-  <!-- Portfolio / Services -->
-  <section id="portfolio" class="portfolio-grid">
-    <div class="project-card">
-      <h3>Project One</h3>
-      <p>Brief description of the project or service offered.</p>
-      <a href="#" target="_blank">View Project</a>
+    <h2>Portfolio</h2>
+    <section class="portfolio-grid">
+      <div class="project-card">
+        <h3>Chic Fashion House</h3>
+        <p>A stylish e-commerce site showcasing clothing collections.</p>
+        <a href="https://chicfashionhouse.netlify.app/" target="_blank">View Project</a>
+      </div>
+      <div class="project-card">
+        <h3>Velora Airlines</h3>
+        <p>A travel booking experience for a fictional airline project.</p>
+        <a href="https://veloraairlines.netlify.app/" target="_blank">View Project</a>
+      </div>
+      <div class="project-card">
+        <h3>La Belle Cuisine</h3>
+        <p>A culinary website presenting recipes and restaurant menus.</p>
+        <a href="https://labellecuisine.netlify.app/" target="_blank">View Project</a>
+      </div>
+      <div class="project-card">
+        <h3>Shatanu</h3>
+        <p>A personal portfolio site showcasing a creative’s work online.</p>
+        <a href="https://shatanu.netlify.app/" target="_blank">View Project</a>
+      </div>
+    </section>
+
+    <h2>Connect with me</h2>
+    <div class="social-links">
+      <a href="https://twitter.com/yourusername" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://linkedin.com/in/yourusername" target="_blank"><i class="fab fa-linkedin"></i></a>
+      <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:youremail@example.com" target="_blank"><i class="fas fa-envelope"></i></a>
     </div>
-    <div class="project-card">
-      <h3>Project Two</h3>
-      <p>Brief description of the project or service offered.</p>
-      <a href="#" target="_blank">View Project</a>
-    </div>
-    <div class="project-card">
-      <h3>Project Three</h3>
-      <p>Brief description of the project or service offered.</p>
-      <a href="#" target="_blank">View Project</a>
-    </div>
-  </section>
 
-  <!-- Social links -->
-  <section class="social-links">
-    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-    <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
-    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-    <a href="mailto:sharon@example.com"><i class="fas fa-envelope"></i></a>
-  </section>
-
-  <!-- Subtle Back to Landing Page -->
-  <div class="exit">
-    <a href="index.html">Back to Landing Page</a>
-  </div>
-
+  </main>
 </body>
 </html>
