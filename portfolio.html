@@ -5,111 +5,194 @@
   <title>Sharon Mutanu | Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
   <style>
-    body { font-family: "Inter", sans-serif; margin:0; padding:0; background:#111; color:#d4af37; }
-    main { padding:2rem; max-width:1000px; margin:auto; }
+    /* --- THEME SYNC --- */
+    body { 
+      font-family: "Inter", sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: #0a0a0a; 
+      color: #d4af37; 
+      overflow-x: hidden;
+    }
 
-    h1, h2 { font-family: "Playfair Display", serif; color:#d4af37; }
-    h1 { margin-bottom:0.5rem; }
-    p { line-height:1.5; margin-bottom:1rem; color:#cfd3da; }
+    /* Keep the floating thingys in the background */
+    canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
-    /* Back button */
+    main { 
+      padding: 4rem 2rem; 
+      max-width: 1100px; 
+      margin: auto; 
+      position: relative; 
+      z-index: 1; 
+    }
+
+    h1, h2 { font-family: "Playfair Display", serif; color: #d4af37; }
+    h1 { font-size: 3rem; margin-bottom: 0.5rem; letter-spacing: -1px; }
+    
+    .intro-text { 
+      font-size: 1.1rem; 
+      line-height: 1.8; 
+      margin-bottom: 2rem; 
+      color: #cfd3da; 
+      max-width: 700px;
+    }
+
+    /* Back Button - Pill Style */
     .back-btn {
-      display:inline-block;
-      margin:1rem 0;
-      padding:0.6rem 1.2rem;
-      background:#222;
-      color:#d4af37;
-      border-radius:0.5rem;
-      text-decoration:none;
-      transition:0.3s;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding: 0.7rem 1.5rem;
+      background: transparent;
+      color: #d4af37;
+      border: 1px solid #d4af37;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    .back-btn:hover { background:#d4af37; color:#111; }
+    .back-btn:hover { background: #d4af37; color: #111; box-shadow: 0 0 15px #d4af37; }
 
-    /* Portfolio grid */
+    /* Portfolio Grid */
     .portfolio-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-      gap:1.5rem;
-      margin-top:2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
     }
-    .project-card {
-      background:#222;
-      padding:1.2rem;
-      border-radius:10px;
-      box-shadow:0 0 10px rgba(59,108,255,0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .project-card:hover {
-      transform: scale(1.05);
-      box-shadow:0 0 15px rgba(59,108,255,0.6);
-    }
-    .project-card h3 { margin-top:0; margin-bottom:0.5rem; }
-    .project-card p { font-size:0.9rem; margin-bottom:0.5rem; color:#cfd3da; }
-    .project-card a { text-decoration:none; color:#3b6cff; font-weight:bold; }
-    .project-card a:hover { text-decoration:underline; }
 
-    /* Social icons */
-    .social-links {
-      display:flex;
-      gap:1rem;
-      margin-top:2rem;
+    .project-card {
+      background: rgba(25, 25, 25, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 15px;
+      border: 1px solid #222;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
     }
-    .social-links a { color:#d4af37; font-size:1.5rem; transition:0.3s; }
-    .social-links a:hover { color:#3b6cff; }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      border-color: #d4af37;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .project-card h3 { margin: 0 0 1rem; font-size: 1.4rem; }
+    .project-card p { font-size: 0.95rem; line-height: 1.6; color: #a0a0a0; flex-grow: 1; }
+
+    /* Skill Tags */
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+    .tag { 
+      font-size: 0.7rem; 
+      background: rgba(212, 175, 55, 0.1); 
+      color: #d4af37; 
+      padding: 4px 10px; 
+      border-radius: 4px; 
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+
+    .view-link { 
+      text-decoration: none; 
+      color: #fff; 
+      font-weight: bold; 
+      font-size: 0.85rem; 
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 2px solid #d4af37;
+      align-self: flex-start;
+      padding-bottom: 2px;
+      transition: 0.3s;
+    }
+    .view-link:hover { color: #d4af37; border-color: #fff; }
+
+    /* Footer / Socials */
+    .footer {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid #222;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .social-links { display: flex; gap: 1.5rem; }
+    .social-links a { color: #d4af37; font-size: 1.5rem; transition: 0.3s; }
+    .social-links a:hover { transform: translateY(-5px); color: #fff; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.2rem; }
+      .footer { flex-direction: column; gap: 2rem; text-align: center; }
+    }
   </style>
 </head>
 <body>
+
   <main>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> &nbsp; Home</a>
+
     <h1>Sharon Mutanu</h1>
-    <p>Hi! I’m Sharon. A creative technologist and writer. I build websites, craft digital experiences, and create worlds with words and code. Below are a few projects I’ve built for clients and personal work.</p>
+    <p class="intro-text">
+      Creative Technologist & Writer. I bridge the gap between aesthetic design and functional code, 
+      crafting digital environments that tell a story.
+    </p>
 
-    <a href="index.html" class="back-btn">← Back to Landing Page</a>
-
-    <h2>Portfolio</h2>
-    <section class="portfolio-grid">
+    <div class="portfolio-grid">
       <div class="project-card">
         <h3>Chic Fashion House</h3>
-        <p>A stylish e-commerce site showcasing clothing collections.</p>
-        <a href="https://chicfashionhouse.netlify.app/" target="_blank">View Project</a>
+        <div class="tags"><span class="tag">E-Commerce</span><span class="tag">UI/UX</span></div>
+        <p>A stylish e-commerce platform built for high-end clothing collections, focusing on visual storytelling.</p>
+        <a href="https://chicfashionhouse.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
+
       <div class="project-card">
         <h3>Velora Airlines</h3>
-        <p>A travel booking experience for a fictional airline project.</p>
-        <a href="https://veloraairlines.netlify.app/" target="_blank">View Project</a>
+        <div class="tags"><span class="tag">Booking System</span><span class="tag">Javascript</span></div>
+        <p>A complex booking interface designed for a fictional airline, emphasizing user flow and speed.</p>
+        <a href="https://veloraairlines.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
+
       <div class="project-card">
         <h3>La Belle Cuisine</h3>
-        <p>A culinary website presenting recipes and restaurant menus.</p>
-        <a href="https://labellecuisine.netlify.app/" target="_blank">View Project</a>
+        <div class="tags"><span class="tag">Culinary</span><span class="tag">Responsive</span></div>
+        <p>A recipe and menu showcase featuring clean typography and appetizing layout structures.</p>
+        <a href="https://labellecuisine.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
-      <div class="project-card">
-        <h3>Shatanu</h3>
-        <p>A personal portfolio site showcasing a creative’s work online.</p>
-        <a href="https://shatanu.netlify.app/" target="_blank">View Project</a>
-      </div>
-       <div class="project-card">
-        <h3>Luxeestates</h3>
-        <p>A real estate website.</p>
-        <a href="https://luxeestates.netlify.app/" target="_blank">View Project</a>
-      </div>
-      <div class="project-card">
-        <h3>Velora| Saas Analytics Dashboard</h3>
-        <p>website.</p>
-        <a href="https://velora-saas-analytics-dashboard.netlify.app/" target="_blank">View Project</a>
-      </div>
-    </section>
 
-    <h2>Connect with me</h2>
-    <div class="social-links">
-      <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank"><i class="fab fa-linkedin"></i></a>
-      <a href="mutanu.sharon@yahoo.com" target="_blank"><i class="fas fa-envelope"></i></a>
+      <div class="project-card">
+        <h3>Luxeestates</h3>
+        <div class="tags"><span class="tag">Real Estate</span><span class="tag">Premium UI</span></div>
+        <p>High-end real estate listing site with a focus on luxury properties and interactive galleries.</p>
+        <a href="https://luxeestates.netlify.app/" class="view-link" target="_blank">Explore Site</a>
+      </div>
+
+      <div class="project-card">
+        <h3>Velora Analytics</h3>
+        <div class="tags"><span class="tag">SaaS</span><span class="tag">Dashboard</span></div>
+        <p>A modern analytics dashboard for SaaS products, visualizing data in a clean, dark-mode interface.</p>
+        <a href="https://velora-saas-analytics-dashboard.netlify.app/" class="view-link" target="_blank">Explore Site</a>
+      </div>
     </div>
 
+    <footer class="footer">
+      <p>© 2026 Sharon Mutanu</p>
+      <div class="social-links">
+        <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:mutanu.sharon@yahoo.com"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.instagram.com/sha.ta.nu" target="_blank"><i class="fab fa-instagram"></i></a>
+      </div>
+    </footer>
   </main>
+
+  <script src="sketch.js"></script>
 </body>
 </html>
