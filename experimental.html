@@ -2,178 +2,312 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Experimental Portal | Sharon Mutanu</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Experimental Portal | Sharon Mutanu</title>
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   
   <style>
-    /* --- THEME COLORS --- */
     :root {
       --gold: #d4af37;
       --bg: #0a0a0a;
       --panel: #111;
-      --accent: #3b6cff;
+      --glass: rgba(255, 255, 255, 0.03);
     }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background: var(--bg);
       color: #cfd3da;
-      display: flex;
-      flex-direction: column;
-      height: 100vh; /* Lock height to screen */
-      overflow: hidden; /* Prevent body scroll */
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* --- TOP NAVIGATION --- */
+    /* --- HEADER --- */
     header {
-      padding: 1rem 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--panel);
       border-bottom: 1px solid #222;
-      z-index: 10;
+      background: var(--panel);
     }
 
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.5rem;
       margin: 0;
       color: var(--gold);
       letter-spacing: 1px;
     }
 
-    .back-link {
-      padding: 0.6rem 1.2rem;
-      background: transparent;
+    .back-btn {
       color: var(--gold);
       text-decoration: none;
-      border: 1px solid var(--gold);
-      border-radius: 30px;
       font-size: 0.8rem;
       font-weight: bold;
+      border: 1px solid var(--gold);
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--gold);
+      color: #000;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    /* --- GALLERY --- */
+    .portal-intro {
+      text-align: center;
+      padding: 4rem 1rem 1rem;
+    }
+
+    .portal-intro h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .portal-intro p {
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.8rem;
+    }
+
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+      padding: 3rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px dashed #333;
+      padding: 3rem 2rem;
+      border-radius: 20px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+    }
+
+    .card:hover {
+      border-style: solid;
+      border-color: var(--gold);
+      transform: translateY(-10px);
+      background: #161616;
+    }
+
+    .card h3 {
+      font-family: 'Playfair Display', serif;
+      color: var(--gold);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .card p {
+      line-height: 1.6;
+      color: #a0a0a0;
+      margin-bottom: 2rem;
+    }
+
+    .launch-trigger {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 12px 30px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
       transition: 0.3s;
     }
 
-    .back-link:hover {
+    .launch-trigger:hover {
       background: var(--gold);
       color: #000;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
     }
 
-    /* --- GAME THEATER AREA --- */
-    .viewport-container {
-      flex: 1;
-      display: flex;
+    /* --- THEATER MODE --- */
+    #theater {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 2000;
       flex-direction: column;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(1.05); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .theater-controls {
+      background: #111;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #222;
+    }
+
+    .theater-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .control-btn {
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      font-size: 0.75rem;
+    }
+
+    .fullscreen-btn { background: #333; color: white; }
+    .close-btn { background: #800000; color: white; }
+
+    .iframe-container {
+      flex-grow: 1;
+      position: relative;
+      display: flex;
       justify-content: center;
       align-items: center;
-      padding: 1rem;
-      background: #000; /* Darker focus for the game */
-    }
-
-    .iframe-wrapper {
-      width: 100%;
-      max-width: 1100px;
-      height: 80vh;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-      position: relative;
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
     }
 
-    /* --- EXPERIMENT SELECTOR (For your future items) --- */
-    .experiment-nav {
-      background: var(--panel);
-      padding: 0.8rem;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      border-top: 1px solid #222;
+    /* Loading Spinner */
+    .loader {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border: 3px solid #333;
+      border-top: 3px solid var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
     }
 
-    .exp-tab {
-      font-size: 0.75rem;
-      color: #666;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      cursor: pointer;
-      padding: 5px 10px;
-      border-bottom: 2px solid transparent;
-      transition: 0.3s;
-    }
-
-    .exp-tab.active {
-      color: var(--gold);
-      border-bottom: 2px solid var(--gold);
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     footer {
       text-align: center;
-      padding: 0.5rem;
-      background: #000;
+      padding: 3rem;
       color: #444;
-      font-size: 0.7rem;
-    }
-
-    /* Loading indicator overlay */
-    .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: var(--gold);
-      font-family: 'Playfair Display', serif;
-      z-index: -1;
+      font-size: 0.8rem;
+      border-top: 1px solid #111;
+      margin-top: 4rem;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Experimental Portal / <span id="current-title">Platformer</span></h1>
-    <a href="hub.html" class="back-link">← Return to Hub</a>
+    <h1>Experimental Portal</h1>
+    <a href="hub.html" class="back-btn">← Back to Hub</a>
   </header>
 
-  <div class="viewport-container">
-    <div class="iframe-wrapper">
-      <div class="loader">Initializing System...</div>
-      <iframe src="https://shaaas.github.io/platformer/" id="main-frame" title="Experimental Game"></iframe>
+  <div class="portal-intro">
+    <p>The Sandbox</p>
+    <h2>Creative Logic & Play</h2>
+  </div>
+
+  <main id="gallery">
+    <div class="card">
+      <h3>01. Platformer</h3>
+      <p>A survival-based web game testing collision logic and physics. Built with Vanilla JavaScript and HTML5 Canvas.</p>
+      <button class="launch-trigger" onclick="openExperiment('https://shaaas.github.io/platformer/', 'Platformer')">Launch Project</button>
+    </div>
+
+    <div class="card" style="opacity: 0.4; cursor: default;">
+      <h3>02. Neural Prose</h3>
+      <p>An upcoming experiment in generative text and AI-driven narrative structures.</p>
+      <button class="launch-trigger" style="border-color:#444; color:#444; cursor:default;">Coming Soon</button>
+    </div>
+  </main>
+
+  <div id="theater">
+    <div class="theater-controls">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span id="theater-title" style="color: var(--gold); font-weight: bold; letter-spacing: 1px;">Experience</span>
+      </div>
+      <div class="theater-btns">
+        <button class="control-btn fullscreen-btn" onclick="toggleFullScreen()">Full Screen</button>
+        <button class="control-btn close-btn" onclick="closeExperiment()">Exit Project</button>
+      </div>
+    </div>
+    <div class="iframe-container">
+      <div class="loader" id="loader"></div>
+      <iframe id="theater-frame" src="" onload="hideLoader()"></iframe>
     </div>
   </div>
 
-  <nav class="experiment-nav">
-    <div class="exp-tab active" onclick="loadExperiment('https://shaaas.github.io/platformer/', 'Platformer', this)">01. Platformer</div>
-    <div class="exp-tab" style="opacity: 0.3;">02. Coming Soon</div>
-    <div class="exp-tab" style="opacity: 0.3;">03. Coming Soon</div>
-  </nav>
-
   <footer>
-    &copy; 2026 Sharon Mutanu — Experimental Lab v1.0
+    &copy; 2026 Sharon Mutanu — Built at the intersection of Code & Story.
   </footer>
 
   <script>
-    function loadExperiment(url, title, element) {
-      // 1. Change the iframe source
-      document.getElementById('main-frame').src = url;
-      
-      // 2. Update the header title
-      document.getElementById('current-title').innerText = title;
-      
-      // 3. Update active tab styling
-      document.querySelectorAll('.exp-tab').forEach(tab => tab.classList.remove('active'));
-      element.classList.add('active');
+    const theater = document.getElementById('theater');
+    const frame = document.getElementById('theater-frame');
+    const title = document.getElementById('theater-title');
+    const loader = document.getElementById('loader');
+
+    function openExperiment(url, expTitle) {
+      loader.style.display = 'block';
+      frame.src = url;
+      title.innerText = expTitle;
+      theater.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeExperiment() {
+      theater.style.display = 'none';
+      frame.src = '';
+      document.body.style.overflow = 'auto';
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    }
+
+    function hideLoader() {
+      loader.style.display = 'none';
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        theater.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
     }
   </script>
 
