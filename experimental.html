@@ -2,91 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Experimental Portal</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <title>Experimental Portal | Sharon Mutanu</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  
   <style>
+    /* --- THEME COLORS --- */
+    :root {
+      --gold: #d4af37;
+      --bg: #0a0a0a;
+      --panel: #111;
+      --accent: #3b6cff;
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: #111;
-      color: #d4af37;
+      background: var(--bg);
+      color: #cfd3da;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh; /* Lock height to screen */
+      overflow: hidden; /* Prevent body scroll */
     }
 
+    /* --- TOP NAVIGATION --- */
     header {
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #222;
+      background: var(--panel);
+      border-bottom: 1px solid #222;
+      z-index: 10;
     }
 
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       margin: 0;
-      color: #d4af37;
+      color: var(--gold);
+      letter-spacing: 1px;
     }
 
-    header a {
-      padding: 0.5rem 1rem;
-      background: #d4af37;
-      color: #111;
+    .back-link {
+      padding: 0.6rem 1.2rem;
+      background: transparent;
+      color: var(--gold);
       text-decoration: none;
-      border-radius: 6px;
+      border: 1px solid var(--gold);
+      border-radius: 30px;
+      font-size: 0.8rem;
       font-weight: bold;
       transition: 0.3s;
     }
 
-    header a:hover {
-      background: #3b6cff;
-      color: #fff;
+    .back-link:hover {
+      background: var(--gold);
+      color: #000;
     }
 
-    .game-container {
+    /* --- GAME THEATER AREA --- */
+    .viewport-container {
       flex: 1;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 2rem;
+      padding: 1rem;
+      background: #000; /* Darker focus for the game */
     }
 
-    .game-container iframe {
+    .iframe-wrapper {
       width: 100%;
-      max-width: 1200px;
-      height: 700px;
-      border: 4px solid #d4af37;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+      max-width: 1100px;
+      height: 80vh;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* --- EXPERIMENT SELECTOR (For your future items) --- */
+    .experiment-nav {
+      background: var(--panel);
+      padding: 0.8rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      border-top: 1px solid #222;
+    }
+
+    .exp-tab {
+      font-size: 0.75rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-bottom: 2px solid transparent;
+      transition: 0.3s;
+    }
+
+    .exp-tab.active {
+      color: var(--gold);
+      border-bottom: 2px solid var(--gold);
     }
 
     footer {
       text-align: center;
-      padding: 1rem;
-      background: #222;
-      color: #d4af37;
-      font-size: 0.9rem;
+      padding: 0.5rem;
+      background: #000;
+      color: #444;
+      font-size: 0.7rem;
+    }
+
+    /* Loading indicator overlay */
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      z-index: -1;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>Experimental Portal</h1>
-    <a href="hub.html">Back to Hub</a>
+    <h1>Experimental Portal / <span id="current-title">Platformer</span></h1>
+    <a href="hub.html" class="back-link">← Return to Hub</a>
   </header>
 
-  <div class="game-container">
-    <!-- Embed your web game here -->
-    <iframe src="https://shaaas.github.io/platformer/" title="Experimental Game"></iframe>
+  <div class="viewport-container">
+    <div class="iframe-wrapper">
+      <div class="loader">Initializing System...</div>
+      <iframe src="https://shaaas.github.io/platformer/" id="main-frame" title="Experimental Game"></iframe>
+    </div>
   </div>
 
+  <nav class="experiment-nav">
+    <div class="exp-tab active" onclick="loadExperiment('https://shaaas.github.io/platformer/', 'Platformer', this)">01. Platformer</div>
+    <div class="exp-tab" style="opacity: 0.3;">02. Coming Soon</div>
+    <div class="exp-tab" style="opacity: 0.3;">03. Coming Soon</div>
+  </nav>
+
   <footer>
-    &copy; 2026 Sharon Mutanu – All Rights Reserved
+    &copy; 2026 Sharon Mutanu — Experimental Lab v1.0
   </footer>
+
+  <script>
+    function loadExperiment(url, title, element) {
+      // 1. Change the iframe source
+      document.getElementById('main-frame').src = url;
+      
+      // 2. Update the header title
+      document.getElementById('current-title').innerText = title;
+      
+      // 3. Update active tab styling
+      document.querySelectorAll('.exp-tab').forEach(tab => tab.classList.remove('active'));
+      element.classList.add('active');
+    }
+  </script>
 
 </body>
 </html>
