@@ -2,166 +2,260 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>The Hub</title>
-   <style> 
+  <title>The Hub | Sharon Mutanu</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <style> 
     :root { 
-      --black: #0b0b0f; 
+      --black: #050507; 
       --gold: #d4af37; 
       --silver: #cfd3da; 
       --electric-blue: #3b6cff; 
-    } 
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    } 
-    body { 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
-      background: var(--black); 
-      color: var(--silver); 
-    } 
-    .hub { 
-      text-align: center; 
-      padding: 2rem 1rem; 
-    } 
-    .hub-title { 
-      font-size: 2.5rem; 
-      color: var(--gold); 
-      margin-bottom: 2rem; 
-      font-family: "Playfair Display", serif; 
-    } 
-    .portals-links { 
-      margin-bottom: 3rem; 
-    } 
-    .portal-link { 
-      color: var(--silver); 
-      text-decoration: none; 
-      margin: 0 1rem; 
-      font-weight: bold; 
-      transition: color 0.3s ease; 
-    } 
-    .portal-link:hover { 
-      color: var(--electric-blue); 
-    } 
-    .hub-portals { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-      gap: 2rem;
-      padding: 0 2rem 4rem 2rem; 
-      justify-items: center; 
-    } 
-    .portal { 
-      background: #111; 
-      border-radius: 1rem; 
-      overflow: hidden; 
-      text-align: center; 
-      padding: 1rem; 
-      position: relative; 
-      transition: transform 0.5s ease, box-shadow 0.5s ease; 
-      cursor: pointer; 
-      width: 250px; 
-    } 
-    .portal img { 
-      width: 100%; 
-      height: 180px; 
-      object-fit: cover; 
-      border-radius: 0.8rem; 
-      margin-bottom: 1rem; 
-      transition: transform 0.5s ease, box-shadow 0.5s ease; 
-    } 
-    .portal:hover { 
-      transform: scale(1.05) translateY(-5px); 
-      box-shadow: 0 0 20px 5px var(--electric-blue); 
-    } 
-    .portal:hover img { 
-      transform: scale(1.08) 
-      box-shadow: 0 0 20px 5px rgba(59,108,255,0.4); 
-    } 
-    .portal h2 { 
-      color: var(--gold); 
-      margin-bottom: 0.5rem; 
-    } 
-    .portal p { 
-      color: var(--silver); 
-      font-size: 0.9rem; 
-      line-height: 1.3; 
-    } 
-    .exit { 
-      position: fixed; 
-      bottom: 2rem; 
-      right: 2rem; 
-      background: #111; 
-      color: var(--gold); 
-      padding: 0.8rem 1.5rem; 
-      border-radius: 0.5rem; 
-      cursor: pointer; 
-      text-align: center; 
-      transition: background 0.3s ease, color 0.3s ease; 
-      z-index: 10; 
-    } 
-    .exit span { 
-      transition: all 0.4s ease; 
-    } 
-    .exit:hover { 
-      background: #000; 
-    } 
-    .exit:hover span { 
-      color: var(--electric-blue); 
-      text-shadow: 0 0 8px var(--electric-blue); 
+      --glass: rgba(255, 255, 255, 0.03);
     } 
 
+    * { margin: 0; padding: 0; box-sizing: border-box; } 
+
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: var(--black); 
+      color: var(--silver); 
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    } 
+
+    /* --- AMBIENT BACKGROUND PARTICLES --- */
+    .bg-ambient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: float 20s infinite alternate;
+    }
+
+    .orb-1 {
+      width: 400px; height: 400px;
+      background: var(--gold);
+      top: -10%; left: -10%;
+    }
+
+    .orb-2 {
+      width: 300px; height: 300px;
+      background: var(--electric-blue);
+      bottom: 10%; right: -5%;
+      animation-duration: 15s;
+    }
+
+    @keyframes float {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(100px, 50px) scale(1.2); }
+    }
+
+    /* --- HUB CONTENT --- */
+    .hub-header { 
+      text-align: center; 
+      padding: 5rem 1rem 3rem; 
+      animation: fadeIn 1.5s ease;
+    } 
+
+    .hub-title { 
+      font-size: clamp(2.5rem, 6vw, 3.5rem); 
+      color: var(--gold); 
+      font-family: "Playfair Display", serif; 
+      letter-spacing: -1px;
+    } 
+
+    .hub-subtitle {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      color: #555;
+      margin-top: 10px;
+    }
+
+    .hub-portals { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 2.5rem;
+      padding: 0 8% 8rem; 
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    } 
+
+    .portal { 
+      background: var(--glass); 
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 2rem; 
+      padding: 1.5rem; 
+      position: relative; 
+      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+      cursor: pointer; 
+      text-align: center;
+      backdrop-filter: blur(15px);
+    } 
+
+    .portal img { 
+      width: 100%; 
+      height: 220px; 
+      object-fit: cover; 
+      border-radius: 1.2rem; 
+      margin-bottom: 1.5rem; 
+      transition: 0.6s ease;
+      filter: saturate(0.5) brightness(0.8);
+    } 
+
+    .portal:hover { 
+      transform: translateY(-20px) scale(1.02); 
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.03);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+    } 
+
+    .portal:hover img { 
+      filter: saturate(1) brightness(1.1);
+    } 
+
+    .portal h2 { 
+      color: var(--gold); 
+      font-family: "Playfair Display", serif;
+      margin-bottom: 10px; 
+      font-size: 1.8rem;
+    } 
+
+    .portal p { 
+      color: #999; 
+      font-size: 0.95rem; 
+      line-height: 1.6; 
+      padding: 0 10px;
+    }
+
+    /* Entry Indicator */
+    .portal .btn-enter {
+      margin-top: 20px;
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: 0.4s;
+    }
+
+    .portal:hover .btn-enter {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .exit { 
+      position: fixed; 
+      bottom: 2.5rem; 
+      right: 2.5rem; 
+      background: rgba(255, 255, 255, 0.05); 
+      color: var(--gold); 
+      padding: 1rem 2rem; 
+      border-radius: 100px; 
+      cursor: pointer; 
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      backdrop-filter: blur(10px);
+      transition: 0.3s; 
+      z-index: 100; 
+    } 
+
+    .exit:hover { 
+      background: var(--gold);
+      color: #000;
+      transform: scale(1.05);
+    } 
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style> 
 </head>
 <body>
 
-  <!-- Hub header -->
-  <div class="hub">
-    <h2 class="hub-title">Choose a world</h2>
+  <div class="bg-ambient">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
   </div>
 
-  <!-- Main portals section -->
+  <header class="hub-header">
+    <h1 class="hub-title">Select a Realm</h1>
+    <p class="hub-subtitle">Sharon Mutanu — Digital Archive</p>
+  </header>
+
   <section class="hub-portals">
 
     <div class="portal" data-target="writing.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/writing.png" alt="writing">
-      <h2>Writing</h2>
-      <p>Enter my worlds of poetry and stories.</p>
+      <h2>The Library</h2>
+      <p>Where thoughts take shape as ink. Explore poetry and narrative prose.</p>
+      <span class="btn-enter">OPEN ARCHIVE</span>
     </div>
 
     <div class="portal" data-target="music.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/music.png" alt="music">
-      <h2>Music</h2>
-      <p>Experience sounds and rhythms I love.</p>
+      <h2>The Echo</h2>
+      <p>Spoken word and rhythmic compositions designed to be heard.</p>
+      <span class="btn-enter">LISTEN NOW</span>
     </div>
 
     <div class="portal" data-target="experimental.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/experimental.png" alt="experimental">
-      <h2>Experimental</h2>
-      <p>Interactive surprises and playful chaos.</p>
+      <h2>The Lab</h2>
+      <p>Code-based interactions, games, and playful digital chaos.</p>
+      <span class="btn-enter">LAUNCH DEMO</span>
     </div>
 
   </section>
 
-  <!-- Exit button -->
-  <div class="exit">
-    <span>Leave Quietly</span>
+  <div class="exit" onclick="window.location.href='index.html'">
+    Leave Quietly
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Make portals clickable
     const portals = document.querySelectorAll('.portal');
-    portals.forEach(portal => {
+    
+    portals.forEach((portal, index) => {
+      // Staggered entry
+      portal.style.opacity = "0";
+      portal.style.transform = "translateY(30px)";
+      
+      setTimeout(() => {
+        portal.style.transition = "all 0.8s cubic-bezier(0.2, 1, 0.3, 1)";
+        portal.style.opacity = "1";
+        portal.style.transform = "translateY(0)";
+      }, 150 * index);
+
+      // Smooth Navigation
       portal.addEventListener('click', () => {
         const target = portal.getAttribute('data-target');
-        if (target) window.location.href = target;
+        document.body.style.opacity = "0";
+        document.body.style.transition = "0.8s";
+        setTimeout(() => {
+          if (target) window.location.href = target;
+        }, 600);
       });
-    });
-
-    // Exit button functionality
-    const exit = document.querySelector('.exit');
-    exit.addEventListener('click', () => {
-      window.location.href = 'index.html';
     });
   </script>
 
