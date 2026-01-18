@@ -15,7 +15,7 @@
       --glass: rgba(255, 255, 255, 0.03);
     } 
 
-    * { margin: 0; padding: 0; box-sizing: border-box; } 
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; } 
 
     body { 
       font-family: 'Inter', sans-serif; 
@@ -27,70 +27,78 @@
       flex-direction: column;
     } 
 
-    /* --- AMBIENT BACKGROUND PARTICLES --- */
-    .bg-ambient {
+    /* --- GRAIN OVERLAY --- */
+    body::after {
+      content: "";
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Grain.png');
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 9999;
     }
 
+    /* --- CUSTOM CURSOR --- */
+    #cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.1s ease;
+    }
+    #cursor-follower {
+      position: fixed;
+      width: 30px; height: 30px;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, width 0.3s, height 0.3s;
+    }
+
+    /* --- AMBIENT BACKGROUND --- */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+    }
     .orb {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.15;
-      animation: float 20s infinite alternate;
+      filter: blur(100px);
+      opacity: 0.12;
+      animation: float 25s infinite alternate;
     }
-
-    .orb-1 {
-      width: 400px; height: 400px;
-      background: var(--gold);
-      top: -10%; left: -10%;
-    }
-
-    .orb-2 {
-      width: 300px; height: 300px;
-      background: var(--electric-blue);
-      bottom: 10%; right: -5%;
-      animation-duration: 15s;
-    }
+    .orb-1 { width: 500px; height: 500px; background: var(--gold); top: -10%; left: -10%; }
+    .orb-2 { width: 400px; height: 400px; background: var(--electric-blue); bottom: 5%; right: 5%; animation-delay: -5s; }
 
     @keyframes float {
-      from { transform: translate(0, 0) scale(1); }
-      to { transform: translate(100px, 50px) scale(1.2); }
+      from { transform: translate(0, 0); }
+      to { transform: translate(8vw, 5vh); }
     }
 
-    /* --- HUB CONTENT --- */
+    /* --- HEADER --- */
     .hub-header { 
       text-align: center; 
-      padding: 5rem 1rem 3rem; 
-      animation: fadeIn 1.5s ease;
+      padding: 6rem 1rem 3rem; 
+      animation: fadeIn 2s ease;
     } 
-
     .hub-title { 
-      font-size: clamp(2.5rem, 6vw, 3.5rem); 
+      font-size: clamp(2.5rem, 6vw, 4rem); 
       color: var(--gold); 
       font-family: "Playfair Display", serif; 
-      letter-spacing: -1px;
+      font-weight: 700;
     } 
 
-    .hub-subtitle {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 5px;
-      color: #555;
-      margin-top: 10px;
-    }
-
+    /* --- PORTALS --- */
     .hub-portals { 
       display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-      gap: 2.5rem;
-      padding: 0 8% 8rem; 
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+      gap: 3rem;
+      padding: 0 10% 8rem; 
       max-width: 1400px;
       margin: 0 auto;
       width: 100%;
@@ -99,100 +107,68 @@
     .portal { 
       background: var(--glass); 
       border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 2rem; 
-      padding: 1.5rem; 
+      border-radius: 24px; 
+      padding: 2rem; 
       position: relative; 
-      transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
-      cursor: pointer; 
-      text-align: center;
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); 
       backdrop-filter: blur(15px);
+      overflow: hidden;
     } 
 
     .portal img { 
-      width: 100%; 
-      height: 220px; 
+      width: 100%; height: 240px; 
       object-fit: cover; 
-      border-radius: 1.2rem; 
+      border-radius: 16px; 
       margin-bottom: 1.5rem; 
-      transition: 0.6s ease;
-      filter: saturate(0.5) brightness(0.8);
+      transition: 0.8s ease;
+      filter: saturate(0) brightness(0.6);
     } 
 
     .portal:hover { 
-      transform: translateY(-20px) scale(1.02); 
+      transform: translateY(-20px); 
       border-color: var(--gold);
-      background: rgba(212, 175, 55, 0.03);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+      background: rgba(212, 175, 55, 0.05);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.9);
     } 
 
     .portal:hover img { 
-      filter: saturate(1) brightness(1.1);
+      filter: saturate(1) brightness(1);
+      transform: scale(1.05);
     } 
 
     .portal h2 { 
       color: var(--gold); 
       font-family: "Playfair Display", serif;
-      margin-bottom: 10px; 
-      font-size: 1.8rem;
+      font-size: 2rem;
+      margin-bottom: 12px;
     } 
 
-    .portal p { 
-      color: #999; 
-      font-size: 0.95rem; 
-      line-height: 1.6; 
-      padding: 0 10px;
-    }
-
-    /* Entry Indicator */
-    .portal .btn-enter {
-      margin-top: 20px;
-      display: inline-block;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--gold);
-      opacity: 0;
-      transform: translateY(10px);
-      transition: 0.4s;
-    }
-
-    .portal:hover .btn-enter {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .portal p { color: #888; font-size: 0.95rem; line-height: 1.6; transition: 0.3s; }
+    .portal:hover p { color: var(--silver); }
 
     .exit { 
-      position: fixed; 
-      bottom: 2.5rem; 
-      right: 2.5rem; 
-      background: rgba(255, 255, 255, 0.05); 
-      color: var(--gold); 
-      padding: 1rem 2rem; 
-      border-radius: 100px; 
-      cursor: pointer; 
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      backdrop-filter: blur(10px);
-      transition: 0.3s; 
-      z-index: 100; 
+      position: fixed; bottom: 3rem; right: 3rem; 
+      color: var(--gold); padding: 1rem 2rem; 
+      border-radius: 100px; border: 1px solid rgba(212, 175, 55, 0.2);
+      font-weight: 600; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 3px; backdrop-filter: blur(10px);
+      transition: 0.4s; z-index: 100; 
     } 
+    .exit:hover { background: var(--gold); color: #000; letter-spacing: 5px; }
 
-    .exit:hover { 
-      background: var(--gold);
-      color: #000;
-      transform: scale(1.05);
-    } 
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* Hide custom cursor on mobile */
+    @media (max-width: 1024px) {
+      #cursor, #cursor-follower { display: none; }
+      * { cursor: auto; }
     }
   </style> 
 </head>
 <body>
+
+  <div id="cursor"></div>
+  <div id="cursor-follower"></div>
 
   <div class="bg-ambient">
     <div class="orb orb-1"></div>
@@ -200,61 +176,79 @@
   </div>
 
   <header class="hub-header">
-    <h1 class="hub-title">Select a Realm</h1>
-    <p class="hub-subtitle">Sharon Mutanu — Digital Archive</p>
+    <h1 class="hub-title">The Archive</h1>
   </header>
 
   <section class="hub-portals">
-
     <div class="portal" data-target="writing.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/writing.png" alt="writing">
-      <h2>The Library</h2>
-      <p>Where thoughts take shape as ink. Explore poetry and narrative prose.</p>
-      <span class="btn-enter">OPEN ARCHIVE</span>
+      <h2>Writing</h2>
+      <p>Poetry and prose for the quiet hours.</p>
     </div>
 
     <div class="portal" data-target="music.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/music.png" alt="music">
-      <h2>The Echo</h2>
-      <p>Spoken word and rhythmic compositions designed to be heard.</p>
-      <span class="btn-enter">LISTEN NOW</span>
+      <h2>Sound</h2>
+      <p>Spoken word and rhythmic compositions.</p>
     </div>
 
     <div class="portal" data-target="experimental.html">
       <img src="https://shaaas.github.io/Sharon-living-canvas/experimental.png" alt="experimental">
       <h2>The Lab</h2>
-      <p>Code-based interactions, games, and playful digital chaos.</p>
-      <span class="btn-enter">LAUNCH DEMO</span>
+      <p>Interactive code and digital physics.</p>
     </div>
-
   </section>
 
-  <div class="exit" onclick="window.location.href='index.html'">
-    Leave Quietly
-  </div>
+  <div class="exit" onclick="window.location.href='index.html'">Leave Quietly</div>
 
   <script>
-    const portals = document.querySelectorAll('.portal');
+    // Audio Context Setup for SFX
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     
-    portals.forEach((portal, index) => {
-      // Staggered entry
-      portal.style.opacity = "0";
-      portal.style.transform = "translateY(30px)";
-      
-      setTimeout(() => {
-        portal.style.transition = "all 0.8s cubic-bezier(0.2, 1, 0.3, 1)";
-        portal.style.opacity = "1";
-        portal.style.transform = "translateY(0)";
-      }, 150 * index);
+    function playSfx(freq, type, duration, vol) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
 
-      // Smooth Navigation
+    // Custom Cursor Logic
+    const cursor = document.getElementById('cursor');
+    const follower = document.getElementById('cursor-follower');
+    
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      follower.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
+    });
+
+    // Portal Interactions
+    const portals = document.querySelectorAll('.portal');
+    portals.forEach((portal) => {
+      portal.addEventListener('mouseenter', () => {
+        playSfx(150, 'sine', 0.2, 0.1); // Low thrum
+        follower.style.width = '80px';
+        follower.style.height = '80px';
+        follower.style.background = 'rgba(212, 175, 55, 0.1)';
+      });
+
+      portal.addEventListener('mouseleave', () => {
+        follower.style.width = '30px';
+        follower.style.height = '30px';
+        follower.style.background = 'transparent';
+      });
+
       portal.addEventListener('click', () => {
-        const target = portal.getAttribute('data-target');
+        playSfx(600, 'triangle', 0.1, 0.1); // High click
         document.body.style.opacity = "0";
-        document.body.style.transition = "0.8s";
         setTimeout(() => {
-          if (target) window.location.href = target;
-        }, 600);
+          window.location.href = portal.getAttribute('data-target');
+        }, 500);
       });
     });
   </script>
