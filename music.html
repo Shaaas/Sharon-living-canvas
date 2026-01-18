@@ -2,170 +2,198 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Music & Spoken Word</title>
+  <title>Music & Spoken Word | Sharon Mutanu</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎙️</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --gold: #d4af37;
       --text: #cfd3da;
-      --bg: #0e0e0e;
+      --bg: #0a0a0a;
       --panel: #111;
       --border: #222;
       --blue: #3b6cff;
     }
 
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background: var(--bg);
-      color: var(--gold);
+      color: var(--text);
       min-height: 100vh;
-      padding-bottom: 100px;
+      padding-bottom: 120px; /* Space for audio player */
     }
 
     header {
-      padding: 1.5rem 2rem;
+      padding: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid var(--border);
     }
 
     header h1 {
       font-family: 'Playfair Display', serif;
       margin: 0;
+      color: var(--gold);
+      font-size: 1.8rem;
     }
 
     header a {
-      color: var(--text);
+      color: var(--gold);
       text-decoration: none;
-      opacity: 0.6;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid var(--gold);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      transition: 0.3s;
     }
 
     header a:hover {
-      opacity: 1;
+      background: var(--gold);
+      color: #000;
     }
 
     main {
-      max-width: 900px;
+      max-width: 800px;
       margin: auto;
       padding: 2rem;
     }
 
     .intro {
-      color: var(--text);
-      max-width: 600px;
-      margin-bottom: 2.5rem;
-      line-height: 1.6;
+      font-size: 1.1rem;
+      margin-bottom: 3rem;
+      line-height: 1.8;
+      border-left: 2px solid var(--gold);
+      padding-left: 1.5rem;
     }
 
     /* LIST */
     .media-list {
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.5rem;
     }
 
     .media-item {
+      background: var(--panel);
       border: 1px solid var(--border);
-      padding: 1.2rem;
-      border-radius: 10px;
+      padding: 1.5rem;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: all 0.3s ease;
     }
 
     .media-item:hover {
-      background: #1a1a1a;
-      transform: translateY(-2px);
+      border-color: var(--gold);
+      transform: translateX(10px);
+      background: #161616;
     }
 
     .title {
-      font-weight: bold;
-      margin-bottom: 0.3rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
+      font-size: 1.1rem;
     }
 
     .meta {
-      font-size: 0.85rem;
-      opacity: 0.6;
+      font-size: 0.8rem;
+      opacity: 0.7;
       display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
     }
 
     .tag {
-      border: 1px solid var(--border);
-      padding: 0.1rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
     }
 
     /* VIDEO VIEWER */
     .video-viewer {
       margin-top: 3rem;
       display: none;
-      animation: fadeIn 0.6s ease;
-    }
-
-    .video-viewer.active {
-      display: block;
-    }
-
-    .video-viewer video {
-      width: 100%;
-      border-radius: 12px;
+      animation: slideDown 0.5s ease forwards;
       background: #000;
+      padding: 1rem;
+      border-radius: 15px;
+      border: 1px solid var(--border);
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .video-viewer.active { display: block; }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+      outline: none;
     }
 
     .video-caption {
-      margin-top: 0.8rem;
-      font-size: 0.85rem;
-      color: var(--text);
-      opacity: 0.7;
+      margin-top: 1rem;
+      font-style: italic;
+      text-align: center;
+      color: var(--gold);
+      font-size: 0.9rem;
     }
 
-    /* AUDIO PLAYER */
+    /* AUDIO PLAYER FIXED BOTTOM */
     .player {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      padding: 0.8rem 1rem;
-      transition: transform 0.4s ease;
-    }
-
-    .player.hidden {
+      background: #111;
+      border-top: 2px solid var(--gold);
+      padding: 1.5rem;
+      box-sizing: border-box;
       transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
     }
 
-    audio {
-      width: 100%;
+    .player.show { transform: translateY(0); }
+
+    audio { width: 100%; filter: invert(100%) hue-rotate(180deg) brightness(1.5); }
+
+    .now-playing {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 0.5rem;
+      color: var(--gold);
     }
 
-    /* ANIMATIONS */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* LINK BACK TO WRITING */
     .link-writing {
-      margin-top: 3rem;
-      font-size: 0.85rem;
-      opacity: 0.6;
+      margin-top: 4rem;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
     }
 
     .link-writing a {
-      color: var(--blue);
+      color: var(--gold);
       text-decoration: none;
-    }
-
-    .link-writing a:hover {
-      text-decoration: underline;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -173,88 +201,92 @@
 <body>
 
 <header>
-  <h1>Music</h1>
-  <a href="hub.html">← back to hub</a>
+  <h1>The Sound</h1>
+  <a href="hub.html">← Back to Hub</a>
 </header>
 
 <main>
   <p class="intro">
-    Spoken word, breath, silence, rhythm.  
-    Some pieces are meant to be heard. Others watched.
+    Words aren't just for reading. These pieces are meant to be felt through rhythm, breath, and stillness.
   </p>
 
   <div class="media-list">
 
-    <!-- AUDIO ITEM -->
-    <div class="media-item"
-         onclick="playAudio('spokenword1.mp3')">
+    <div class="media-item" onclick="playAudio('spokenword1.mp3', 'How I Speak When I’m Alone')">
       <div class="title">How I Speak When I’m Alone</div>
       <div class="meta">
-        <span>spoken word · audio</span>
-        <span class="tag">quiet</span>
-        <span class="tag">soft</span>
+        <span>Audio Experience</span>
+        <span class="tag">Quiet</span>
+        <span class="tag">Confessional</span>
       </div>
     </div>
 
-    <!-- VIDEO ITEM -->
-    <div class="media-item"
-         onclick="playVideo('https://github.com/Shaaas/Sharon-living-canvas/blob/main/avc_tiktok%202.mp4', 'This piece lives between stillness and confession.')">
-      <div class="title">How I love You</div>
+    <div class="media-item" 
+         onclick="playVideo('https://raw.githubusercontent.com/Shaaas/Sharon-living-canvas/main/avc_tiktok%202.mp4', 'How I Love You', 'This piece lives between stillness and confession.')">
+      <div class="title">How I Love You</div>
       <div class="meta">
-        <span>spoken word · video</span>
-        <span class="tag">heavy</span>
-        <span class="tag">presence</span>
+        <span>Visual Poem</span>
+        <span class="tag">Heavy</span>
+        <span class="tag">Presence</span>
       </div>
     </div>
 
   </div>
 
-  <!-- VIDEO VIEWER -->
   <div class="video-viewer" id="videoViewer">
-    <video id="videoPlayer" controls></video>
+    <video id="videoPlayer" controls playsinline></video>
     <div class="video-caption" id="videoCaption"></div>
   </div>
 
   <div class="link-writing">
-    Some of these pieces begin on the page.  
-    <a href="writing.html">Read the writing →</a>
+    Explore the roots of these sounds. <br><br>
+    <a href="hub.html">Read the Original Scripts →</a>
   </div>
 </main>
 
-<!-- AUDIO PLAYER -->
 <div class="player" id="audioWrapper">
+  <div class="now-playing" id="audioTitle">Now Playing</div>
   <audio id="audioPlayer" controls></audio>
 </div>
 
 <script>
   const audioPlayer = document.getElementById('audioPlayer');
   const audioWrapper = document.getElementById('audioWrapper');
+  const audioTitle = document.getElementById('audioTitle');
 
   const videoPlayer = document.getElementById('videoPlayer');
   const videoViewer = document.getElementById('videoViewer');
   const videoCaption = document.getElementById('videoCaption');
 
-  function playAudio(src) {
-    // Stop video
+  function playAudio(src, title) {
+    // Kill video if playing
     videoPlayer.pause();
     videoViewer.classList.remove('active');
 
-    // Show audio player
-    audioWrapper.classList.remove('hidden');
-
+    // Show and play audio
+    audioTitle.innerText = "Now Playing: " + title;
+    audioWrapper.classList.add('show');
     audioPlayer.src = src;
     audioPlayer.play();
   }
 
-  function playVideo(src, caption) {
-    // Stop audio
+  function playVideo(src, title, caption) {
+    // Kill audio if playing
     audioPlayer.pause();
-    audioWrapper.classList.add('hidden');
+    audioWrapper.classList.remove('show');
 
+    // Setup video
     videoPlayer.src = src;
-    videoCaption.textContent = caption;
+    videoCaption.innerHTML = `<strong>${title}</strong><br>${caption}`;
     videoViewer.classList.add('active');
-    videoPlayer.play();
+    
+    // Scroll smoothly to player
+    videoViewer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    
+    videoPlayer.play().catch(e => {
+        console.error("Path error or browser block:", e);
+        alert("The video could not load. Ensure the file 'avc_tiktok 2.mp4' is uploaded to your GitHub main branch.");
+    });
   }
 </script>
 
