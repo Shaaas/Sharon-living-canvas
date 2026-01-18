@@ -2,21 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Music Portal</title>
+  <title>Music & Spoken Word</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@300;400&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --gold: #d4af37;
+      --text: #cfd3da;
+      --bg: #0e0e0e;
+      --panel: #111;
+      --border: #222;
+      --blue: #3b6cff;
+    }
+
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: #0e0e0e;
-      color: #d4af37;
+      background: var(--bg);
+      color: var(--gold);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      padding-bottom: 100px;
     }
 
     header {
@@ -28,15 +35,14 @@
 
     header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
       margin: 0;
     }
 
     header a {
+      color: var(--text);
       text-decoration: none;
-      color: #cfd3da;
+      opacity: 0.6;
       font-size: 0.9rem;
-      opacity: 0.7;
     }
 
     header a:hover {
@@ -44,107 +50,213 @@
     }
 
     main {
-      flex: 1;
-      padding: 2rem;
       max-width: 900px;
       margin: auto;
+      padding: 2rem;
     }
 
     .intro {
-      margin-bottom: 2rem;
-      font-size: 1rem;
-      color: #cfd3da;
+      color: var(--text);
+      max-width: 600px;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
     }
 
-    .track-list {
+    /* LIST */
+    .media-list {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.2rem;
     }
 
-    .track {
-      padding: 1rem;
-      border: 1px solid #222;
-      border-radius: 8px;
+    .media-item {
+      border: 1px solid var(--border);
+      padding: 1.2rem;
+      border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
-    .track:hover {
+    .media-item:hover {
       background: #1a1a1a;
+      transform: translateY(-2px);
     }
 
-    .track-title {
+    .title {
       font-weight: bold;
+      margin-bottom: 0.3rem;
     }
 
-    .track-sub {
+    .meta {
       font-size: 0.85rem;
+      opacity: 0.6;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    /* VIDEO VIEWER */
+    .video-viewer {
+      margin-top: 3rem;
+      display: none;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .video-viewer.active {
+      display: block;
+    }
+
+    .video-viewer video {
+      width: 100%;
+      border-radius: 12px;
+      background: #000;
+    }
+
+    .video-caption {
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      color: var(--text);
       opacity: 0.7;
     }
 
+    /* AUDIO PLAYER */
     .player {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      background: #111;
-      padding: 1rem;
-      border-top: 1px solid #222;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      transition: transform 0.4s ease;
+    }
+
+    .player.hidden {
+      transform: translateY(100%);
     }
 
     audio {
       width: 100%;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* LINK BACK TO WRITING */
+    .link-writing {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      opacity: 0.6;
+    }
+
+    .link-writing a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .link-writing a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Music</h1>
-    <a href="hub.html">← back</a>
-  </header>
+<header>
+  <h1>Music</h1>
+  <a href="hub.html">← back to hub</a>
+</header>
 
-  <main>
-    <p class="intro">
-      Spoken word, sounds I return to, and music that holds something.
-    </p>
+<main>
+  <p class="intro">
+    Spoken word, breath, silence, rhythm.  
+    Some pieces are meant to be heard. Others watched.
+  </p>
 
-    <div class="track-list">
-      <div class="track" onclick="playTrack('audio/spokenword1.mp3', 'How I Speak When I’m Alone')">
-        <div class="track-title">How I Speak When I’m Alone</div>
-        <div class="track-sub">spoken word</div>
-      </div>
+  <div class="media-list">
 
-      <div class="track" onclick="playTrack('https://github.com/Shaaas/Sharon-living-canvas/blob/main/avc_tiktok%202.mp4', 'Quiet Is a Language')">
-        <div class="track-title">How I love You</div>
-        <div class="track-sub">spoken word</div>
+    <!-- AUDIO ITEM -->
+    <div class="media-item"
+         onclick="playAudio('spokenword1.mp3')">
+      <div class="title">How I Speak When I’m Alone</div>
+      <div class="meta">
+        <span>spoken word · audio</span>
+        <span class="tag">quiet</span>
+        <span class="tag">soft</span>
       </div>
     </div>
 
-    <!-- Future section -->
-    <!--
-    <h2>Listening</h2>
-    <iframe src="SPOTIFY_EMBED_LINK" width="100%" height="152" frameborder="0"></iframe>
-    -->
-  </main>
+    <!-- VIDEO ITEM -->
+    <div class="media-item"
+         onclick="playVideo('avc_tiktok.mp4', 'This piece lives between stillness and confession.')">
+      <div class="title">How I love You</div>
+      <div class="meta">
+        <span>spoken word · video</span>
+        <span class="tag">heavy</span>
+        <span class="tag">presence</span>
+      </div>
+    </div>
 
-  <div class="player">
-    <audio id="audioPlayer" controls>
-      <source src="" type="audio/mpeg">
-      Your browser does not support audio.
-    </audio>
   </div>
 
-  <script>
-    const player = document.getElementById('audioPlayer');
+  <!-- VIDEO VIEWER -->
+  <div class="video-viewer" id="videoViewer">
+    <video id="videoPlayer" controls></video>
+    <div class="video-caption" id="videoCaption"></div>
+  </div>
 
-    function playTrack(src, title) {
-      player.src = src;
-      player.play();
-    }
-  </script>
+  <div class="link-writing">
+    Some of these pieces begin on the page.  
+    <a href="writing.html">Read the writing →</a>
+  </div>
+</main>
+
+<!-- AUDIO PLAYER -->
+<div class="player" id="audioWrapper">
+  <audio id="audioPlayer" controls></audio>
+</div>
+
+<script>
+  const audioPlayer = document.getElementById('audioPlayer');
+  const audioWrapper = document.getElementById('audioWrapper');
+
+  const videoPlayer = document.getElementById('videoPlayer');
+  const videoViewer = document.getElementById('videoViewer');
+  const videoCaption = document.getElementById('videoCaption');
+
+  function playAudio(src) {
+    // Stop video
+    videoPlayer.pause();
+    videoViewer.classList.remove('active');
+
+    // Show audio player
+    audioWrapper.classList.remove('hidden');
+
+    audioPlayer.src = src;
+    audioPlayer.play();
+  }
+
+  function playVideo(src, caption) {
+    // Stop audio
+    audioPlayer.pause();
+    audioWrapper.classList.add('hidden');
+
+    videoPlayer.src = src;
+    videoCaption.textContent = caption;
+    videoViewer.classList.add('active');
+    videoPlayer.play();
+  }
+</script>
 
 </body>
 </html>
