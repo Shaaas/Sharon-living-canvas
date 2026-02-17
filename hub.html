@@ -202,6 +202,21 @@
   <div class="exit" onclick="window.location.href='index.html'">Leave Quietly</div>
 
   <script>
+    // Audio Context Setup for SFX
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playSfx(freq, type, duration, vol) {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
 
     // Custom Cursor Logic
     const cursor = document.getElementById('cursor');
