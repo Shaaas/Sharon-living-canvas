@@ -25,6 +25,7 @@
       overflow-x: hidden;
       display: flex;
       flex-direction: column;
+      transition: opacity 0.5s ease;
     } 
 
     /* --- GRAIN OVERLAY --- */
@@ -56,7 +57,7 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
-      transition: transform 0.15s ease, width 0.3s, height 0.3s;
+      transition: transform 0.15s ease, width 0.3s, height 0.3s, background 0.3s;
     }
 
     /* --- AMBIENT BACKGROUND --- */
@@ -202,22 +203,6 @@
   <div class="exit" onclick="window.location.href='index.html'">Leave Quietly</div>
 
   <script>
-    // Audio Context Setup for SFX
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    
-    function playSfx(freq, type, duration, vol) {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(vol, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    }
-
     // Custom Cursor Logic
     const cursor = document.getElementById('cursor');
     const follower = document.getElementById('cursor-follower');
@@ -227,11 +212,10 @@
       follower.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
     });
 
-    // Portal Interactions
+    // Portal Interactions (Visual Only)
     const portals = document.querySelectorAll('.portal');
     portals.forEach((portal) => {
       portal.addEventListener('mouseenter', () => {
-        playSfx(150, 'sine', 0.2, 0.1); // Low thrum
         follower.style.width = '80px';
         follower.style.height = '80px';
         follower.style.background = 'rgba(212, 175, 55, 0.1)';
@@ -244,7 +228,6 @@
       });
 
       portal.addEventListener('click', () => {
-        playSfx(600, 'triangle', 0.1, 0.1); // High click
         document.body.style.opacity = "0";
         setTimeout(() => {
           window.location.href = portal.getAttribute('data-target');
