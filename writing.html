@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing Portal | Sharon Mutanu</title>
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sharon-mutanu.vercel.app/writing"> 
+  <meta property="og:title" content="Sharon Mutanu | Writing Portal">
+  <meta property="og:description" content="Exploring emotional multitasking, technical glitches, and the human condition.">
+  <meta property="og:image" content="https://sharon-mutanu.vercel.app/og-image.jpg">
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
   
   <style>
@@ -38,7 +45,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       border: 1px solid transparent;
@@ -76,6 +83,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      min-height: 250px;
     }
 
     .item-card:hover {
@@ -97,12 +105,41 @@
       margin-bottom: 1.5rem;
     }
 
+    /* Card Footer & Share Action */
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      border-top: 1px solid #222;
+      padding-top: 1rem;
+    }
+
     .open-text {
       color: #3b6cff;
       font-weight: bold;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+
+    .share-btn {
+      background: transparent;
+      border: 1px solid #333;
+      color: #888;
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.65rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .share-btn:hover {
+      border-color: #25D366;
+      color: #25D366;
+      background: rgba(37, 211, 102, 0.1);
     }
 
     /* --- PDF VIEWER --- */
@@ -215,82 +252,50 @@
 
   <main class="writing-space">
     <section class="collection articles active">
-      
       <div class="item-card entry" data-pdf="Emotional Multitasking.pdf">
-          <h3>Emotional Multitasking</h3>
-        <p>An exploration of the emotional and psychological tension of being caught between two people, where choosing one means letting go of another version of yourself.</p>
-        <span class="open-text">Read Article</span>
+        <h3>Emotional Multitasking</h3>
+        <p>An exploration of the tension caught between two versions of yourself.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Article</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Emotional Multitasking')">SHARE</button>
+        </div>
       </div>
       
       <div class="item-card entry" data-pdf="Paying the Passion Tax.pdf">
-          <h3>Paying the Passion Tax</h3>
-        <p>An exploration of why we walk back into collapsing buildings. A study on the human glitch of never learning.</p>
-        <span class="open-text">Read Article</span>
+        <h3>Paying the Passion Tax</h3>
+        <p>A study on why we walk back into collapsing buildings. The human glitch.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Article</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Paying the Passion Tax')">SHARE</button>
+        </div>
       </div>
-      
+
       <div class="item-card entry" data-pdf="Why Humans are Bad at Debugging Their Own Lives.pdf">
-        <h3>Why Humans are Bad at Debugging Their Own Lives</h3>
-        <p>A technical analysis of our emotional glitches. Why the hardest code to fix is the one we've written for ourselves.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="Fireworks.pdf">
-        <h3>Fireworks</h3>
-        <p>A reflection on what love is and how it ignites our daily lives.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="The cost of Safe words.pdf">
-        <h3>The cost of Safe words</h3>
-        <p>Most brands don't have a voice. Exploring the safety of silence.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="Things I've Noticed lately.pdf">
-        <h3>Things I've Noticed lately</h3>
-        <p>Been paying attention to small details that often go ignored.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="The space between words and meaning.pdf">
-        <h3>The space between words and meaning</h3>
-        <p>Exploring the gap where confusion lives.</p>
-        <span class="open-text">Read Article</span>
-      </div>
-      <div class="item-card entry" data-pdf="Your voice (1).pdf">
-        <h3>Your voice</h3>
-        <p>Does it appear fully formed? A look at finding your sound.</p>
-        <span class="open-text">Read Article</span>
+        <h3>Life Debugging</h3>
+        <p>A technical analysis of emotional glitches and the code we write for ourselves.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Article</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Life Debugging')">SHARE</button>
+        </div>
       </div>
     </section>
 
     <section class="collection poems">
-      <div class="item-card entry" data-pdf="How I love you.pdf">
-        <h3>How I love you</h3>
-        <p>Fear that limits me. A deep dive into the vulnerability of affection.</p>
-        <span class="open-text">Read Poem</span>
+      <div class="item-card entry" data-pdf="Document 20.pdf">
+        <h3>Salt and Surrender</h3>
+        <p>When dawn arrives, we’ll keep the quiet and the laws we broke.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Poem</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Salt and Surrender')">SHARE</button>
+        </div>
       </div>
-      <div class="item-card entry" data-pdf="Eloping story.pdf">
-        <h3>Eloping</h3>
-        <p>A short story about a love that dared to leave everything behind.</p>
-        <span class="open-text">Read Poem</span>
-      </div>
-      <div class="item-card entry" data-pdf="the one I let get away.pdf">
-        <h3>Let get away</h3>
-        <p>To the one I was too unsure to keep. Reflection on missed timing.</p>
-        <span class="open-text">Read Poem</span>
-      </div>
-       <div class="item-card entry" data-pdf="Document 20.pdf">
-        <h3>The Litany of Salt and Surrender </h3>
-        <p>When dawn arrives, we’ll keep the quiet, the room smelling of us and the laws we broke.</p>
-        <span class="open-text">Read Poem</span>
-      </div>
-       <div class="item-card entry" data-pdf="Survival to Safety.pdf">
-        <h3>The scary part of being loved</h3>
-        <p>Wait for me. I am coming out of the dark.</p>
-        <span class="open-text">Read Poem</span>
-      </div>
-
-       <div class="item-card entry" data-pdf="Homecoming Found.pdf">
-        <h3>When someone feels like home</h3>
-        <p>And if this story stretches long, I choose every page, every trial, every joy we face.</p>
-        <span class="open-text">Read Poem</span>
+      <div class="item-card entry" data-pdf="Survival to Safety.pdf">
+        <h3>The Scary Part</h3>
+        <p>Wait for me. I am coming out of the dark. Exploring vulnerability.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Poem</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'The Scary Part of Love')">SHARE</button>
+        </div>
       </div>
     </section>
 
@@ -298,12 +303,10 @@
       <div class="item-card entry" data-pdf="book1.pdf">
         <h3>Almost, Always</h3>
         <p>A book about choices, consequences, and the paths we almost took.</p>
-        <span class="open-text">Open Book</span>
-      </div>
-       <div class="item-card entry" data-pdf="book1.pdf">
-        <h3>Unspoken Word</h3>
-        <p>A book about choices, consequences, and the paths we almost took.</p>
-                   <a href="https://www.wattpad.com/story/393043044-secrets-they-kept" class="view-link" target="_blank">Open book</a>
+        <div class="card-actions">
+          <span class="open-text">Open Book</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Almost, Always (Book)')">SHARE</button>
+        </div>
       </div>
     </section>
   </main>
@@ -327,7 +330,7 @@
   <div id="exit-modal" class="pdf-viewer">
     <div class="item-card" style="max-width: 450px; text-align: center; margin: auto; border-color: #d4af37;">
       <h3>A soft exit.</h3>
-      <p>We are brilliant at building systems, yet we are the only architects who will walk back into a collapsing building because we liked the way the light hit the windows. Safe travels back to the rest of the internet.</p>
+      <p>Safe travels back to the rest of the internet. The building is still standing, for now.</p>
       <div style="display: flex; flex-direction: column; gap: 1rem;">
           <button class="folder active" onclick="window.location.href='hub.html'">Leave Quietly</button>
           <span class="open-text" style="cursor:pointer;" onclick="document.getElementById('exit-modal').style.display='none'">Wait, stay a bit longer</span>
@@ -360,19 +363,31 @@
       });
     });
 
-    // 2. OPEN PDF (PC Scroll fix applied)
+    // 2. OPEN PDF (Stop propagation added for share buttons)
     document.querySelectorAll('.entry').forEach(entry => {
-      entry.addEventListener('click', () => {
-        const pdfFile = entry.getAttribute('data-pdf');
-        document.getElementById('pdf-title').textContent = entry.querySelector('h3').innerText;
-        frame.src = `${pdfFile}#toolbar=0&navpanes=0&view=FitH`;
-        viewer.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; 
-        readerContainer.scrollTop = 0;
+      entry.addEventListener('click', (e) => {
+        // Only open if they didn't click the share button
+        if (!e.target.classList.contains('share-btn')) {
+            const pdfFile = entry.getAttribute('data-pdf');
+            document.getElementById('pdf-title').textContent = entry.querySelector('h3').innerText;
+            frame.src = `${pdfFile}#toolbar=0&navpanes=0&view=FitH`;
+            viewer.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+            readerContainer.scrollTop = 0;
+        }
       });
     });
 
-    // 3. CLOSE LOGIC
+    // 3. WHATSAPP SHARE LOGIC
+    function shareToWhatsapp(event, title) {
+      event.stopPropagation(); 
+      const siteUrl = window.location.href;
+      const text = `Check out this writing by Sharon Mutanu: "${title}" \n\nRead it here: ${siteUrl}`;
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // 4. CLOSE LOGIC
     closeBtn.addEventListener('click', () => {
       viewer.style.display = 'none';
       frame.src = '';
@@ -380,18 +395,18 @@
       document.body.style.overflow = 'auto';
     });
 
-    // 4. PROGRESS BAR
+    // 5. PROGRESS BAR
     readerContainer.addEventListener('scroll', () => {
       const scrolled = (readerContainer.scrollTop / (readerContainer.scrollHeight - readerContainer.clientHeight)) * 100;
       progressBar.style.width = scrolled + '%';
     });
 
-    // 5. EXIT MODAL
+    // 6. EXIT MODAL
     function showExitMessage() {
       exitModal.style.display = 'flex';
     }
 
-    // 6. SECURITY BLUR
+    // 7. SECURITY BLUR
     document.addEventListener('mouseleave', () => {
       if(viewer.style.display === 'flex') readerContainer.classList.add('content-blur');
     });
@@ -399,7 +414,7 @@
       readerContainer.classList.remove('content-blur');
     });
 
-    // 7. KEYBOARD ESCAPE
+    // 8. KEYBOARD ESCAPE
     document.addEventListener('keydown', (e) => {
       if(e.key === "Escape") {
         viewer.style.display = 'none';
