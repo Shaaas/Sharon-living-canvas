@@ -13,9 +13,8 @@
       --gold: #d4af37;
       --silver: #cfd3da;
       --black: #0a0a0a;
-      --card-bg: rgba(255, 255, 255, 0.03); /* Subtle glass base */
-      --electric-blue: #3b6cff;
-      --blur: blur(12px);
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --blur: blur(15px);
     }
 
     body {
@@ -23,16 +22,16 @@
       color: var(--silver);
       font-family: 'Inter', sans-serif;
       margin: 0;
-      user-select: none;
+      overflow-x: hidden;
     }
 
-    /* Navigation with Glassmorphism */
+    /* Navigation with Editorial Blur */
     .writing-portal {
       display: flex;
-      gap: 0.8rem;
-      padding: 1.2rem;
+      gap: 1rem;
+      padding: 1.5rem;
       justify-content: center;
-      background: rgba(10, 10, 10, 0.8);
+      background: rgba(10, 10, 10, 0.7);
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -42,28 +41,24 @@
     }
 
     .folder {
-      padding: 0.6rem 1.4rem;
+      padding: 0.7rem 1.5rem;
       background: rgba(255, 255, 255, 0.05);
       color: var(--gold);
-      border-radius: 30px;
+      border-radius: 40px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      letter-spacing: 2px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      transition: 0.4s;
     }
 
-    .folder.active { 
-      background: var(--gold); 
-      color: #000; 
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-    }
+    .folder.active { background: var(--gold); color: #000; }
 
     /* Grid Layout */
-    .writing-space { padding: 2rem 1.5rem; max-width: 1200px; margin: 0 auto; }
-    .collection { display: none; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+    .writing-space { padding: 3rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+    .collection { display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
     .collection.active { display: grid; }
 
     /* The "Blur" Card Design */
@@ -71,64 +66,36 @@
       background: var(--card-bg);
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
-      border-radius: 20px;
-      padding: 2rem;
+      border-radius: 24px;
+      padding: 2.5rem;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all 0.4s ease;
+      transition: 0.4s ease;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       position: relative;
-      overflow: hidden;
     }
 
     .item-card:hover { 
       border-color: var(--gold); 
-      transform: translateY(-8px);
-      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.07);
     }
 
-    .tag { color: var(--electric-blue); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
-    .item-card h3 { font-family: "Playfair Display", serif; color: var(--gold); margin: 15px 0; font-size: 1.6rem; line-height: 1.2; }
-    .item-card p { font-size: 0.9rem; color: #999; line-height: 1.6; margin-bottom: 1.5rem; }
+    .item-card h3 { font-family: "Playfair Display", serif; color: var(--gold); margin: 15px 0; font-size: 1.8rem; }
+    .item-card p { font-size: 0.95rem; color: #888; line-height: 1.6; }
 
-    /* Share Button Styling */
-    .card-footer {
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .share-btn {
-      background: transparent;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      color: var(--gold);
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .share-btn:hover { background: var(--gold); color: #000; }
-
-    /* EDITORIAL READER OVERLAY */
+    /* EDITORIAL READER - PRECISION STACK */
     #editorial-reader {
       position: fixed;
       inset: 0;
-      background: rgba(5, 5, 5, 0.98);
-      backdrop-filter: blur(20px);
+      background: #050505;
       z-index: 2000;
       display: none;
       flex-direction: column;
       align-items: center;
       overflow-y: auto;
-      padding-top: 80px;
+      padding-top: 100px;
     }
 
     .reader-toolbar {
@@ -136,7 +103,7 @@
       top: 0; width: 100%;
       background: rgba(10, 10, 10, 0.9);
       backdrop-filter: var(--blur);
-      padding: 1.2rem 2rem;
+      padding: 1.2rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -146,52 +113,45 @@
 
     .pdf-canvas-container {
       width: 100%;
-      max-width: 800px;
-      margin-bottom: 100px;
+      max-width: 850px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     canvas { 
       width: 100% !important; 
       height: auto !important; 
       display: block; 
-      margin-bottom: 0;
-      /* The Dark Mode Magic: Inverts document colors to match your site */
+      /* Negative margin kills the white space between pages */
+      margin-top: -20px; 
+      margin-bottom: -20px; 
       filter: invert(93%) hue-rotate(180deg) contrast(110%);
     }
 
-    .close-btn {
-      background: var(--gold);
-      border: none;
-      padding: 10px 24px;
-      border-radius: 30px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-
-    .exit-btn {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: rgba(10, 10, 10, 0.5);
-      backdrop-filter: var(--blur);
+    .reader-share-btn {
+      background: transparent;
       border: 1px solid var(--gold);
-      padding: 0.8rem 1.6rem;
-      border-radius: 30px;
       color: var(--gold);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 700;
-      z-index: 50;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-right: 15px;
       transition: 0.3s;
     }
 
-    .exit-btn:hover { background: var(--gold); color: #000; }
+    .reader-share-btn:hover { background: var(--gold); color: #000; }
 
-    @media (max-width: 768px) {
-      .reader-toolbar { padding: 1rem; }
-      #doc-title { font-size: 0.9rem !important; }
-      .writing-space { padding: 1rem; }
+    .close-btn {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -206,178 +166,64 @@
   <main class="writing-space">
     <section class="collection articles active">
       <div class="item-card entry" data-file="Two Timelines in One Bed.pdf">
-        <span class="tag">Relationship Anatomy</span>
         <h3>Two Timelines in One Bed</h3>
         <p>A blunt look at the "finish line" myth and the comedic silence that follows.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">5 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Two Timelines in One Bed')">SHARE</button>
-        </div>
       </div>
       <div class="item-card entry" data-file="Men, Silence, and the Moment After.pdf">
-        <span class="tag">Observational</span>
         <h3>Men, Silence, and the Moment After</h3>
-        <p>Studying the system reboot from "Epic Romance" to "Hardware Catalog".</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">7 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Men, Silence, and the Moment After')">SHARE</button>
-        </div>
+        <p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog".</p>
       </div>
       <div class="item-card entry" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf">
-        <span class="tag">Technical Metaphor</span>
         <h3>Life Debugging</h3>
         <p>An analysis of our emotional glitches and faulty code.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">6 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Life Debugging')">SHARE</button>
-        </div>
       </div>
       <div class="item-card entry" data-file="Emotional Multitasking.pdf">
-        <span class="tag">Introspective</span>
         <h3>Emotional Multitasking</h3>
         <p>The tension of being caught between two worlds.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">4 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Emotional Multitasking')">SHARE</button>
-        </div>
       </div>
       <div class="item-card entry" data-file="Paying the Passion Tax.pdf">
-        <span class="tag">Brutally Honest</span>
         <h3>Paying the Passion Tax</h3>
         <p>Why we walk back into collapsing buildings.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">5 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Paying the Passion Tax')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Fireworks.pdf">
-        <span class="tag">Reflective</span>
-        <h3>Fireworks</h3>
-        <p>A short reflection on ignition and temporary light.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">3 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Fireworks')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="The cost of Safe words.pdf">
-        <span class="tag">Analytical</span>
-        <h3>The Cost of Safe Words</h3>
-        <p>The safety found in silence and withheld words.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">5 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'The Cost of Safe Words')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Things I've Noticed lately.pdf">
-        <span class="tag">Observational</span>
-        <h3>Things I've Noticed Lately</h3>
-        <p>Small details ignored in the noise of being human.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">4 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Things I\'ve Noticed Lately')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="The space between words and meaning.pdf">
-        <span class="tag">Linguistic</span>
-        <h3>The Space Between Words</h3>
-        <p>The gap where communication fails.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">6 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'The Space Between Words')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Your voice (1).pdf">
-        <span class="tag">Personal</span>
-        <h3>Your Voice</h3>
-        <p>Finding your unique sound in a crowded world.</p>
-        <div class="card-footer">
-          <span style="font-size: 0.7rem; color: #555;">3 MIN READ</span>
-          <button class="share-btn" onclick="shareDoc(event, 'Your Voice')">SHARE</button>
-        </div>
       </div>
     </section>
 
     <section class="collection poems">
       <div class="item-card entry" data-file="How I love you.pdf">
-        <span class="tag">Vulnerable</span>
         <h3>How I love you</h3>
         <p>The vulnerability of affection and the weight of the heart.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'How I Love You')">SHARE</button>
-        </div>
       </div>
       <div class="item-card entry" data-file="Survival to Safety.pdf">
-        <span class="tag">Healing</span>
         <h3>The scary part of being loved</h3>
         <p>Transitioning from survival to safety.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'The Scary Part of Being Loved')">SHARE</button>
-        </div>
       </div>
       <div class="item-card entry" data-file="Homecoming Found.pdf">
-        <span class="tag">Connection</span>
         <h3>When someone feels like home</h3>
         <p>Choosing every page of a story that stretches long.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'When Someone Feels Like Home')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Eloping story.pdf">
-        <span class="tag">Narrative</span>
-        <h3>Eloping</h3>
-        <p>A love that dared to leave everything behind.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'Eloping')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="the one I let get away.pdf">
-        <span class="tag">Regret</span>
-        <h3>Let Get Away</h3>
-        <p>To the one I was too unsure to keep.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'Let Get Away')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Document 20.pdf">
-        <span class="tag">Atmospheric</span>
-        <h3>Salt and Surrender</h3>
-        <p>When dawn arrives, we’ll keep the quiet.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'Salt and Surrender')">SHARE</button>
-        </div>
       </div>
     </section>
 
     <section class="collection books">
       <div class="item-card entry" data-file="book1.pdf">
-        <span class="tag">Narrative</span>
         <h3>Almost, Always</h3>
         <p>A book about choices and the paths we almost took.</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'Almost Always')">SHARE</button>
-        </div>
       </div>
       <div class="item-card" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept', '_blank')">
-        <span class="tag">Fiction</span>
         <h3>Unspoken Word</h3>
-        <p>A story about secrets and hidden truths. (External Link)</p>
-        <div class="card-footer">
-          <button class="share-btn" onclick="shareDoc(event, 'Unspoken Word')">SHARE</button>
-        </div>
+        <p>A story about secrets and hidden truths. (Wattpad Link)</p>
       </div>
     </section>
   </main>
 
   <div id="editorial-reader">
     <div class="reader-toolbar">
-      <span id="doc-title" style="color:var(--gold); font-family:'Playfair Display'; font-weight:700;">Reading</span>
-      <button class="close-btn" onclick="closeReader()">CLOSE</button>
-    </div>
-    <div id="pdf-render-area" class="pdf-canvas-container">
+      <span id="doc-title" style="color:var(--gold); font-family:'Playfair Display'; font-size: 1.2rem;">Reading</span>
+      <div>
+        <button id="active-share-btn" class="reader-share-btn">SHARE PIECE</button>
+        <button class="close-btn" onclick="closeReader()">CLOSE</button>
       </div>
+    </div>
+    <div id="pdf-render-area" class="pdf-canvas-container"></div>
   </div>
-
-  <a href="hub.html" class="exit-btn">Leave Quietly</a>
 
   <script>
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -385,7 +231,7 @@
 
     async function renderPDF(url) {
       const container = document.getElementById('pdf-render-area');
-      container.innerHTML = '<p style="color:var(--gold); text-align:center; margin-top:100px; font-weight:bold; letter-spacing:2px;">LOADING PIECE...</p>';
+      container.innerHTML = '<p style="color:var(--gold); margin-top:20vh;">OPENING MANUSCRIPT...</p>';
       
       try {
         const loadingTask = pdfjsLib.getDocument(url);
@@ -394,7 +240,7 @@
         
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: window.innerWidth < 768 ? 1.8 : 2.5 }); 
+          const viewport = page.getViewport({ scale: 2.2 }); 
           const canvas = document.createElement('canvas');
           const context = canvas.getContext('2d');
           
@@ -405,20 +251,24 @@
           container.appendChild(canvas);
         }
       } catch (err) {
-        container.innerHTML = '<p style="color:red; text-align:center; padding:20px;">Could not load document.</p>';
+        container.innerHTML = '<p style="color:red;">Error loading document.</p>';
       }
     }
 
-    // Card Interaction
     document.querySelectorAll('.entry').forEach(card => {
-      card.addEventListener('click', (e) => {
-        if (e.target.classList.contains('share-btn')) return; // Prevent open if sharing
-        
+      card.addEventListener('click', () => {
         const file = card.dataset.file;
         const title = card.querySelector('h3').innerText;
+        
         document.getElementById('doc-title').innerText = title;
         document.getElementById('editorial-reader').style.display = 'flex';
         document.body.style.overflow = 'hidden';
+
+        document.getElementById('active-share-btn').onclick = () => {
+          const text = `Read "${title}" by Sharon Mutanu: \n\n${window.location.href}`;
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+        };
+
         renderPDF(file);
       });
     });
@@ -429,14 +279,7 @@
       document.getElementById('pdf-render-area').innerHTML = ''; 
     }
 
-    // Share Logic
-    function shareDoc(event, title) {
-      event.stopPropagation();
-      const text = `Read "${title}" by Sharon Mutanu: \n\n${window.location.href}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    // Tab Switching
+    // Tabs
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
     folders.forEach(f => {
