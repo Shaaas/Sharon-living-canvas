@@ -13,10 +13,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
   
   <style>
-    /* --- BASE STYLES --- */
+    :root {
+      --gold: #d4af37;
+      --silver: #cfd3da;
+      --black: #0a0a0a;
+      --card-bg: #111;
+      --electric-blue: #3b6cff;
+    }
+
     body {
-      background: #0a0a0a;
-      color: #cfd3da;
+      background: var(--black);
+      color: var(--silver);
       font-family: 'Inter', sans-serif;
       margin: 0;
       user-select: none;
@@ -39,7 +46,7 @@
     .folder {
       padding: 0.8rem 1.5rem;
       background: #222;
-      color: #d4af37;
+      color: var(--gold);
       border-radius: 30px;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -51,7 +58,7 @@
     }
 
     .folder.active, .folder:hover {
-      background: #d4af37;
+      background: var(--gold);
       color: #111;
       box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
     }
@@ -65,15 +72,15 @@
 
     .collection {
       display: none; 
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 2rem;
     }
 
     .collection.active { display: grid; }
 
     .item-card {
-      background: #111;
-      color: #d4af37;
+      background: var(--card-bg);
+      color: var(--gold);
       border-radius: 15px;
       padding: 2rem;
       border: 1px solid #222;
@@ -81,14 +88,28 @@
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 280px;
+      min-height: 320px;
     }
 
     .item-card:hover {
       transform: translateY(-10px);
-      border-color: #d4af37;
+      border-color: var(--gold);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #666;
+    }
+
+    .tag {
+      color: var(--electric-blue);
+      font-weight: 700;
     }
 
     .item-card h3 {
@@ -114,7 +135,7 @@
     }
 
     .open-text {
-      color: #3b6cff;
+      color: var(--electric-blue);
       font-weight: bold;
       font-size: 0.8rem;
       text-transform: uppercase;
@@ -140,14 +161,7 @@
       background: rgba(37, 211, 102, 0.1);
     }
 
-    /* Header Share Button specifically */
-    .header-share {
-      border-color: #25D366;
-      color: #25D366;
-      margin-right: 15px;
-    }
-
-    /* --- PDF VIEWER --- */
+    /* PDF Viewer */
     .pdf-viewer {
       position: fixed;
       inset: 0;
@@ -183,28 +197,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: #d4af37;
-      border-bottom: 2px solid #3b6cff;
-      flex-shrink: 0;
-    }
-
-    .header-controls {
-        display: flex;
-        align-items: center;
+      color: var(--gold);
+      border-bottom: 2px solid var(--electric-blue);
     }
 
     #reader-container {
       flex-grow: 1;
       overflow-y: auto; 
-      position: relative;
       background: #333;
+      position: relative;
     }
 
-    #pdf-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+    #pdf-frame { width: 100%; height: 100%; border: none; }
+
+    .exit-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #111;
+      color: var(--gold);
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      z-index: 100;
+      border: 1px solid var(--gold);
+      font-weight: bold;
     }
 
     .watermark {
@@ -214,38 +231,16 @@
       pointer-events: none;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      opacity: 0.08;
+      opacity: 0.05;
     }
     .watermark span { transform: rotate(-30deg); padding: 80px; font-size: 12px; color: white; }
-    .content-blur { filter: blur(30px) !important; }
-
-    .exit-btn {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #111;
-      color: #d4af37;
-      padding: 0.8rem 1.5rem;
-      border-radius: 30px;
-      cursor: pointer;
-      z-index: 100;
-      border: 1px solid #d4af37;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-    .exit-btn:hover { background: #d4af37; color: #111; }
-
-    #progress-container {
+    
+    #progress-bar {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: #222;
+      bottom: 0; left: 0;
+      height: 4px; background: var(--electric-blue);
+      width: 0%; transition: width 0.1s;
     }
-    #progress-bar { width: 0%; height: 100%; background: #3b6cff; transition: width 0.1s; }
-
-    @media print { body { display: none !important; } }
   </style>
 </head>
 <body>
@@ -258,25 +253,38 @@
 
   <main class="writing-space">
     <section class="collection articles active">
-      <div class="item-card entry" data-pdf="Emotional Multitasking.pdf">
-        <h3>Emotional Multitasking</h3>
-        <p>An exploration of the emotional tension of being caught between two people.</p>
+      
+      <div class="item-card entry" data-pdf="Two Timelines in One Bed.pdf">
+        <div class="card-meta">
+          <span class="tag">Relationship Anatomy</span>
+          <span class="read-time">6 min read</span>
+        </div>
+        <h3>Two Timelines in One Bed</h3>
+        <p>An honest look at the "finish line" myth and the comedic, lonely silence that follows pleasure when timing doesn't align.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
-          <button class="share-btn" onclick="shareToWhatsapp(event, 'Emotional Multitasking')">SHARE</button>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Two Timelines in One Bed')">SHARE</button>
         </div>
       </div>
-      
-      <div class="item-card entry" data-pdf="Paying the Passion Tax.pdf">
-        <h3>Paying the Passion Tax</h3>
-        <p>An exploration of why we walk back into collapsing buildings.</p>
+
+      <div class="item-card entry" data-pdf="Men, Silence, and the Moment After.pdf">
+        <div class="card-meta">
+          <span class="tag">Observational</span>
+          <span class="read-time">7 min read</span>
+        </div>
+        <h3>Men, Silence, and the Moment After</h3>
+        <p>Studying the "emotional weather" of men—how a Category 5 hurricane turns into a light drizzle and a craving for tea.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
-          <button class="share-btn" onclick="shareToWhatsapp(event, 'Paying the Passion Tax')">SHARE</button>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Men, Silence, and the Moment After')">SHARE</button>
         </div>
       </div>
-      
+
       <div class="item-card entry" data-pdf="Why Humans are Bad at Debugging Their Own Lives.pdf">
+        <div class="card-meta">
+          <span class="tag">Technical Metaphor</span>
+          <span class="read-time">5 min read</span>
+        </div>
         <h3>Life Debugging</h3>
         <p>A technical analysis of our emotional glitches and the code we write for ourselves.</p>
         <div class="card-actions">
@@ -285,9 +293,39 @@
         </div>
       </div>
 
+      <div class="item-card entry" data-pdf="Emotional Multitasking.pdf">
+        <div class="card-meta">
+          <span class="tag">Introspective</span>
+          <span class="read-time">4 min read</span>
+        </div>
+        <h3>Emotional Multitasking</h3>
+        <p>The tension of being caught between two people and the weight of split focus.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Article</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Emotional Multitasking')">SHARE</button>
+        </div>
+      </div>
+
+      <div class="item-card entry" data-pdf="Paying the Passion Tax.pdf">
+        <div class="card-meta">
+          <span class="tag">Brutally Honest</span>
+          <span class="read-time">5 min read</span>
+        </div>
+        <h3>Paying the Passion Tax</h3>
+        <p>Why we walk back into collapsing buildings and the price we pay for intense connections.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Article</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'Paying the Passion Tax')">SHARE</button>
+        </div>
+      </div>
+
       <div class="item-card entry" data-pdf="Fireworks.pdf">
+        <div class="card-meta">
+          <span class="tag">Reflective</span>
+          <span class="read-time">3 min read</span>
+        </div>
         <h3>Fireworks</h3>
-        <p>A reflection on what love is and how it ignites our daily lives.</p>
+        <p>What love is and how it ignites our daily lives in bursts of light.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
           <button class="share-btn" onclick="shareToWhatsapp(event, 'Fireworks')">SHARE</button>
@@ -295,7 +333,11 @@
       </div>
 
       <div class="item-card entry" data-pdf="The cost of Safe words.pdf">
-        <h3>The cost of Safe words</h3>
+        <div class="card-meta">
+          <span class="tag">Analytical</span>
+          <span class="read-time">5 min read</span>
+        </div>
+        <h3>The Cost of Safe Words</h3>
         <p>Exploring the safety of silence and the weight of words left unsaid.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
@@ -304,8 +346,12 @@
       </div>
 
       <div class="item-card entry" data-pdf="Things I've Noticed lately.pdf">
-        <h3>Things I've Noticed lately</h3>
-        <p>Been paying attention to small details that often go ignored.</p>
+        <div class="card-meta">
+          <span class="tag">Observational</span>
+          <span class="read-time">4 min read</span>
+        </div>
+        <h3>Things I've Noticed Lately</h3>
+        <p>Paying attention to small details that often go ignored in the noise of daily life.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
           <button class="share-btn" onclick="shareToWhatsapp(event, 'Things I\'ve Noticed lately')">SHARE</button>
@@ -313,8 +359,12 @@
       </div>
 
       <div class="item-card entry" data-pdf="The space between words and meaning.pdf">
-        <h3>The space between words and meaning</h3>
-        <p>Exploring the gap where confusion lives and true communication often fails.</p>
+        <div class="card-meta">
+          <span class="tag">Linguistic</span>
+          <span class="read-time">6 min read</span>
+        </div>
+        <h3>The Space Between Words</h3>
+        <p>Exploring the gap where communication fails and confusion lives.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
           <button class="share-btn" onclick="shareToWhatsapp(event, 'The space between words and meaning')">SHARE</button>
@@ -322,17 +372,26 @@
       </div>
 
       <div class="item-card entry" data-pdf="Your voice (1).pdf">
-        <h3>Your voice</h3>
+        <div class="card-meta">
+          <span class="tag">Personal</span>
+          <span class="read-time">3 min read</span>
+        </div>
+        <h3>Your Voice</h3>
         <p>A look at finding your unique sound in a crowded world.</p>
         <div class="card-actions">
           <span class="open-text">Read Article</span>
           <button class="share-btn" onclick="shareToWhatsapp(event, 'Your voice')">SHARE</button>
         </div>
       </div>
+
     </section>
 
     <section class="collection poems">
       <div class="item-card entry" data-pdf="How I love you.pdf">
+        <div class="card-meta">
+          <span class="tag">Vulnerable</span>
+          <span class="read-time">2 min read</span>
+        </div>
         <h3>How I love you</h3>
         <p>A deep dive into the vulnerability of affection and the weight of the heart.</p>
         <div class="card-actions">
@@ -341,7 +400,37 @@
         </div>
       </div>
 
+      <div class="item-card entry" data-pdf="Survival to Safety.pdf">
+        <div class="card-meta">
+          <span class="tag">Healing</span>
+          <span class="read-time">3 min read</span>
+        </div>
+        <h3>The scary part of being loved</h3>
+        <p>Coming out of the dark and transitioning from survival to safety.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Poem</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'The scary part of being loved')">SHARE</button>
+        </div>
+      </div>
+
+      <div class="item-card entry" data-pdf="Homecoming Found.pdf">
+        <div class="card-meta">
+          <span class="tag">Connection</span>
+          <span class="read-time">2 min read</span>
+        </div>
+        <h3>When someone feels like home</h3>
+        <p>Choosing every page of a story that stretches long.</p>
+        <div class="card-actions">
+          <span class="open-text">Read Poem</span>
+          <button class="share-btn" onclick="shareToWhatsapp(event, 'When someone feels like home')">SHARE</button>
+        </div>
+      </div>
+
       <div class="item-card entry" data-pdf="Eloping story.pdf">
+        <div class="card-meta">
+          <span class="tag">Narrative</span>
+          <span class="read-time">4 min read</span>
+        </div>
         <h3>Eloping</h3>
         <p>A short story about a love that dared to leave everything behind.</p>
         <div class="card-actions">
@@ -351,8 +440,12 @@
       </div>
 
       <div class="item-card entry" data-pdf="the one I let get away.pdf">
-        <h3>Let get away</h3>
-        <p>To the one I was too unsure to keep. Reflection on missed timing.</p>
+        <div class="card-meta">
+          <span class="tag">Regret</span>
+          <span class="read-time">3 min read</span>
+        </div>
+        <h3>Let Get Away</h3>
+        <p>To the one I was too unsure to keep. A reflection on missed timing.</p>
         <div class="card-actions">
           <span class="open-text">Read Poem</span>
           <button class="share-btn" onclick="shareToWhatsapp(event, 'Let get away')">SHARE</button>
@@ -360,6 +453,10 @@
       </div>
 
       <div class="item-card entry" data-pdf="Document 20.pdf">
+        <div class="card-meta">
+          <span class="tag">Atmospheric</span>
+          <span class="read-time">2 min read</span>
+        </div>
         <h3>Salt and Surrender</h3>
         <p>When dawn arrives, we’ll keep the quiet and the laws we broke.</p>
         <div class="card-actions">
@@ -367,28 +464,14 @@
           <button class="share-btn" onclick="shareToWhatsapp(event, 'Salt and Surrender')">SHARE</button>
         </div>
       </div>
-
-      <div class="item-card entry" data-pdf="Survival to Safety.pdf">
-        <h3>The scary part of being loved</h3>
-        <p>Wait for me. I am coming out of the dark. Exploring the transition to safety.</p>
-        <div class="card-actions">
-          <span class="open-text">Read Poem</span>
-          <button class="share-btn" onclick="shareToWhatsapp(event, 'The scary part of being loved')">SHARE</button>
-        </div>
-      </div>
-
-      <div class="item-card entry" data-pdf="Homecoming Found.pdf">
-        <h3>When someone feels like home</h3>
-        <p>And if this story stretches long, I choose every page we face.</p>
-        <div class="card-actions">
-          <span class="open-text">Read Poem</span>
-          <button class="share-btn" onclick="shareToWhatsapp(event, 'When someone feels like home')">SHARE</button>
-        </div>
-      </div>
     </section>
 
     <section class="collection books">
       <div class="item-card entry" data-pdf="book1.pdf">
+        <div class="card-meta">
+          <span class="tag">Narrative</span>
+          <span class="read-time">Long Read</span>
+        </div>
         <h3>Almost, Always</h3>
         <p>A book about choices, consequences, and the paths we almost took.</p>
         <div class="card-actions">
@@ -398,6 +481,10 @@
       </div>
 
       <div class="item-card">
+        <div class="card-meta">
+          <span class="tag">Fiction</span>
+          <span class="read-time">Web Series</span>
+        </div>
         <h3>Unspoken Word</h3>
         <p>A story about secrets and the paths we almost took.</p>
         <div class="card-actions">
@@ -412,117 +499,76 @@
     <div class="viewer-window">
       <div class="pdf-header">
         <span id="pdf-title">Reading</span>
-        <div class="header-controls">
-            <button class="share-btn header-share" id="viewer-share-btn">SHARE</button>
-            <button id="close-pdf" style="background:#d4af37; border:none; padding:8px 16px; border-radius:20px; cursor:pointer; font-weight:bold;">CLOSE</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="share-btn" id="viewer-share" style="border-color:#25D366; color:#25D366;">SHARE</button>
+          <button id="close-pdf" style="background:var(--gold); border:none; padding:8px 16px; border-radius:20px; cursor:pointer; font-weight:bold;">CLOSE</button>
         </div>
-        <div id="progress-container"><div id="progress-bar"></div></div>
+        <div id="progress-bar"></div>
       </div>
       <div id="reader-container">
         <div class="watermark">
           <span>PRIVATE CONTENT</span><span>Sharon Mutanu</span><span>DO NOT COPY</span>
         </div>
-        <iframe id="pdf-frame" src="" scrolling="no"></iframe>
+        <iframe id="pdf-frame" src=""></iframe>
       </div>
     </div>
   </div>
 
-  <div id="exit-modal" class="pdf-viewer">
-    <div class="item-card" style="max-width: 450px; text-align: center; margin: auto; border-color: #d4af37;">
-      <h3>A soft exit.</h3>
-      <p>Safe travels back to the rest of the internet.</p>
-      <div style="display: flex; flex-direction: column; gap: 1rem;">
-          <button class="folder active" onclick="window.location.href='hub.html'">Leave Quietly</button>
-          <span class="open-text" style="cursor:pointer;" onclick="document.getElementById('exit-modal').style.display='none'">Wait, stay a bit longer</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="exit-btn" onclick="showExitMessage()">
-    <span>Leave Quietly</span>
-  </div>
+  <div class="exit-btn" onclick="window.location.href='hub.html'">Leave Quietly</div>
 
   <script>
     const folders = document.querySelectorAll('.folder');
     const collections = document.querySelectorAll('.collection');
     const viewer = document.getElementById('pdf-viewer');
-    const exitModal = document.getElementById('exit-modal');
-    const readerContainer = document.getElementById('reader-container');
     const frame = document.getElementById('pdf-frame');
     const progressBar = document.getElementById('progress-bar');
-    const closeBtn = document.getElementById('close-pdf');
-    const viewerShareBtn = document.getElementById('viewer-share-btn');
-
+    const readerContainer = document.getElementById('reader-container');
+    
     let currentTitle = "";
 
-    // Tab Logic
+    // Folder switching
     folders.forEach(folder => {
       folder.addEventListener('click', () => {
         folders.forEach(f => f.classList.remove('active'));
         collections.forEach(c => c.classList.remove('active'));
         folder.classList.add('active');
-        const target = folder.getAttribute('data-target');
-        document.querySelector('.collection.' + target).classList.add('active');
+        document.querySelector(`.collection.${folder.dataset.target}`).classList.add('active');
       });
     });
 
-    // Open PDF
+    // Opening PDF
     document.querySelectorAll('.entry').forEach(entry => {
       entry.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('share-btn')) {
-            const pdfFile = entry.getAttribute('data-pdf');
-            currentTitle = entry.querySelector('h3').innerText;
-            document.getElementById('pdf-title').textContent = currentTitle;
-            frame.src = `${pdfFile}#toolbar=0&navpanes=0&view=FitH`;
-            viewer.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; 
-            readerContainer.scrollTop = 0;
-        }
+        if (e.target.classList.contains('share-btn')) return;
+        currentTitle = entry.querySelector('h3').innerText;
+        document.getElementById('pdf-title').innerText = currentTitle;
+        frame.src = `${entry.dataset.pdf}#toolbar=0&navpanes=0`;
+        viewer.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        readerContainer.scrollTop = 0;
       });
     });
 
-    // Share Function
+    // Share Logic
     function shareToWhatsapp(event, title) {
-      if(event) event.stopPropagation(); 
-      const siteUrl = window.location.href;
-      const text = `Check out this writing by Sharon Mutanu: "${title}" \n\nRead it here: ${siteUrl}`;
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-      window.open(whatsappUrl, '_blank');
+      if(event) event.stopPropagation();
+      const text = `Check out this piece by Sharon Mutanu: "${title}" \n\nRead it here: ${window.location.href}`;
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // Connect viewer share button
-    viewerShareBtn.addEventListener('click', () => {
-        shareToWhatsapp(null, currentTitle);
-    });
+    document.getElementById('viewer-share').addEventListener('click', () => shareToWhatsapp(null, currentTitle));
 
     // Close Viewer
-    closeBtn.addEventListener('click', () => {
+    document.getElementById('close-pdf').addEventListener('click', () => {
       viewer.style.display = 'none';
       frame.src = '';
-      progressBar.style.width = '0%';
       document.body.style.overflow = 'auto';
     });
 
+    // Scroll Progress
     readerContainer.addEventListener('scroll', () => {
       const scrolled = (readerContainer.scrollTop / (readerContainer.scrollHeight - readerContainer.clientHeight)) * 100;
       progressBar.style.width = scrolled + '%';
-    });
-
-    function showExitMessage() { exitModal.style.display = 'flex'; }
-
-    document.addEventListener('mouseleave', () => {
-      if(viewer.style.display === 'flex') readerContainer.classList.add('content-blur');
-    });
-    document.addEventListener('mouseenter', () => {
-      readerContainer.classList.remove('content-blur');
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if(e.key === "Escape") {
-        viewer.style.display = 'none';
-        exitModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }
     });
   </script>
 </body>
