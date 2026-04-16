@@ -40,7 +40,7 @@
       gap: 1rem;
       padding: 1.5rem;
       justify-content: center;
-      background: rgba(10, 10, 10, 0.7);
+      background: rgba(10, 10, 10, 0.75);
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -81,7 +81,6 @@
       transition: 0.4s ease;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
     .item-card:hover { border-color: var(--gold); transform: translateY(-10px); background: rgba(255, 255, 255, 0.07); }
@@ -89,11 +88,11 @@
     .item-card h3 { font-family: "Playfair Display", serif; color: var(--gold); margin: 0 0 15px 0; font-size: 1.8rem; }
     .item-card p { font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 2rem; }
 
-    .card-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
-    .open-btn { background: var(--gold); color: black; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 800; font-size: 0.7rem; cursor: pointer; }
-    .share-btn { background: transparent; border: 1px solid rgba(212, 175, 55, 0.4); color: var(--gold); padding: 10px 20px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
+    .card-footer { margin-top: auto; display: flex; gap: 10px; }
+    .open-btn { flex: 1; background: var(--gold); color: black; border: none; padding: 10px; border-radius: 30px; font-weight: 800; font-size: 0.7rem; cursor: pointer; }
+    .share-btn { flex: 1; background: transparent; border: 1px solid rgba(212, 175, 55, 0.4); color: var(--gold); padding: 10px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
 
-    /* ZERO-GAP READER */
+    /* PRECISION READER */
     #editorial-reader {
       position: fixed;
       inset: 0;
@@ -125,17 +124,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-bottom: 100px;
     }
 
     canvas { 
       width: 100% !important; 
       height: auto !important; 
       display: block; 
-      /* OVERLAP FIX: These margins hide the white gaps from PDF exports */
-      margin-top: -60px; 
-      margin-bottom: -60px; 
+      /* CLIP-PATH FIX: We crop the top/bottom 8% of the page to hide margins without cutting text */
+      clip-path: inset(8% 0 8% 0);
+      margin-top: -12%; /* Pulls the cropped pages together */
       filter: invert(93%) hue-rotate(180deg) contrast(110%);
     }
+    
+    /* First page doesn't need to pull up as much */
+    canvas:first-child { margin-top: 0; }
 
     .reader-share-btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; cursor: pointer; margin-right: 10px; }
     .close-btn { background: #222; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; }
@@ -202,13 +205,46 @@
         <span class="read-time">3 MIN READ</span>
         <h3>Fireworks</h3>
         <p>A short reflection on ignition and temporary light.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'Fireworks')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Fireworks')">SHARE</button>
+        </div>
       </div>
       <div class="item-card entry" data-file="The cost of Safe words.pdf" data-time="5 MIN READ">
         <span class="read-time">5 MIN READ</span>
         <h3>The Cost of Safe Words</h3>
         <p>The safety found in silence and withheld words.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'The Cost of Safe Words')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'The Cost of Safe Words')">SHARE</button>
+        </div>
+      </div>
+      <div class="item-card entry" data-file="Things I've Noticed lately.pdf" data-time="4 MIN READ">
+        <span class="read-time">4 MIN READ</span>
+        <h3>Things I've Noticed Lately</h3>
+        <p>Small details ignored in the noise of being human.</p>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Things I\'ve Noticed Lately')">SHARE</button>
+        </div>
+      </div>
+      <div class="item-card entry" data-file="The space between words and meaning.pdf" data-time="6 MIN READ">
+        <span class="read-time">6 MIN READ</span>
+        <h3>The Space Between Words</h3>
+        <p>The gap where communication fails.</p>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'The Space Between Words')">SHARE</button>
+        </div>
+      </div>
+      <div class="item-card entry" data-file="Your voice (1).pdf" data-time="3 MIN READ">
+        <span class="read-time">3 MIN READ</span>
+        <h3>Your Voice</h3>
+        <p>Finding your unique sound in a crowded world.</p>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Your Voice')">SHARE</button>
+        </div>
       </div>
     </section>
 
@@ -217,25 +253,55 @@
         <span class="read-time">2 MIN READ</span>
         <h3>How I love you</h3>
         <p>The vulnerability of affection and the weight of the heart.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'How I Love You')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'How I Love You')">SHARE</button>
+        </div>
       </div>
       <div class="item-card entry" data-file="Survival to Safety.pdf" data-time="2 MIN READ">
         <span class="read-time">2 MIN READ</span>
         <h3>The scary part of being loved</h3>
         <p>Transitioning from survival to safety.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'The Scary Part of Being Loved')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'The Scary Part of Being Loved')">SHARE</button>
+        </div>
       </div>
       <div class="item-card entry" data-file="Homecoming Found.pdf" data-time="2 MIN READ">
         <span class="read-time">2 MIN READ</span>
         <h3>When someone feels like home</h3>
         <p>Choosing every page of a story that stretches long.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'When Someone Feels Like Home')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'When Someone Feels Like Home')">SHARE</button>
+        </div>
       </div>
       <div class="item-card entry" data-file="Eloping story.pdf" data-time="3 MIN READ">
         <span class="read-time">3 MIN READ</span>
         <h3>Eloping</h3>
         <p>A love that dared to leave everything behind.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'Eloping')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Eloping')">SHARE</button>
+        </div>
+      </div>
+      <div class="item-card entry" data-file="the one I let get away.pdf" data-time="2 MIN READ">
+        <span class="read-time">2 MIN READ</span>
+        <h3>Let Get Away</h3>
+        <p>To the one I was too unsure to keep.</p>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Let Get Away')">SHARE</button>
+        </div>
+      </div>
+      <div class="item-card entry" data-file="Document 20.pdf" data-time="2 MIN READ">
+        <span class="read-time">2 MIN READ</span>
+        <h3>Salt and Surrender</h3>
+        <p>When dawn arrives, we’ll keep the quiet.</p>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Salt and Surrender')">SHARE</button>
+        </div>
       </div>
     </section>
 
@@ -244,13 +310,19 @@
         <span class="read-time">LONG READ</span>
         <h3>Almost, Always</h3>
         <p>A book about choices and the paths we almost took.</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'Almost Always')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Almost Always')">SHARE</button>
+        </div>
       </div>
       <div class="item-card" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept', '_blank')">
         <span class="read-time">EXTERNAL</span>
         <h3>Unspoken Word</h3>
         <p>A story about secrets and hidden truths. (Wattpad Link)</p>
-        <div class="card-footer"><button class="open-btn">OPEN</button><button class="share-btn" onclick="shareDoc(event, 'Unspoken Word')">SHARE</button></div>
+        <div class="card-footer">
+          <button class="open-btn">OPEN</button>
+          <button class="share-btn" onclick="shareDoc(event, 'Unspoken Word')">SHARE</button>
+        </div>
       </div>
     </section>
   </main>
@@ -267,7 +339,7 @@
   </div>
 
   <script>
-    // PARTICLE BACKGROUND SYSTEM
+    // GOLD PARTICLES
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -275,18 +347,18 @@
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
       particles = [];
-      for(let i=0; i<60; i++) {
+      for(let i=0; i<70; i++) {
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 2 + 1,
-          speedX: Math.random() * 0.5 - 0.25,
-          speedY: Math.random() * 0.5 - 0.25,
-          opacity: Math.random()
+          speedX: Math.random() * 0.4 - 0.2,
+          speedY: Math.random() * 0.4 - 0.2,
+          opacity: Math.random() * 0.5 + 0.1
         });
       }
     }
-    function animateParticles() {
+    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#d4af37';
       particles.forEach(p => {
@@ -298,25 +370,25 @@
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
       });
-      requestAnimationFrame(animateParticles);
+      requestAnimationFrame(animate);
     }
     window.addEventListener('resize', initParticles);
-    initParticles(); animateParticles();
+    initParticles(); animate();
 
-    // PDF RENDERER
+    // PDF ENGINE
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
     async function renderPDF(url) {
       const container = document.getElementById('pdf-render-area');
-      container.innerHTML = '<p style="color:var(--gold); margin-top:20vh; font-weight:bold; letter-spacing:2px;">LOADING...</p>';
+      container.innerHTML = '<p style="color:var(--gold); margin-top:20vh; font-weight:bold; letter-spacing:2px;">IMMERSING...</p>';
       try {
         const loadingTask = pdfjsLib.getDocument(url);
         const pdf = await loadingTask.promise;
         container.innerHTML = ''; 
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 2.5 }); 
+          const viewport = page.getViewport({ scale: 2.2 }); 
           const canvasObj = document.createElement('canvas');
           const context = canvasObj.getContext('2d');
           canvasObj.height = viewport.height;
@@ -324,10 +396,10 @@
           await page.render({ canvasContext: context, viewport: viewport }).promise;
           container.appendChild(canvasObj);
         }
-      } catch (err) { container.innerHTML = '<p style="color:red;">Error loading file.</p>'; }
+      } catch (err) { container.innerHTML = '<p style="color:red;">Failed to load.</p>'; }
     }
 
-    // INTERACTIONS
+    // CLICKS
     document.querySelectorAll('.entry').forEach(card => {
       card.addEventListener('click', (e) => {
         if (e.target.classList.contains('share-btn')) return;
