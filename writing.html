@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing | Sharon Mutanu</title>
+  <!-- Open Graph / WhatsApp / iMessage previews -->
+<meta property="og:type"        content="website" />
+<meta property="og:site_name"   content="Sharon Mutanu" />
+<meta property="og:title"       content="Sharon Mutanu | Writer & Developer" />
+<meta property="og:description" content="Essays, poems, and books on living — honestly." />
+<meta property="og:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
+<meta property="og:url"         content="https://sharonlivingcanvas.netlify.app/writing.html" />
+
+<!-- Twitter / X card -->
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content="Sharon Mutanu | Writer & Developer" />
+<meta name="twitter:description" content="Essays, poems, and books on living — honestly." />
+<meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
@@ -405,6 +418,42 @@
     document.getElementById('reader').classList.add('open');
     document.getElementById('r-scroll').scrollTop = 0;
     document.body.style.overflow = 'hidden';
+    // Update meta tags for social sharing preview
+const descriptions = {
+  'Not Lost. Just 25': "I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.",
+  'Two Timelines in One Bed': "A blunt look at the "finish line" myth and the comedic silence that follows when two people are secretly decades apart.",
+  'Men, Silence, and the Moment After': "On men, emotional vocabulary, and what lives in the silence after the system reboots.",
+  'Life Debugging': "An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.",
+  'Emotional Multitasking': "The tension of being caught between two worlds — the one you're in and the one you're still carrying from before.",
+  'Paying the Passion Tax': "Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.",
+  'Fireworks': "On what it means to be briefly, spectacularly seen — and then to go dark.",
+  'The Cost of Safe Words': "What we protect when we don't say things, and what we lose in the keeping.",
+  "Things I've Noticed Lately": "Small details ignored in the noise of being human. Observations from the edge of attention.",
+  'The Space Between Words': "On meaning, silence, and what gets lost in the gap where communication fails.",
+  'Your Voice': "Why the thing that makes you strange is the only thing worth amplifying.",
+  'How I Love You': "The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.",
+  'The Scary Part of Being Loved': "Transitioning from survival to safety, and the terror of finally believing someone when they stay.",
+  'When Someone Feels Like Home': "On the quiet miracle of recognising someone. Choosing every page of a story that stretches long.",
+  'Eloping': "A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.",
+  'Let Get Away': "To the one I was too unsure to keep. A poem about hesitation and the weight of the almost.",
+  'Salt and Surrender': "When dawn arrives, we'll keep the quiet. On the way tenderness makes us undone.",
+  'Almost, Always': "A book about choices and the paths we almost took. Everything we nearly were.",
+  'Unspoken Word': "A story about secrets and hidden truths — the words we swallow and the ones that escape without permission.",
+};
+
+const slug = slugify(title);
+const shareUrl = window.location.origin + window.location.pathname + '#' + slug;
+const desc = descriptions[title] || 'A piece by Sharon Mutanu.';
+
+document.querySelector('meta[property="og:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+document.querySelector('meta[property="og:description"]').setAttribute('content', desc);
+document.querySelector('meta[property="og:url"]').setAttribute('content', shareUrl);
+document.querySelector('meta[name="twitter:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+document.querySelector('meta[name="twitter:description"]').setAttribute('content', desc);
+
+// Update the browser URL bar too (so copy-pasting the URL also works)
+history.replaceState(null, '', '#' + slug);
+    
 
     try {
       const rawText = await extractTextFromPDF(file);
@@ -418,6 +467,12 @@
   function closeReader() {
     document.getElementById('reader').classList.remove('open');
     document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname);
+document.querySelector('meta[property="og:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+document.querySelector('meta[property="og:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
+document.querySelector('meta[property="og:url"]').setAttribute('content', 'https://sharonlivingcanvas.netlify.app/writing.html');
+document.querySelector('meta[name="twitter:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+document.querySelector('meta[name="twitter:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
   }
 
   document.getElementById('r-scroll').addEventListener('scroll', e => {
@@ -457,18 +512,47 @@
   });
 
   /* ── Share ── */
-  function shareDoc(title) {
-    const url = window.location.href;
-    const text = `"${title}" by Sharon Mutanu\n${url}`;
-    if (navigator.share) {
-      navigator.share({ title, url }).catch(() => {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => toast('Link copied'));
-    } else {
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+ function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function shareDoc(title) {
+  const slug = slugify(title);
+  const url = window.location.origin + window.location.pathname + '#' + slug;
+  const text = `"${title}" by Sharon Mutanu\n${url}`;
+  if (navigator.share) {
+    navigator.share({ title, text: `"${title}" by Sharon Mutanu`, url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => toast('Link copied'));
+  } else {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+  }
+}
+function openFromHash() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return;
+  const all = document.querySelectorAll('.card[data-file]');
+  for (const card of all) {
+    if (slugify(card.dataset.title) === hash) {
+      const collection = card.closest('.collection');
+      if (collection) {
+        const tabId = collection.id.replace('col-', '');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
+        const matchingTab = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+        if (matchingTab) matchingTab.classList.add('active');
+        collection.classList.add('active');
+        document.getElementById('hero-eye').textContent = tabMeta[tabId].eye;
+        document.getElementById('hero-title').innerHTML = tabMeta[tabId].title;
+      }
+      openReader(card);
+      break;
     }
   }
+}
 
+window.addEventListener('DOMContentLoaded', openFromHash);
+window.addEventListener('hashchange', openFromHash);
   function toast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
