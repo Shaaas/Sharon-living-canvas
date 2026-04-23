@@ -44,6 +44,21 @@
     .glow-g { position: fixed; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%); top: -250px; left: -150px; pointer-events: none; z-index: 0; }
     .glow-b { position: fixed; width: 550px; height: 550px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%); bottom: -150px; right: -100px; pointer-events: none; z-index: 0; }
 
+    #particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+
+    /* LEAVE QUIETLY */
+    .leave-quietly {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+      font-family: 'DM Mono', monospace; font-size: 0.56rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      transition: color 0.25s;
+    }
+    .leave-quietly::before { content: '←'; font-size: 0.7rem; transition: transform 0.25s; }
+    .leave-quietly:hover { color: var(--gold); }
+    .leave-quietly:hover::before { transform: translateX(-3px); }
+
     /* NAV */
     .nav {
       position: sticky; top: 0; z-index: 100;
@@ -203,6 +218,8 @@
 
 <div class="glow-g"></div>
 <div class="glow-b"></div>
+<canvas id="particle-canvas"></canvas>
+<a href="hub.html" class="leave-quietly">Leave quietly</a>
 
 <nav class="nav">
   <span class="nav-logo">Sharon Mutanu</span>
@@ -460,6 +477,51 @@
   }
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader(); });
+
+  /* ── PARTICLES ── */
+  (function() {
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let pts = [];
+
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function init() {
+      resize();
+      pts = [];
+      for (let i = 0; i < 65; i++) {
+        pts.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.4 + 0.4,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: (Math.random() - 0.5) * 0.3,
+          o: Math.random() * 0.45 + 0.08,
+        });
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        ctx.globalAlpha = p.o;
+        ctx.fillStyle = '#d4af37';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', init);
+    init(); draw();
+  })();
 </script>
 </body>
 </html>
