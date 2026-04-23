@@ -3,444 +3,1018 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Writing Portal | Sharon Mutanu</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <title>Writing | Sharon Mutanu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --gold: #d4af37;
-      --silver: #cfd3da;
-      --black: #0a0a0a;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --blur: blur(20px);
+      --gold-dim: rgba(212,175,55,0.18);
+      --gold-glow: rgba(212,175,55,0.08);
+      --blue: #38bdf8;
+      --blue-dim: rgba(56,189,248,0.15);
+      --blue-glow: rgba(56,189,248,0.06);
+      --black: #080808;
+      --surface: #101010;
+      --surface2: #161616;
+      --line: rgba(255,255,255,0.07);
+      --line-hover: rgba(255,255,255,0.14);
+      --text: #e8e4dc;
+      --text-muted: #6b6760;
+      --text-dim: #3a3835;
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background: var(--black);
-      color: var(--silver);
-      font-family: 'Inter', sans-serif;
-      margin: 0;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
-    /* Floating Gold Particles Background */
-    #particle-canvas {
+    /* ── NOISE TEXTURE ── */
+    body::before {
+      content: '';
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: -1;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
     }
 
-    /* Glass Navigation */
-    .writing-portal {
-      display: flex;
-      gap: 1rem;
-      padding: 1.5rem;
-      justify-content: center;
-      background: rgba(10, 10, 10, 0.75);
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* ── AMBIENT GLOW ── */
+    .glow-gold {
+      position: fixed;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+      top: -200px; left: -100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-blue {
+      position: fixed;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,189,248,0.05) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    .nav {
       position: sticky;
       top: 0;
       z-index: 100;
-    }
-
-    .folder {
-      padding: 0.7rem 1.5rem;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--gold);
-      border-radius: 40px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      transition: 0.4s;
-    }
-
-    .folder.active { background: var(--gold); color: #000; box-shadow: 0 0 20px rgba(212, 175, 55, 0.2); }
-
-    /* Grid Layout */
-    .writing-space { padding: 3rem 1.5rem; max-width: 1200px; margin: 0 auto; }
-    .collection { display: none; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
-    .collection.active { display: grid; }
-
-    /* Card Design */
-    .item-card {
-      background: var(--card-bg);
-      backdrop-filter: var(--blur);
-      -webkit-backdrop-filter: var(--blur);
-      border-radius: 24px;
-      padding: 2.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: 0.4s ease;
       display: flex;
-      flex-direction: column;
-    }
-
-    .item-card:hover { border-color: var(--gold); transform: translateY(-10px); background: rgba(255, 255, 255, 0.07); }
-    .read-time { font-size: 0.65rem; color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
-    .item-card h3 { font-family: "Playfair Display", serif; color: var(--gold); margin: 0 0 15px 0; font-size: 1.8rem; }
-    .item-card p { font-size: 0.95rem; color: #888; line-height: 1.6; margin-bottom: 2rem; }
-
-    .card-footer { margin-top: auto; display: flex; gap: 10px; }
-    .open-btn { flex: 1; background: var(--gold); color: black; border: none; padding: 10px; border-radius: 30px; font-weight: 800; font-size: 0.7rem; cursor: pointer; }
-    .share-btn { flex: 1; background: transparent; border: 1px solid rgba(212, 175, 55, 0.4); color: var(--gold); padding: 10px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
-
-    /* PRECISION READER */
-    #editorial-reader {
-      position: fixed;
-      inset: 0;
-      background: #050505;
-      z-index: 2000;
-      display: none;
-      flex-direction: column;
       align-items: center;
-      overflow-y: auto;
-      padding-top: 80px;
+      justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 60px;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--line);
     }
 
-    .reader-toolbar {
-      position: fixed;
-      top: 0; width: 100%;
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: var(--blur);
-      padding: 1rem 2rem;
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 2px;
+    }
+
+    .tab-btn {
+      position: relative;
+      background: none;
+      border: none;
+      padding: 8px 20px;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      transition: color 0.3s;
+      border-radius: 2px;
+    }
+
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; right: 50%;
+      height: 1px;
+      background: var(--gold);
+      transition: left 0.3s, right 0.3s;
+    }
+
+    .tab-btn.active { color: var(--gold); }
+    .tab-btn.active::after { left: 16px; right: 16px; }
+    .tab-btn:hover { color: var(--text); }
+
+    /* ── HERO STRIP ── */
+    .hero-strip {
+      padding: 3.5rem 2.5rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    /* ── GRID ── */
+    .collection { display: none; }
+    .collection.active { display: block; }
+
+    .cards-grid {
+      padding: 1.5rem 2.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      border-top: 1px solid var(--line);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── CARD ── */
+    .card {
+      position: relative;
+      padding: 2rem 2rem 1.75rem;
+      border: 1px solid transparent;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      cursor: pointer;
+      transition: background 0.25s, border-color 0.25s;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      background: var(--surface);
+      border-color: var(--line-hover);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.18em;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      z-index: 2100;
     }
 
-    .pdf-canvas-container {
-      width: 100%;
-      max-width: 800px;
+    .card-num-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      padding: 3px 8px;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      border-radius: 1px;
+    }
+
+    .card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      transition: color 0.2s;
+    }
+
+    .card:hover h3 { color: #fff; }
+
+    .card p {
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .card-footer {
       display: flex;
-      flex-direction: column;
+      gap: 8px;
       align-items: center;
-      padding-bottom: 100px;
     }
 
-    canvas { 
-      width: 100% !important; 
-      height: auto !important; 
-      display: block; 
-      /* CLIP-PATH FIX: We crop the top/bottom 8% of the page to hide margins without cutting text */
-      clip-path: inset(8% 0 8% 0);
-      margin-top: -12%; /* Pulls the cropped pages together */
-      filter: invert(93%) hue-rotate(180deg) contrast(110%);
+    .btn-read {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: var(--gold);
+      color: #000;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 1px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.15s;
     }
-    
-    /* First page doesn't need to pull up as much */
-    canvas:first-child { margin-top: 0; }
 
-    .reader-share-btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 30px; font-size: 0.7rem; font-weight: 800; cursor: pointer; margin-right: 10px; }
-    .close-btn { background: #222; color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; }
+    .btn-read:hover { background: #e8c540; transform: translateY(-1px); }
+
+    .btn-share {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--blue);
+      border: 1px solid var(--blue-dim);
+      padding: 8px 16px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-share:hover { background: var(--blue-dim); border-color: var(--blue); }
+
+    .btn-external {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--line-hover);
+      padding: 9px 18px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-external:hover { color: var(--text); border-color: var(--text-muted); }
+
+    /* ── READER ── */
+    #reader {
+      position: fixed;
+      inset: 0;
+      background: var(--black);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #reader.open { display: flex; }
+
+    .reader-bar {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2.5rem;
+      height: 56px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8,8,8,0.95);
+      backdrop-filter: blur(20px);
+    }
+
+    .reader-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .reader-section-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .reader-bar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .reader-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-share-reader {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--blue);
+      border: 1px solid var(--blue-dim);
+      padding: 7px 14px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-share-reader:hover { background: var(--blue-dim); }
+
+    .btn-close-reader {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--line-hover);
+      padding: 7px 14px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-close-reader:hover { color: var(--text); border-color: var(--text-muted); }
+
+    /* Progress bar */
+    .reader-progress {
+      flex-shrink: 0;
+      height: 2px;
+      background: var(--surface2);
+    }
+
+    .reader-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+      transition: width 0.08s linear;
+    }
+
+    /* Scrollable area */
+    .reader-scroll {
+      flex: 1;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .reader-scroll::-webkit-scrollbar { width: 4px; }
+    .reader-scroll::-webkit-scrollbar-track { background: transparent; }
+    .reader-scroll::-webkit-scrollbar-thumb { background: var(--text-dim); border-radius: 2px; }
+
+    /* Content area */
+    .reader-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 4rem 2rem 8rem;
+    }
+
+    .reader-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+    }
+
+    .reader-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .reader-byline {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .reader-byline-dot {
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: inline-block;
+    }
+
+    /* Article body */
+    .reader-body {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: #c8c4bc;
+    }
+
+    .reader-body p { margin-bottom: 1.6em; }
+
+    .reader-body p:first-child::first-letter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4.8em;
+      font-weight: 600;
+      line-height: 0.78;
+      float: left;
+      margin: 0.06em 0.08em 0 0;
+      color: var(--gold);
+    }
+
+    /* Poem body — tighter, indented, no dropcap */
+    .reader-body.poem {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      line-height: 2;
+      font-style: italic;
+    }
+
+    .reader-body.poem p:first-child::first-letter {
+      font-size: inherit;
+      float: none;
+      margin: 0;
+      color: inherit;
+    }
+
+    .reader-body.poem p { margin-bottom: 0.3em; }
+    .reader-body.poem .stanza-break { margin-bottom: 1.8em; }
+
+    /* Pull quote */
+    .pull-quote {
+      border-left: 2px solid var(--gold);
+      padding: 0.25rem 0 0.25rem 1.5rem;
+      margin: 2.5rem 0;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--gold);
+      line-height: 1.5;
+    }
+
+    /* Reader footer */
+    .reader-footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .reader-footer-sig {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .btn-dl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      padding: 8px 16px;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-dl:hover { background: var(--gold-dim); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--surface2);
+      border: 1px solid var(--blue-dim);
+      color: var(--blue);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 10px 20px;
+      border-radius: 1px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .nav { padding: 0 1.25rem; }
+      .hero-strip, .cards-grid { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .reader-inner { padding: 2.5rem 1.25rem 6rem; }
+      .reader-bar { padding: 0 1.25rem; }
+      .reader-bar-title { display: none; }
+    }
   </style>
 </head>
 <body>
 
-  <canvas id="particle-canvas"></canvas>
+<div class="glow-gold"></div>
+<div class="glow-blue"></div>
 
-  <nav class="writing-portal">
-    <div class="folder active" data-target="articles">Articles</div>
-    <div class="folder" data-target="poems">Poems</div>
-    <div class="folder" data-target="books">Books</div>
-  </nav>
+<!-- NAV -->
+<nav class="nav">
+  <span class="nav-logo">Sharon Mutanu</span>
+  <div class="nav-tabs">
+    <button class="tab-btn active" data-target="articles">Articles</button>
+    <button class="tab-btn" data-target="poems">Poems</button>
+    <button class="tab-btn" data-target="books">Books</button>
+  </div>
+</nav>
 
-  <main class="writing-space">
-    <section class="collection articles active">
-       <div class="item-card entry" data-file="Not Lost. Just 25.pdf" data-time="5 MIN READ">
-        <span class="read-time">5 MIN READ</span>
-        <h3>Not Lost. Just 25d</h3>
-        <p>I didn't care about politics before.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Two Timelines in One Bed')">SHARE</button>
-        </div>
-      </div>
-      
-      <div class="item-card entry" data-file="Two Timelines in One Bed.pdf" data-time="5 MIN READ">
-        <span class="read-time">5 MIN READ</span>
-        <h3>Two Timelines in One Bed</h3>
-        <p>A blunt look at the "finish line" myth and the comedic silence that follows.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Two Timelines in One Bed')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Men, Silence, and the Moment After.pdf" data-time="7 MIN READ">
-        <span class="read-time">7 MIN READ</span>
-        <h3>Men, Silence, and the Moment After</h3>
-        <p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog".</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Men, Silence, and the Moment After')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-time="6 MIN READ">
-        <span class="read-time">6 MIN READ</span>
-        <h3>Life Debugging</h3>
-        <p>An analysis of our emotional glitches and faulty code.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Life Debugging')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Emotional Multitasking.pdf" data-time="4 MIN READ">
-        <span class="read-time">4 MIN READ</span>
-        <h3>Emotional Multitasking</h3>
-        <p>The tension of being caught between two worlds.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Emotional Multitasking')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Paying the Passion Tax.pdf" data-time="5 MIN READ">
-        <span class="read-time">5 MIN READ</span>
-        <h3>Paying the Passion Tax</h3>
-        <p>Why we walk back into collapsing buildings.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Paying the Passion Tax')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Fireworks.pdf" data-time="3 MIN READ">
-        <span class="read-time">3 MIN READ</span>
-        <h3>Fireworks</h3>
-        <p>A short reflection on ignition and temporary light.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Fireworks')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="The cost of Safe words.pdf" data-time="5 MIN READ">
-        <span class="read-time">5 MIN READ</span>
-        <h3>The Cost of Safe Words</h3>
-        <p>The safety found in silence and withheld words.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'The Cost of Safe Words')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Things I've Noticed lately.pdf" data-time="4 MIN READ">
-        <span class="read-time">4 MIN READ</span>
-        <h3>Things I've Noticed Lately</h3>
-        <p>Small details ignored in the noise of being human.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Things I\'ve Noticed Lately')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="The space between words and meaning.pdf" data-time="6 MIN READ">
-        <span class="read-time">6 MIN READ</span>
-        <h3>The Space Between Words</h3>
-        <p>The gap where communication fails.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'The Space Between Words')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Your voice (1).pdf" data-time="3 MIN READ">
-        <span class="read-time">3 MIN READ</span>
-        <h3>Your Voice</h3>
-        <p>Finding your unique sound in a crowded world.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Your Voice')">SHARE</button>
-        </div>
-      </div>
-    </section>
+<!-- HERO -->
+<header class="hero-strip">
+  <p class="hero-eyebrow" id="hero-eyebrow">11 Pieces</p>
+  <h1 class="hero-title" id="hero-title">Essays on <em>living</em>,<br>honestly</h1>
+</header>
 
-    <section class="collection poems">
-      <div class="item-card entry" data-file="How I love you.pdf" data-time="2 MIN READ">
-        <span class="read-time">2 MIN READ</span>
-        <h3>How I love you</h3>
-        <p>The vulnerability of affection and the weight of the heart.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'How I Love You')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Survival to Safety.pdf" data-time="2 MIN READ">
-        <span class="read-time">2 MIN READ</span>
-        <h3>The scary part of being loved</h3>
-        <p>Transitioning from survival to safety.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'The Scary Part of Being Loved')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Homecoming Found.pdf" data-time="2 MIN READ">
-        <span class="read-time">2 MIN READ</span>
-        <h3>When someone feels like home</h3>
-        <p>Choosing every page of a story that stretches long.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'When Someone Feels Like Home')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Eloping story.pdf" data-time="3 MIN READ">
-        <span class="read-time">3 MIN READ</span>
-        <h3>Eloping</h3>
-        <p>A love that dared to leave everything behind.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Eloping')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="the one I let get away.pdf" data-time="2 MIN READ">
-        <span class="read-time">2 MIN READ</span>
-        <h3>Let Get Away</h3>
-        <p>To the one I was too unsure to keep.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Let Get Away')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card entry" data-file="Document 20.pdf" data-time="2 MIN READ">
-        <span class="read-time">2 MIN READ</span>
-        <h3>Salt and Surrender</h3>
-        <p>When dawn arrives, we’ll keep the quiet.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Salt and Surrender')">SHARE</button>
-        </div>
-      </div>
-    </section>
+<!-- ARTICLES -->
+<div class="collection active" id="col-articles">
+  <div class="cards-grid">
 
-    <section class="collection books">
-      <div class="item-card entry" data-file="book1.pdf" data-time="LONG READ">
-        <span class="read-time">LONG READ</span>
-        <h3>Almost, Always</h3>
-        <p>A book about choices and the paths we almost took.</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Almost Always')">SHARE</button>
-        </div>
-      </div>
-      <div class="item-card" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept', '_blank')">
-        <span class="read-time">EXTERNAL</span>
-        <h3>Unspoken Word</h3>
-        <p>A story about secrets and hidden truths. (Wattpad Link)</p>
-        <div class="card-footer">
-          <button class="open-btn">OPEN</button>
-          <button class="share-btn" onclick="shareDoc(event, 'Unspoken Word')">SHARE</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <div id="editorial-reader">
-    <div class="reader-toolbar">
-      <span id="doc-title" style="color:var(--gold); font-family:'Playfair Display'; font-weight:700;">Reading</span>
-      <div>
-        <button id="active-share-btn" class="reader-share-btn">SHARE</button>
-        <button class="close-btn" onclick="closeReader()">CLOSE</button>
+    <div class="card" data-file="Not Lost. Just 25.pdf" data-type="article" data-time="5 MIN READ" data-title="Not Lost. Just 25" data-desc="I didn't care about politics before.">
+      <div class="card-num"><span>01 / 11</span><span class="card-num-badge">5 min read</span></div>
+      <h3>Not Lost. Just 25</h3>
+      <p>I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Not Lost. Just 25')">Share</button>
       </div>
     </div>
-    <div id="pdf-render-area" class="pdf-canvas-container"></div>
+
+    <div class="card" data-file="Two Timelines in One Bed.pdf" data-type="article" data-time="5 MIN READ" data-title="Two Timelines in One Bed" data-desc="A blunt look at the 'finish line' myth and the comedic silence that follows.">
+      <div class="card-num"><span>02 / 11</span><span class="card-num-badge">5 min read</span></div>
+      <h3>Two Timelines in One Bed</h3>
+      <p>A blunt look at the "finish line" myth and the comedic silence that follows when two people are technically together but secretly decades apart.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Two Timelines in One Bed')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Men, Silence, and the Moment After.pdf" data-type="article" data-time="7 MIN READ" data-title="Men, Silence, and the Moment After" data-desc="The system reboot from 'Epic Romance' to 'Local Hardware Store Catalog'.">
+      <div class="card-num"><span>03 / 11</span><span class="card-num-badge">7 min read</span></div>
+      <h3>Men, Silence, and the Moment After</h3>
+      <p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog". On men, emotional vocabulary, and what lives in the silence.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Men, Silence, and the Moment After')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-type="article" data-time="6 MIN READ" data-title="Life Debugging" data-desc="An analysis of our emotional glitches and faulty code.">
+      <div class="card-num"><span>04 / 11</span><span class="card-num-badge">6 min read</span></div>
+      <h3>Life Debugging</h3>
+      <p>An analysis of our emotional glitches and faulty code — and why we are always the last to find the bug in our own system.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Life Debugging')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Emotional Multitasking.pdf" data-type="article" data-time="4 MIN READ" data-title="Emotional Multitasking" data-desc="The tension of being caught between two worlds.">
+      <div class="card-num"><span>05 / 11</span><span class="card-num-badge">4 min read</span></div>
+      <h3>Emotional Multitasking</h3>
+      <p>The tension of being caught between two worlds — the one you're in and the one you're still carrying from before.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Emotional Multitasking')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Paying the Passion Tax.pdf" data-type="article" data-time="5 MIN READ" data-title="Paying the Passion Tax" data-desc="Why we walk back into collapsing buildings.">
+      <div class="card-num"><span>06 / 11</span><span class="card-num-badge">5 min read</span></div>
+      <h3>Paying the Passion Tax</h3>
+      <p>Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny of it.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Paying the Passion Tax')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Fireworks.pdf" data-type="article" data-time="3 MIN READ" data-title="Fireworks" data-desc="A short reflection on ignition and temporary light.">
+      <div class="card-num"><span>07 / 11</span><span class="card-num-badge">3 min read</span></div>
+      <h3>Fireworks</h3>
+      <p>A short reflection on ignition and temporary light — on what it means to be briefly, spectacularly seen, and then to go dark.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Fireworks')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="The cost of Safe words.pdf" data-type="article" data-time="5 MIN READ" data-title="The Cost of Safe Words" data-desc="The safety found in silence and withheld words.">
+      <div class="card-num"><span>08 / 11</span><span class="card-num-badge">5 min read</span></div>
+      <h3>The Cost of Safe Words</h3>
+      <p>The safety found in silence and withheld words. What we protect when we don't say things — and what we lose in the keeping.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('The Cost of Safe Words')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Things I've Noticed lately.pdf" data-type="article" data-time="4 MIN READ" data-title="Things I've Noticed Lately" data-desc="Small details ignored in the noise of being human.">
+      <div class="card-num"><span>09 / 11</span><span class="card-num-badge">4 min read</span></div>
+      <h3>Things I've Noticed Lately</h3>
+      <p>Small details ignored in the noise of being human. A collection of observations from the edge of attention.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Things I\'ve Noticed Lately')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="The space between words and meaning.pdf" data-type="article" data-time="6 MIN READ" data-title="The Space Between Words" data-desc="The gap where communication fails.">
+      <div class="card-num"><span>10 / 11</span><span class="card-num-badge">6 min read</span></div>
+      <h3>The Space Between Words</h3>
+      <p>The gap where communication fails and something else — something truer — takes its place. On meaning, silence, and what gets lost in translation.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('The Space Between Words')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Your voice (1).pdf" data-type="article" data-time="3 MIN READ" data-title="Your Voice" data-desc="Finding your unique sound in a crowded world.">
+      <div class="card-num"><span>11 / 11</span><span class="card-num-badge">3 min read</span></div>
+      <h3>Your Voice</h3>
+      <p>Finding your unique sound in a crowded world. On why the thing that makes you strange is the only thing worth amplifying.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Your Voice')">Share</button>
+      </div>
+    </div>
+
   </div>
+</div>
 
-  <script>
-    // GOLD PARTICLES
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    function initParticles() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      particles = [];
-      for(let i=0; i<70; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 2 + 1,
-          speedX: Math.random() * 0.4 - 0.2,
-          speedY: Math.random() * 0.4 - 0.2,
-          opacity: Math.random() * 0.5 + 0.1
-        });
-      }
+<!-- POEMS -->
+<div class="collection" id="col-poems">
+  <div class="cards-grid">
+
+    <div class="card" data-file="How I love you.pdf" data-type="poem" data-time="2 MIN READ" data-title="How I Love You" data-desc="The vulnerability of affection and the weight of the heart.">
+      <div class="card-num"><span>01 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>How I Love You</h3>
+      <p>The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('How I Love You')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Survival to Safety.pdf" data-type="poem" data-time="2 MIN READ" data-title="The Scary Part of Being Loved" data-desc="Transitioning from survival to safety.">
+      <div class="card-num"><span>02 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>The Scary Part of Being Loved</h3>
+      <p>Transitioning from survival to safety — and the terror of finally believing someone when they stay.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('The Scary Part of Being Loved')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Homecoming Found.pdf" data-type="poem" data-time="2 MIN READ" data-title="When Someone Feels Like Home" data-desc="Choosing every page of a story that stretches long.">
+      <div class="card-num"><span>03 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>When Someone Feels Like Home</h3>
+      <p>Choosing every page of a story that stretches long. On the quiet miracle of recognising someone.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('When Someone Feels Like Home')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Eloping story.pdf" data-type="poem" data-time="3 MIN READ" data-title="Eloping" data-desc="A love that dared to leave everything behind.">
+      <div class="card-num"><span>04 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>Eloping</h3>
+      <p>A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Eloping')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="the one I let get away.pdf" data-type="poem" data-time="2 MIN READ" data-title="Let Get Away" data-desc="To the one I was too unsure to keep.">
+      <div class="card-num"><span>05 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>Let Get Away</h3>
+      <p>To the one I was too unsure to keep. A poem about hesitation, and the particular weight of the almost.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Let Get Away')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" data-file="Document 20.pdf" data-type="poem" data-time="2 MIN READ" data-title="Salt and Surrender" data-desc="When dawn arrives, we'll keep the quiet.">
+      <div class="card-num"><span>06 / 06</span><span class="card-num-badge">Poem</span></div>
+      <h3>Salt and Surrender</h3>
+      <p>When dawn arrives, we'll keep the quiet. A poem about the way tenderness makes us undone.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Salt and Surrender')">Share</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOOKS -->
+<div class="collection" id="col-books">
+  <div class="cards-grid">
+
+    <div class="card" data-file="book1.pdf" data-type="article" data-time="LONG READ" data-title="Almost, Always" data-desc="A book about choices and the paths we almost took.">
+      <div class="card-num"><span>01 / 02</span><span class="card-num-badge">Book</span></div>
+      <h3>Almost, Always</h3>
+      <p>A book about choices and the paths we almost took. The ones we chose and the ones that chose us. Everything we nearly were.</p>
+      <div class="card-footer">
+        <button class="btn-read">Read</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Almost, Always')">Share</button>
+      </div>
+    </div>
+
+    <div class="card" style="cursor:default;">
+      <div class="card-num"><span>02 / 02</span><span class="card-num-badge" style="border-color:var(--blue-dim);color:var(--blue);">External</span></div>
+      <h3>Unspoken Word</h3>
+      <p>A story about secrets and hidden truths — the words we swallow and the ones that escape without permission. Read on Wattpad.</p>
+      <div class="card-footer">
+        <button class="btn-external" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept','_blank')">Open on Wattpad ↗</button>
+        <button class="btn-share" onclick="event.stopPropagation(); shareDoc('Unspoken Word')">Share</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- READER -->
+<div id="reader">
+  <div class="reader-bar">
+    <div class="reader-bar-left">
+      <span class="reader-section-tag" id="reader-tag">Article</span>
+      <span class="reader-bar-title" id="reader-bar-title">—</span>
+    </div>
+    <div class="reader-bar-right">
+      <button class="btn-share-reader" id="reader-share-btn">Share</button>
+      <button class="btn-close-reader" onclick="closeReader()">Close</button>
+    </div>
+  </div>
+  <div class="reader-progress"><div class="reader-progress-fill" id="reader-progress"></div></div>
+  <div class="reader-scroll" id="reader-scroll">
+    <div class="reader-inner" id="reader-inner">
+      <!-- content injected here -->
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  /* ─── PDF.js ─── */
+  const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
+  const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+  let pdfjsLib = null;
+  function loadPdfJs(cb) {
+    if (pdfjsLib) return cb(pdfjsLib);
+    const s = document.createElement('script');
+    s.src = PDFJS_SRC;
+    s.onload = () => {
+      pdfjsLib = window['pdfjs-dist/build/pdf'];
+      pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+      cb(pdfjsLib);
+    };
+    document.head.appendChild(s);
+  }
+
+  /* ─── TEXT CONTENT MAP ───
+     Add extracted text for any article here and the reader will render
+     it as beautiful HTML instead of a PDF canvas.
+     Format:
+       'Filename.pdf': { text: `<p>...</p><p>...</p>`, pullQuote: '...' }
+     If not present, falls back to PDF canvas render.
+  ─────────────────────────── */
+  const CONTENT = {
+    /* Example — replace with your real article text:
+    'Two Timelines in One Bed.pdf': {
+      pullQuote: 'Nobody warns you about this.',
+      text: `<p>There is a particular kind of silence...</p>`
+    },
+    */
+  };
+
+  /* ─── TABS ─── */
+  const tabMeta = {
+    articles: { eyebrow: '11 Pieces', title: 'Essays on <em>living</em>,<br>honestly' },
+    poems:    { eyebrow: '6 Poems',   title: 'Words for the <em>feeling</em><br>you can\'t name' },
+    books:    { eyebrow: '2 Books',   title: 'Longer things,<br><em>slowly</em> made' },
+  };
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const t = btn.dataset.target;
+      document.getElementById('col-' + t).classList.add('active');
+      const m = tabMeta[t];
+      document.getElementById('hero-eyebrow').textContent = m.eyebrow;
+      document.getElementById('hero-title').innerHTML = m.title;
+    });
+  });
+
+  /* ─── CARD CLICKS ─── */
+  document.querySelectorAll('.card[data-file]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.classList.contains('btn-share') || e.target.classList.contains('btn-external')) return;
+      openReader(card);
+    });
+    card.querySelector('.btn-read')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openReader(card);
+    });
+  });
+
+  /* ─── READER ─── */
+  let currentTitle = '';
+
+  function openReader(card) {
+    const file  = card.dataset.file;
+    const title = card.dataset.title;
+    const type  = card.dataset.type;
+    const time  = card.dataset.time;
+    currentTitle = title;
+
+    document.getElementById('reader-tag').textContent = type === 'poem' ? 'Poem' : 'Article';
+    document.getElementById('reader-bar-title').textContent = title;
+    document.getElementById('reader-share-btn').onclick = () => shareDoc(title);
+
+    const inner = document.getElementById('reader-inner');
+
+    if (CONTENT[file]) {
+      const c = CONTENT[file];
+      const bodyClass = type === 'poem' ? 'reader-body poem' : 'reader-body';
+      const pullHtml = c.pullQuote ? `<blockquote class="pull-quote">${c.pullQuote}</blockquote>` : '';
+      inner.innerHTML = `
+        <p class="reader-eyebrow">${time} · Sharon Mutanu</p>
+        <h1 class="reader-title">${title}</h1>
+        <div class="reader-byline">
+          <span>Sharon Mutanu</span>
+          <span class="reader-byline-dot"></span>
+          <span>${time}</span>
+        </div>
+        <div class="${bodyClass}">
+          ${c.text.replace(/(<p>.*?<\/p>)/s, (match, p, offset) => {
+            if (!c.pullQuote) return match;
+            const paras = c.text.match(/<p>/g) || [];
+            if (paras.length > 2) {
+              const secondP = c.text.indexOf('<p>', c.text.indexOf('<p>') + 1);
+              if (offset === secondP) return match + pullHtml;
+            }
+            return match;
+          })}
+        </div>
+        <div class="reader-footer">
+          <span class="reader-footer-sig">— Sharon Mutanu</span>
+          <a class="btn-dl" href="${file}" download>Download PDF ↓</a>
+        </div>
+      `;
+    } else {
+      // PDF canvas fallback
+      inner.innerHTML = `
+        <p class="reader-eyebrow">${time} · Sharon Mutanu</p>
+        <h1 class="reader-title">${title}</h1>
+        <div class="reader-byline">
+          <span>Sharon Mutanu</span>
+          <span class="reader-byline-dot"></span>
+          <span>${time}</span>
+        </div>
+        <div id="pdf-canvas-area" style="margin-top:2rem;"></div>
+        <div class="reader-footer">
+          <span class="reader-footer-sig">— Sharon Mutanu</span>
+          <a class="btn-dl" href="${file}" download>Download PDF ↓</a>
+        </div>
+      `;
+      renderPDF(file);
     }
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#d4af37';
-      particles.forEach(p => {
-        p.x += p.speedX; p.y += p.speedY;
-        if(p.x < 0 || p.x > canvas.width) p.speedX *= -1;
-        if(p.y < 0 || p.y > canvas.height) p.speedY *= -1;
-        ctx.globalAlpha = p.opacity;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-      });
-      requestAnimationFrame(animate);
-    }
-    window.addEventListener('resize', initParticles);
-    initParticles(); animate();
 
-    // PDF ENGINE
-    const pdfjsLib = window['pdfjs-dist/build/pdf'];
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    document.getElementById('reader').classList.add('open');
+    document.getElementById('reader-scroll').scrollTop = 0;
+    document.getElementById('reader-progress').style.width = '0%';
+    document.body.style.overflow = 'hidden';
+  }
 
-    async function renderPDF(url) {
-      const container = document.getElementById('pdf-render-area');
-      container.innerHTML = '<p style="color:var(--gold); margin-top:20vh; font-weight:bold; letter-spacing:2px;">IMMERSING...</p>';
+  function closeReader() {
+    document.getElementById('reader').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('reader-scroll').addEventListener('scroll', (e) => {
+    const el = e.target;
+    const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+    document.getElementById('reader-progress').style.width = Math.round(pct) + '%';
+  });
+
+  /* ─── PDF RENDER (fallback) ─── */
+  async function renderPDF(file) {
+    const area = document.getElementById('pdf-canvas-area');
+    if (!area) return;
+    area.innerHTML = `<p style="color:var(--text-muted);font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;">Loading…</p>`;
+
+    loadPdfJs(async (lib) => {
       try {
-        const loadingTask = pdfjsLib.getDocument(url);
-        const pdf = await loadingTask.promise;
-        container.innerHTML = ''; 
+        const pdf = await lib.getDocument(file).promise;
+        area.innerHTML = '';
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 2.2 }); 
-          const canvasObj = document.createElement('canvas');
-          const context = canvasObj.getContext('2d');
-          canvasObj.height = viewport.height;
-          canvasObj.width = viewport.width;
-          await page.render({ canvasContext: context, viewport: viewport }).promise;
-          container.appendChild(canvasObj);
+          const vp = page.getViewport({ scale: 2.0 });
+          const cv = document.createElement('canvas');
+          cv.getContext('2d');
+          cv.height = vp.height;
+          cv.width  = vp.width;
+          cv.style.cssText = 'width:100%;height:auto;display:block;margin-bottom:0.5rem;filter:invert(92%) hue-rotate(180deg) contrast(1.05);border-radius:2px;';
+          await page.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+          area.appendChild(cv);
         }
-      } catch (err) { container.innerHTML = '<p style="color:red;">Failed to load.</p>'; }
-    }
-
-    // CLICKS
-    document.querySelectorAll('.entry').forEach(card => {
-      card.addEventListener('click', (e) => {
-        if (e.target.classList.contains('share-btn')) return;
-        const file = card.dataset.file;
-        const title = card.querySelector('h3').innerText;
-        document.getElementById('doc-title').innerText = title;
-        document.getElementById('editorial-reader').style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        document.getElementById('active-share-btn').onclick = () => shareDoc(null, title);
-        renderPDF(file);
-      });
+      } catch {
+        area.innerHTML = `<p style="color:var(--text-muted);font-size:0.82rem;">Couldn't load the PDF. <a href="${file}" download style="color:var(--blue)">Download it instead ↓</a></p>`;
+      }
     });
+  }
 
-    function closeReader() { document.getElementById('editorial-reader').style.display = 'none'; document.body.style.overflow = 'auto'; }
-
-    function shareDoc(e, title) {
-      if(e) e.stopPropagation();
-      const text = `Read "${title}" by Sharon Mutanu: \n\n${window.location.href}`;
+  /* ─── SHARE ─── */
+  function shareDoc(title) {
+    const url = window.location.href;
+    const text = `"${title}" by Sharon Mutanu\n${url}`;
+    if (navigator.share) {
+      navigator.share({ title, text, url }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => showToast('Link copied'));
+    } else {
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
+  }
 
-    const folders = document.querySelectorAll('.folder');
-    const collections = document.querySelectorAll('.collection');
-    folders.forEach(f => {
-      f.addEventListener('click', () => {
-        folders.forEach(btn => btn.classList.remove('active'));
-        collections.forEach(c => c.classList.remove('active'));
-        f.classList.add('active');
-        document.querySelector(`.collection.${f.dataset.target}`).classList.add('active');
-      });
-    });
-  </script>
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  /* ─── ESC TO CLOSE ─── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeReader();
+  });
+</script>
 </body>
 </html>
