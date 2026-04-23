@@ -4,19 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Writing | Sharon Mutanu</title>
-  <!-- Open Graph / WhatsApp / iMessage previews -->
-<meta property="og:type"        content="website" />
-<meta property="og:site_name"   content="Sharon Mutanu" />
-<meta property="og:title"       content="Sharon Mutanu | Writer & Developer" />
-<meta property="og:description" content="Essays, poems, and books on living — honestly." />
-<meta property="og:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
-<meta property="og:url"         content="https://sharonlivingcanvas.netlify.app/writing.html" />
-
-<!-- Twitter / X card -->
-<meta name="twitter:card"        content="summary_large_image" />
-<meta name="twitter:title"       content="Sharon Mutanu | Writer & Developer" />
-<meta name="twitter:description" content="Essays, poems, and books on living — honestly." />
-<meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:site_name"   content="Sharon Mutanu" />
+  <meta property="og:title"       content="Sharon Mutanu | Writer & Developer" />
+  <meta property="og:description" content="Essays, poems, and books on living — honestly." />
+  <meta property="og:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
+  <meta property="og:url"         content="https://sharonlivingcanvas.netlify.app/writing.html" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Sharon Mutanu | Writer & Developer" />
+  <meta name="twitter:description" content="Essays, poems, and books on living — honestly." />
+  <meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 
@@ -29,11 +26,39 @@
       --blue-dim: rgba(56,189,248,0.14);
       --black: #080808;
       --surface: #101010;
+      --surface2: #161614;
       --line: rgba(255,255,255,0.07);
       --line-h: rgba(255,255,255,0.13);
       --text: #e4e0d8;
       --muted: #6a6760;
       --dim: #2e2c2a;
+      --fs: 1.05rem;
+      --bg-reader: #080808;
+      --prose-color: #c4c0b8;
+    }
+    .theme-sepia {
+      --black: #f5f0e8;
+      --surface: #ede8e0;
+      --surface2: #e8e3da;
+      --bg-reader: #f5f0e8;
+      --text: #3a3530;
+      --muted: #8a7f74;
+      --dim: #c8c3ba;
+      --line: rgba(0,0,0,0.08);
+      --line-h: rgba(0,0,0,0.14);
+      --prose-color: #4a4540;
+    }
+    .theme-light {
+      --black: #ffffff;
+      --surface: #f4f4f4;
+      --surface2: #eeeeee;
+      --bg-reader: #ffffff;
+      --text: #1a1a1a;
+      --muted: #888;
+      --dim: #ccc;
+      --line: rgba(0,0,0,0.08);
+      --line-h: rgba(0,0,0,0.14);
+      --prose-color: #333;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -56,7 +81,6 @@
 
     .glow-g { position: fixed; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%); top: -250px; left: -150px; pointer-events: none; z-index: 0; }
     .glow-b { position: fixed; width: 550px; height: 550px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%); bottom: -150px; right: -100px; pointer-events: none; z-index: 0; }
-
     #particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 
     /* LEAVE QUIETLY */
@@ -88,19 +112,67 @@
     .tab-btn.active { color: var(--gold); }
     .tab-btn.active::after { left: 16px; right: 16px; }
     .tab-btn:hover { color: var(--text); }
+    @media (max-width: 600px) { .nav-tabs { display: none; } }
 
     /* HERO */
-    .hero { padding: 3.5rem 2.5rem 2rem; position: relative; z-index: 1; }
+    .hero { padding: 3.5rem 2.5rem 1.5rem; position: relative; z-index: 1; }
     .hero-eye { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.7rem; }
     .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 400; line-height: 1.1; }
     .hero-title em { font-style: italic; color: var(--gold); }
 
+    /* SEARCH + FILTER BAR */
+    .filter-bar {
+      padding: 1rem 2.5rem 1.5rem;
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .search-wrap {
+      position: relative; max-width: 380px;
+    }
+    .search-wrap::before {
+      content: '⌕';
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); font-size: 1rem; pointer-events: none;
+    }
+    #search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--line-h);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      padding: 9px 12px 9px 32px;
+      border-radius: 1px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #search-input::placeholder { color: var(--muted); }
+    #search-input:focus { border-color: var(--gold-dim); }
+
+    .tag-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-pill {
+      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 1px;
+      border: 1px solid var(--line-h); color: var(--muted);
+      background: transparent; cursor: pointer; transition: all 0.2s;
+    }
+    .tag-pill:hover { color: var(--text); border-color: var(--muted); }
+    .tag-pill.active { background: var(--gold-dim); border-color: var(--gold-dim); color: var(--gold); }
+
+    /* NO RESULTS */
+    .no-results {
+      display: none; padding: 3rem 2.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;
+      position: relative; z-index: 1;
+    }
+
     /* GRID */
     .collection { display: none; }
     .collection.active { display: block; }
-
     .grid {
-      padding: 0 2.5rem 5rem;
+      padding: 0 2.5rem 6rem;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       border-top: 1px solid var(--line);
@@ -112,21 +184,24 @@
       padding: 2rem 1.75rem 1.75rem;
       border-bottom: 1px solid var(--line);
       border-right: 1px solid var(--line);
-      cursor: pointer;
-      position: relative; overflow: hidden;
+      cursor: pointer; position: relative; overflow: hidden;
       transition: background 0.2s;
     }
+    .card.hidden { display: none; }
     .card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--gold-glow) 0%, transparent 55%); opacity: 0; transition: opacity 0.3s; pointer-events: none; }
     .card:hover { background: var(--surface); }
     .card:hover::before { opacity: 1; }
 
-    .card-meta { font-family: 'DM Mono', monospace; font-size: 0.53rem; letter-spacing: 0.15em; color: var(--dim); margin-bottom: 1.4rem; display: flex; justify-content: space-between; }
+    .card-meta { font-family: 'DM Mono', monospace; font-size: 0.53rem; letter-spacing: 0.15em; color: var(--dim); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
     .card-badge { border: 1px solid var(--gold-dim); color: var(--gold); padding: 2px 8px; border-radius: 1px; }
     .card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; line-height: 1.25; color: var(--text); margin-bottom: 0.65rem; transition: color 0.2s; }
     .card:hover h3 { color: #fff; }
-    .card p { font-size: 0.8rem; line-height: 1.65; color: var(--muted); margin-bottom: 1.75rem; }
-    .card-foot { display: flex; gap: 8px; }
+    .card p { font-size: 0.8rem; line-height: 1.65; color: var(--muted); margin-bottom: 1rem; }
 
+    .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.25rem; }
+    .card-tag { font-family: 'DM Mono', monospace; font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 7px; border-radius: 1px; border: 1px solid var(--line-h); color: var(--muted); }
+
+    .card-foot { display: flex; gap: 8px; align-items: center; }
     .btn-read { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--gold); color: #000; border: none; padding: 8px 18px; border-radius: 1px; cursor: pointer; font-weight: 500; transition: background 0.2s; }
     .btn-read:hover { background: #e8c540; }
     .btn-share { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; background: transparent; color: var(--blue); border: 1px solid var(--blue-dim); padding: 7px 14px; border-radius: 1px; cursor: pointer; transition: background 0.2s; }
@@ -134,28 +209,65 @@
     .btn-ext { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--line-h); padding: 8px 16px; border-radius: 1px; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
     .btn-ext:hover { color: var(--text); border-color: var(--muted); }
 
+    /* BOOKMARK BTN on card */
+    .btn-bookmark {
+      margin-left: auto;
+      background: none; border: none; cursor: pointer;
+      font-size: 1rem; line-height: 1;
+      color: var(--muted); transition: color 0.2s, transform 0.15s;
+      padding: 4px;
+    }
+    .btn-bookmark:hover { transform: scale(1.2); }
+    .btn-bookmark.saved { color: var(--gold); }
+
     /* ── READER ── */
     #reader {
       position: fixed; inset: 0;
-      background: var(--black);
+      background: var(--bg-reader);
       z-index: 1000;
       display: none; flex-direction: column;
+      transition: background 0.3s;
     }
     #reader.open { display: flex; }
 
     .r-bar {
       flex-shrink: 0;
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0 2.5rem; height: 54px;
+      padding: 0 2rem; height: 54px;
       background: rgba(8,8,8,0.96);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--line);
     }
-    .r-bar-left { display: flex; align-items: center; gap: 12px; }
+    .theme-sepia .r-bar, .theme-light .r-bar { background: rgba(245,240,232,0.97); }
+    .r-bar-left { display: flex; align-items: center; gap: 10px; }
     .r-tag { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); }
     .r-bar-title { font-family: 'Cormorant Garamond', serif; font-size: 0.92rem; color: var(--muted); font-style: italic; }
-    .r-bar-right { display: flex; gap: 8px; }
+    .r-bar-right { display: flex; gap: 6px; align-items: center; }
 
+    /* Theme & font controls */
+    .r-controls { display: flex; gap: 4px; align-items: center; margin-right: 4px; }
+    .r-theme-btn {
+      width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line-h);
+      cursor: pointer; transition: border-color 0.2s; flex-shrink: 0;
+    }
+    .r-theme-btn[data-theme="dark"]  { background: #080808; }
+    .r-theme-btn[data-theme="sepia"] { background: #f5f0e8; }
+    .r-theme-btn[data-theme="light"] { background: #ffffff; }
+    .r-theme-btn.active { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-dim); }
+    .r-sep { width: 1px; height: 18px; background: var(--line-h); margin: 0 2px; }
+    .r-font-btn {
+      background: none; border: 1px solid var(--line-h); color: var(--muted);
+      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.08em;
+      padding: 3px 7px; border-radius: 1px; cursor: pointer; transition: color 0.2s;
+    }
+    .r-font-btn:hover { color: var(--text); }
+
+    .btn-bookmark-r {
+      background: none; border: 1px solid var(--line-h); color: var(--muted);
+      font-size: 0.85rem; padding: 4px 10px; border-radius: 1px; cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-bookmark-r.saved { color: var(--gold); border-color: var(--gold-dim); }
     .btn-share-r { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; background: transparent; color: var(--blue); border: 1px solid var(--blue-dim); padding: 6px 14px; border-radius: 1px; cursor: pointer; transition: background 0.2s; }
     .btn-share-r:hover { background: var(--blue-dim); }
     .btn-close-r { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; background: transparent; color: var(--muted); border: 1px solid var(--line-h); padding: 6px 14px; border-radius: 1px; cursor: pointer; transition: color 0.2s; }
@@ -164,66 +276,118 @@
     .r-progress { flex-shrink: 0; height: 2px; background: var(--surface); }
     .r-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--blue)); transition: width 0.08s linear; }
 
-    .r-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+    .r-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; background: var(--bg-reader); }
     .r-scroll::-webkit-scrollbar { width: 3px; }
     .r-scroll::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
 
-    .r-inner { max-width: 680px; margin: 0 auto; padding: 4rem 2rem 8rem; }
+    .r-inner { max-width: 680px; margin: 0 auto; padding: 4rem 2rem 3rem; }
 
     .r-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; }
-    .r-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; line-height: 1.15; color: #fff; margin-bottom: 0.5rem; }
-    .r-byline { font-size: 0.76rem; color: var(--muted); margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 1.2rem; }
-    .r-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--blue); display: inline-block; }
+    .r-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; line-height: 1.15; color: var(--text); margin-bottom: 0.5rem; }
+    .r-byline { font-size: 0.76rem; color: var(--muted); margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+    .r-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--blue); display: inline-block; flex-shrink: 0; }
+    .r-readtime { color: var(--gold); }
 
-    /* Loading state */
-    .r-loading {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 5rem 2rem; gap: 1.5rem;
-    }
-    .r-loading-bar {
-      width: 200px; height: 1px; background: var(--dim); overflow: hidden; border-radius: 1px;
-    }
-    .r-loading-fill {
-      height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--blue));
-      animation: loadpulse 1.6s ease-in-out infinite;
-    }
-    @keyframes loadpulse {
-      0% { width: 0%; margin-left: 0; }
-      50% { width: 60%; margin-left: 20%; }
-      100% { width: 0%; margin-left: 100%; }
-    }
+    /* Loading */
+    .r-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5rem 2rem; gap: 1.5rem; }
+    .r-loading-bar { width: 200px; height: 1px; background: var(--dim); overflow: hidden; border-radius: 1px; }
+    .r-loading-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--blue)); animation: loadpulse 1.6s ease-in-out infinite; }
+    @keyframes loadpulse { 0% { width: 0%; margin-left: 0; } 50% { width: 60%; margin-left: 20%; } 100% { width: 0%; margin-left: 100%; } }
     .r-loading p { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 
     /* Article prose */
-    .r-body { font-size: 1.05rem; line-height: 1.9; color: #c4c0b8; }
+    .r-body { font-size: var(--fs); line-height: 1.9; color: var(--prose-color); }
     .r-body p { margin-bottom: 1.5em; }
-    .r-body p:first-of-type::first-letter {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 4.6em; font-weight: 600; line-height: 0.78;
-      float: left; margin: 0.06em 0.1em 0 0;
-      color: var(--gold);
-    }
+    .r-body p:first-of-type::first-letter { font-family: 'Cormorant Garamond', serif; font-size: 4.6em; font-weight: 600; line-height: 0.78; float: left; margin: 0.06em 0.1em 0 0; color: var(--gold); }
     .r-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--text); margin: 2.5em 0 0.8em; }
     .r-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-style: italic; color: var(--gold); margin: 2em 0 0.6em; }
     .r-body blockquote { border-left: 2px solid var(--gold); padding: 0.2rem 0 0.2rem 1.5rem; margin: 2.5rem 0; font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: var(--gold); line-height: 1.5; }
 
     /* Poem prose */
-    .r-body.poem { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; line-height: 1.9; font-style: italic; color: #ccc8bf; }
+    .r-body.poem { font-family: 'Cormorant Garamond', serif; font-size: calc(var(--fs) * 1.14); line-height: 1.9; font-style: italic; color: var(--prose-color); }
     .r-body.poem p:first-of-type::first-letter { font-size: inherit; float: none; margin: 0; color: inherit; }
     .r-body.poem p { margin-bottom: 0.25em; }
     .r-body.poem .break { margin-bottom: 1.8em; }
 
+    /* Highlight to share */
+    .quote-share-btn {
+      position: absolute;
+      background: var(--gold); color: #000;
+      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 5px 10px; border-radius: 1px;
+      border: none; cursor: pointer; white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none; z-index: 9999;
+      transform: translateX(-50%);
+    }
+
     .r-sig { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; color: var(--muted); }
 
+    /* YOU MIGHT ALSO LIKE */
+    .r-also {
+      margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--line);
+    }
+    .r-also-label { font-family: 'DM Mono', monospace; font-size: 0.54rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+    .r-also-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .r-also-card {
+      background: var(--surface); padding: 1.25rem;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .r-also-card:hover { background: var(--surface2); }
+    .r-also-type { font-family: 'DM Mono', monospace; font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem; }
+    .r-also-title { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+    /* NEXT / PREV NAV */
+    .r-nav {
+      display: flex; gap: 1px; margin-top: 3rem;
+      background: var(--line); border: 1px solid var(--line);
+    }
+    .r-nav-btn {
+      flex: 1; background: var(--surface); padding: 1.25rem 1.5rem;
+      cursor: pointer; transition: background 0.2s; border: none;
+      text-align: left; display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .r-nav-btn:last-child { text-align: right; align-items: flex-end; }
+    .r-nav-btn:hover { background: var(--surface2); }
+    .r-nav-dir { font-family: 'DM Mono', monospace; font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .r-nav-title { font-family: 'Cormorant Garamond', serif; font-size: 1rem; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .r-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
     /* TOAST */
-    #toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--surface); border: 1px solid var(--blue-dim); color: var(--blue); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 9px 20px; border-radius: 1px; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 9999; pointer-events: none; }
+    #toast { position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--surface); border: 1px solid var(--blue-dim); color: var(--blue); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; padding: 9px 20px; border-radius: 1px; opacity: 0; transition: opacity 0.3s, transform 0.3s; z-index: 9999; pointer-events: none; }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* QUOTE SHARE CANVAS (hidden) */
+    #quote-canvas { display: none; }
+
+    /* MOBILE BOTTOM NAV */
+    .mobile-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid var(--line);
+      padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom));
+    }
+    .mobile-nav-inner { display: flex; justify-content: space-around; }
+    .mobile-tab {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      background: none; border: none; cursor: pointer; padding: 6px 16px;
+      font-family: 'DM Mono', monospace; font-size: 0.52rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted); transition: color 0.2s;
+    }
+    .mobile-tab .tab-icon { font-size: 1.1rem; line-height: 1; }
+    .mobile-tab.active { color: var(--gold); }
     @media (max-width: 600px) {
-      .nav, .hero, .grid { padding-left: 1.25rem; padding-right: 1.25rem; }
-      .r-inner { padding: 2.5rem 1.25rem 6rem; }
-      .r-bar { padding: 0 1.25rem; }
+      .mobile-nav { display: block; }
+      .leave-quietly { bottom: 4.5rem; }
+      .nav, .hero, .filter-bar, .grid { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .r-inner { padding: 2.5rem 1.25rem 3rem; }
+      .r-bar { padding: 0 1rem; }
       .r-bar-title { display: none; }
+      .r-controls { display: none; }
+      .grid { padding-bottom: 8rem; }
+      #toast { bottom: 5.5rem; }
     }
   </style>
 </head>
@@ -232,6 +396,8 @@
 <div class="glow-g"></div>
 <div class="glow-b"></div>
 <canvas id="particle-canvas"></canvas>
+<canvas id="quote-canvas" width="1080" height="1080"></canvas>
+<button id="quote-share-btn" class="quote-share-btn">✦ Share quote</button>
 <a href="hub.html" class="leave-quietly">Leave quietly</a>
 
 <nav class="nav">
@@ -248,40 +414,49 @@
   <h1 class="hero-title" id="hero-title">Essays on <em>living</em>,<br>honestly</h1>
 </header>
 
+<div class="filter-bar">
+  <div class="search-wrap">
+    <input id="search-input" type="text" placeholder="Search pieces…" autocomplete="off" />
+  </div>
+  <div class="tag-filters" id="tag-filters"></div>
+</div>
+
+<div class="no-results" id="no-results">No pieces found — try a different search or tag.</div>
+
 <!-- ARTICLES -->
 <div class="collection active" id="col-articles">
   <div class="grid">
-    <div class="card" data-file="Not Lost. Just 25.pdf" data-type="article" data-time="5 MIN READ" data-title="Not Lost. Just 25"><div class="card-meta"><span>01 / 11</span><span class="card-badge">5 min</span></div><h3>Not Lost. Just 25</h3><p>I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Not Lost. Just 25')">Share</button></div></div>
-    <div class="card" data-file="Two Timelines in One Bed.pdf" data-type="article" data-time="5 MIN READ" data-title="Two Timelines in One Bed"><div class="card-meta"><span>02 / 11</span><span class="card-badge">5 min</span></div><h3>Two Timelines in One Bed</h3><p>A blunt look at the "finish line" myth and the comedic silence that follows when two people are technically together but secretly decades apart.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Two Timelines in One Bed')">Share</button></div></div>
-    <div class="card" data-file="Men, Silence, and the Moment After.pdf" data-type="article" data-time="7 MIN READ" data-title="Men, Silence, and the Moment After"><div class="card-meta"><span>03 / 11</span><span class="card-badge">7 min</span></div><h3>Men, Silence, and the Moment After</h3><p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog". On men, emotional vocabulary, and what lives in the silence.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Men, Silence, and the Moment After')">Share</button></div></div>
-    <div class="card" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-type="article" data-time="6 MIN READ" data-title="Life Debugging"><div class="card-meta"><span>04 / 11</span><span class="card-badge">6 min</span></div><h3>Life Debugging</h3><p>An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Life Debugging')">Share</button></div></div>
-    <div class="card" data-file="Emotional Multitasking.pdf" data-type="article" data-time="4 MIN READ" data-title="Emotional Multitasking"><div class="card-meta"><span>05 / 11</span><span class="card-badge">4 min</span></div><h3>Emotional Multitasking</h3><p>The tension of being caught between two worlds, the one you're in and the one you're still carrying from before.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Emotional Multitasking')">Share</button></div></div>
-    <div class="card" data-file="Paying the Passion Tax.pdf" data-type="article" data-time="5 MIN READ" data-title="Paying the Passion Tax"><div class="card-meta"><span>06 / 11</span><span class="card-badge">5 min</span></div><h3>Paying the Passion Tax</h3><p>Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Paying the Passion Tax')">Share</button></div></div>
-    <div class="card" data-file="Fireworks.pdf" data-type="article" data-time="3 MIN READ" data-title="Fireworks"><div class="card-meta"><span>07 / 11</span><span class="card-badge">3 min</span></div><h3>Fireworks</h3><p>A short reflection on ignition and temporary light, on what it means to be briefly, spectacularly seen, and then to go dark.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Fireworks')">Share</button></div></div>
-    <div class="card" data-file="The cost of Safe words.pdf" data-type="article" data-time="5 MIN READ" data-title="The Cost of Safe Words"><div class="card-meta"><span>08 / 11</span><span class="card-badge">5 min</span></div><h3>The Cost of Safe Words</h3><p>The safety found in silence and withheld words. What we protect when we don't say things, and what we lose in the keeping.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('The Cost of Safe Words')">Share</button></div></div>
-    <div class="card" data-file="Things I've Noticed lately.pdf" data-type="article" data-time="4 MIN READ" data-title="Things I've Noticed Lately"><div class="card-meta"><span>09 / 11</span><span class="card-badge">4 min</span></div><h3>Things I've Noticed Lately</h3><p>Small details ignored in the noise of being human. A collection of observations from the edge of attention.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Things I\'ve Noticed Lately')">Share</button></div></div>
-    <div class="card" data-file="The space between words and meaning.pdf" data-type="article" data-time="6 MIN READ" data-title="The Space Between Words"><div class="card-meta"><span>10 / 11</span><span class="card-badge">6 min</span></div><h3>The Space Between Words</h3><p>The gap where communication fails and something truer takes its place. On meaning, silence, and what gets lost in translation.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('The Space Between Words')">Share</button></div></div>
-    <div class="card" data-file="Your voice (1).pdf" data-type="article" data-time="3 MIN READ" data-title="Your Voice"><div class="card-meta"><span>11 / 11</span><span class="card-badge">3 min</span></div><h3>Your Voice</h3><p>Finding your unique sound in a crowded world. On why the thing that makes you strange is the only thing worth amplifying.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Your Voice')">Share</button></div></div>
+    <div class="card" data-file="Not Lost. Just 25.pdf" data-type="article" data-time="5 MIN READ" data-title="Not Lost. Just 25" data-tags="identity,growing-up,politics"><div class="card-meta"><span>01 / 11</span><span class="card-badge">article</span></div><h3>Not Lost. Just 25</h3><p>I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Two Timelines in One Bed.pdf" data-type="article" data-time="5 MIN READ" data-title="Two Timelines in One Bed" data-tags="love,relationships,humour"><div class="card-meta"><span>02 / 11</span><span class="card-badge">article</span></div><h3>Two Timelines in One Bed</h3><p>A blunt look at the "finish line" myth and the comedic silence that follows when two people are technically together but secretly decades apart.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Men, Silence, and the Moment After.pdf" data-type="article" data-time="7 MIN READ" data-title="Men, Silence, and the Moment After" data-tags="relationships,grief,identity"><div class="card-meta"><span>03 / 11</span><span class="card-badge">article</span></div><h3>Men, Silence, and the Moment After</h3><p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog". On men, emotional vocabulary, and what lives in the silence.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-type="article" data-time="6 MIN READ" data-title="Life Debugging" data-tags="identity,humour,growing-up"><div class="card-meta"><span>04 / 11</span><span class="card-badge">article</span></div><h3>Life Debugging</h3><p>An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Emotional Multitasking.pdf" data-type="article" data-time="4 MIN READ" data-title="Emotional Multitasking" data-tags="grief,identity,growing-up"><div class="card-meta"><span>05 / 11</span><span class="card-badge">article</span></div><h3>Emotional Multitasking</h3><p>The tension of being caught between two worlds, the one you're in and the one you're still carrying from before.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Paying the Passion Tax.pdf" data-type="article" data-time="5 MIN READ" data-title="Paying the Passion Tax" data-tags="love,identity,grief"><div class="card-meta"><span>06 / 11</span><span class="card-badge">article</span></div><h3>Paying the Passion Tax</h3><p>Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Fireworks.pdf" data-type="article" data-time="3 MIN READ" data-title="Fireworks" data-tags="love,grief,identity"><div class="card-meta"><span>07 / 11</span><span class="card-badge">article</span></div><h3>Fireworks</h3><p>A short reflection on ignition and temporary light, on what it means to be briefly, spectacularly seen, and then to go dark.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="The cost of Safe words.pdf" data-type="article" data-time="5 MIN READ" data-title="The Cost of Safe Words" data-tags="relationships,grief,identity"><div class="card-meta"><span>08 / 11</span><span class="card-badge">article</span></div><h3>The Cost of Safe Words</h3><p>The safety found in silence and withheld words. What we protect when we don't say things, and what we lose in the keeping.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Things I've Noticed lately.pdf" data-type="article" data-time="4 MIN READ" data-title="Things I've Noticed Lately" data-tags="humour,growing-up,identity"><div class="card-meta"><span>09 / 11</span><span class="card-badge">article</span></div><h3>Things I've Noticed Lately</h3><p>Small details ignored in the noise of being human. A collection of observations from the edge of attention.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="The space between words and meaning.pdf" data-type="article" data-time="6 MIN READ" data-title="The Space Between Words" data-tags="relationships,grief,identity"><div class="card-meta"><span>10 / 11</span><span class="card-badge">article</span></div><h3>The Space Between Words</h3><p>The gap where communication fails and something truer takes its place. On meaning, silence, and what gets lost in translation.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Your voice (1).pdf" data-type="article" data-time="3 MIN READ" data-title="Your Voice" data-tags="identity,growing-up,humour"><div class="card-meta"><span>11 / 11</span><span class="card-badge">article</span></div><h3>Your Voice</h3><p>Finding your unique sound in a crowded world. On why the thing that makes you strange is the only thing worth amplifying.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
   </div>
 </div>
 
 <!-- POEMS -->
 <div class="collection" id="col-poems">
   <div class="grid">
-    <div class="card" data-file="How I love you.pdf" data-type="poem" data-time="2 MIN READ" data-title="How I Love You"><div class="card-meta"><span>01 / 06</span><span class="card-badge">Poem</span></div><h3>How I Love You</h3><p>The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('How I Love You')">Share</button></div></div>
-    <div class="card" data-file="Survival to Safety.pdf" data-type="poem" data-time="2 MIN READ" data-title="The Scary Part of Being Loved"><div class="card-meta"><span>02 / 06</span><span class="card-badge">Poem</span></div><h3>The Scary Part of Being Loved</h3><p>Transitioning from survival to safety, and the terror of finally believing someone when they stay.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('The Scary Part of Being Loved')">Share</button></div></div>
-    <div class="card" data-file="Homecoming Found.pdf" data-type="poem" data-time="2 MIN READ" data-title="When Someone Feels Like Home"><div class="card-meta"><span>03 / 06</span><span class="card-badge">Poem</span></div><h3>When Someone Feels Like Home</h3><p>Choosing every page of a story that stretches long. On the quiet miracle of recognising someone.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('When Someone Feels Like Home')">Share</button></div></div>
-    <div class="card" data-file="Eloping story.pdf" data-type="poem" data-time="3 MIN READ" data-title="Eloping"><div class="card-meta"><span>04 / 06</span><span class="card-badge">Poem</span></div><h3>Eloping</h3><p>A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Eloping')">Share</button></div></div>
-    <div class="card" data-file="the one I let get away.pdf" data-type="poem" data-time="2 MIN READ" data-title="Let Get Away"><div class="card-meta"><span>05 / 06</span><span class="card-badge">Poem</span></div><h3>Let Get Away</h3><p>To the one I was too unsure to keep. A poem about hesitation, and the particular weight of the almost.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Let Get Away')">Share</button></div></div>
-    <div class="card" data-file="Document 20.pdf" data-type="poem" data-time="2 MIN READ" data-title="Salt and Surrender"><div class="card-meta"><span>06 / 06</span><span class="card-badge">Poem</span></div><h3>Salt and Surrender</h3><p>When dawn arrives, we'll keep the quiet. A poem about the way tenderness makes us undone.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Salt and Surrender')">Share</button></div></div>
+    <div class="card" data-file="How I love you.pdf" data-type="poem" data-time="2 MIN READ" data-title="How I Love You" data-tags="love,relationships"><div class="card-meta"><span>01 / 06</span><span class="card-badge">poem</span></div><h3>How I Love You</h3><p>The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Survival to Safety.pdf" data-type="poem" data-time="2 MIN READ" data-title="The Scary Part of Being Loved" data-tags="love,grief,relationships"><div class="card-meta"><span>02 / 06</span><span class="card-badge">poem</span></div><h3>The Scary Part of Being Loved</h3><p>Transitioning from survival to safety, and the terror of finally believing someone when they stay.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Homecoming Found.pdf" data-type="poem" data-time="2 MIN READ" data-title="When Someone Feels Like Home" data-tags="love,relationships"><div class="card-meta"><span>03 / 06</span><span class="card-badge">poem</span></div><h3>When Someone Feels Like Home</h3><p>Choosing every page of a story that stretches long. On the quiet miracle of recognising someone.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Eloping story.pdf" data-type="poem" data-time="3 MIN READ" data-title="Eloping" data-tags="love,relationships,identity"><div class="card-meta"><span>04 / 06</span><span class="card-badge">poem</span></div><h3>Eloping</h3><p>A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="the one I let get away.pdf" data-type="poem" data-time="2 MIN READ" data-title="Let Get Away" data-tags="love,grief,relationships"><div class="card-meta"><span>05 / 06</span><span class="card-badge">poem</span></div><h3>Let Get Away</h3><p>To the one I was too unsure to keep. A poem about hesitation, and the particular weight of the almost.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Document 20.pdf" data-type="poem" data-time="2 MIN READ" data-title="Salt and Surrender" data-tags="love,grief"><div class="card-meta"><span>06 / 06</span><span class="card-badge">poem</span></div><h3>Salt and Surrender</h3><p>When dawn arrives, we'll keep the quiet. A poem about the way tenderness makes us undone.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
   </div>
 </div>
 
 <!-- BOOKS -->
 <div class="collection" id="col-books">
   <div class="grid">
-    <div class="card" data-file="book1.pdf" data-type="article" data-time="Long Read" data-title="Almost, Always"><div class="card-meta"><span>01 / 02</span><span class="card-badge">Book</span></div><h3>Almost, Always</h3><p>A book about choices and the paths we almost took. The ones we chose and the ones that chose us. Everything we nearly were.</p><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Almost, Always')">Share</button></div></div>
-    <div class="card" style="cursor:default;"><div class="card-meta"><span>02 / 02</span><span class="card-badge" style="border-color:var(--blue-dim);color:var(--blue)">External</span></div><h3>Unspoken Word</h3><p>A story about secrets and hidden truths, the words we swallow and the ones that escape without permission.</p><div class="card-foot"><button class="btn-ext" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept','_blank')">Read on Wattpad ↗</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Unspoken Word')">Share</button></div></div>
+    <div class="card" data-file="book1.pdf" data-type="article" data-time="Long Read" data-title="Almost, Always" data-tags="identity,love,grief"><div class="card-meta"><span>01 / 02</span><span class="card-badge">book</span></div><h3>Almost, Always</h3><p>A book about choices and the paths we almost took. The ones we chose and the ones that chose us. Everything we nearly were.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" style="cursor:default;" data-title="Unspoken Word" data-tags="relationships,grief"><div class="card-meta"><span>02 / 02</span><span class="card-badge" style="border-color:var(--blue-dim);color:var(--blue)">external</span></div><h3>Unspoken Word</h3><p>A story about secrets and hidden truths, the words we swallow and the ones that escape without permission.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-ext" onclick="window.open('https://www.wattpad.com/story/393043044-secrets-they-kept','_blank')">Read on Wattpad ↗</button><button class="btn-share" onclick="event.stopPropagation();shareDoc('Unspoken Word')">Share</button></div></div>
   </div>
 </div>
 
@@ -293,6 +468,15 @@
       <span class="r-bar-title" id="r-bar-title">—</span>
     </div>
     <div class="r-bar-right">
+      <div class="r-controls">
+        <button class="r-theme-btn active" data-theme="dark" title="Dark"></button>
+        <button class="r-theme-btn" data-theme="sepia" title="Sepia"></button>
+        <button class="r-theme-btn" data-theme="light" title="Light"></button>
+        <div class="r-sep"></div>
+        <button class="r-font-btn" id="font-down" title="Smaller">A−</button>
+        <button class="r-font-btn" id="font-up" title="Larger">A+</button>
+      </div>
+      <button class="btn-bookmark-r" id="r-bookmark-btn" title="Bookmark">♡</button>
       <button class="btn-share-r" id="r-share-btn">Share</button>
       <button class="btn-close-r" onclick="closeReader()">Close</button>
     </div>
@@ -303,32 +487,56 @@
   </div>
 </div>
 
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-tab active" data-target="articles">
+      <span class="tab-icon">✦</span>Articles
+    </button>
+    <button class="mobile-tab" data-target="poems">
+      <span class="tab-icon">◇</span>Poems
+    </button>
+    <button class="mobile-tab" data-target="books">
+      <span class="tab-icon">◻</span>Books
+    </button>
+  </div>
+</nav>
+
 <div id="toast"></div>
 
 <script>
-  /* ── PDF.js setup ── */
+  /* ══════════════════════════════════════
+     HELPERS — defined first so everything below can use them
+  ══════════════════════════════════════ */
   function slugify(title) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
 
-const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  /* ══════════════════════════════════════
+     PDF.js
+  ══════════════════════════════════════ */
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-  /* ── Extract all text from a PDF file ── */
   async function extractTextFromPDF(file) {
     const pdf = await pdfjsLib.getDocument(file).promise;
     let fullText = '';
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const content = await page.getTextContent();
-      // Reconstruct text with line-break awareness using transform Y position
-      let lastY = null;
-      let pageText = '';
+      let lastY = null, pageText = '';
       for (const item of content.items) {
         const y = item.transform[5];
-        if (lastY !== null && Math.abs(y - lastY) > 5) {
-          pageText += '\n';
-        }
+        if (lastY !== null && Math.abs(y - lastY) > 5) pageText += '\n';
         pageText += item.str;
         lastY = y;
       }
@@ -337,18 +545,24 @@ const pdfjsLib = window['pdfjs-dist/build/pdf'];
     return fullText;
   }
 
-  /* ── Format raw text into article HTML ── */
+  function countWords(text) {
+    return text.trim().split(/\s+/).filter(Boolean).length;
+  }
+
+  function calcReadTime(wordCount) {
+    const mins = Math.ceil(wordCount / 220);
+    return mins <= 1 ? '1 MIN READ' : `${mins} MIN READ`;
+  }
+
+  /* ══════════════════════════════════════
+     FORMAT
+  ══════════════════════════════════════ */
   function formatAsArticle(rawText, type) {
-    // Clean up excessive whitespace
-    const lines = rawText
-      .split('\n')
-      .map(l => l.trim())
-      .filter((l, i, arr) => !(l === '' && arr[i - 1] === ''));
+    const lines = rawText.split('\n').map(l => l.trim())
+      .filter((l, i, arr) => !(l === '' && arr[i-1] === ''));
 
     if (type === 'poem') {
-      // Poems: each non-empty line is a line, blank lines are stanza breaks
-      let html = '';
-      let inStanza = false;
+      let html = '', inStanza = false;
       for (const line of lines) {
         if (line === '') {
           if (inStanza) { html += '</p><p class="break"> </p>'; inStanza = false; }
@@ -361,108 +575,335 @@ const pdfjsLib = window['pdfjs-dist/build/pdf'];
       return `<div class="r-body poem">${html}</div>`;
     }
 
-    // Articles: group lines into paragraphs by blank-line separation
     const paragraphs = [];
     let current = [];
     for (const line of lines) {
-      if (line === '') {
-        if (current.length) { paragraphs.push(current.join(' ')); current = []; }
-      } else {
-        current.push(line);
-      }
+      if (line === '') { if (current.length) { paragraphs.push(current.join(' ')); current = []; } }
+      else current.push(line);
     }
     if (current.length) paragraphs.push(current.join(' '));
 
-    // Filter out very short header-like lines (page numbers, titles repeated, etc.)
-    const body = paragraphs
-      .filter(p => p.length > 40)
-      .map(p => `<p>${escHtml(p)}</p>`)
-      .join('');
-
+    const body = paragraphs.filter(p => p.length > 40).map(p => `<p>${escHtml(p)}</p>`).join('');
     return `<div class="r-body">${body}</div>`;
   }
 
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  /* ══════════════════════════════════════
+     TAGS — render on cards
+  ══════════════════════════════════════ */
+  const ALL_TAGS = ['love','grief','identity','relationships','humour','growing-up','politics'];
+
+  document.querySelectorAll('.card[data-tags]').forEach(card => {
+    const tags = card.dataset.tags.split(',');
+    const wrap = card.querySelector('.card-tags');
+    if (wrap) tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'card-tag';
+      span.textContent = t;
+      wrap.appendChild(span);
+    });
+  });
+
+  /* ══════════════════════════════════════
+     TAG FILTER UI
+  ══════════════════════════════════════ */
+  const tagFiltersEl = document.getElementById('tag-filters');
+  let activeTag = null;
+
+  ALL_TAGS.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-pill';
+    btn.textContent = tag;
+    btn.addEventListener('click', () => {
+      if (activeTag === tag) {
+        activeTag = null;
+        btn.classList.remove('active');
+      } else {
+        tagFiltersEl.querySelectorAll('.tag-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTag = tag;
+      }
+      applyFilters();
+    });
+    tagFiltersEl.appendChild(btn);
+  });
+
+  /* ══════════════════════════════════════
+     SEARCH
+  ══════════════════════════════════════ */
+  document.getElementById('search-input').addEventListener('input', applyFilters);
+
+  function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    document.querySelectorAll('.card').forEach(card => {
+      const title = (card.dataset.title || '').toLowerCase();
+      const desc  = (card.querySelector('p')?.textContent || '').toLowerCase();
+      const tags  = (card.dataset.tags || '').toLowerCase();
+
+      const matchesSearch = !query || title.includes(query) || desc.includes(query) || tags.includes(query);
+      const matchesTag    = !activeTag || tags.includes(activeTag);
+
+      if (matchesSearch && matchesTag) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
   }
 
-  /* ── Open reader ── */
+  /* ══════════════════════════════════════
+     BOOKMARKS
+  ══════════════════════════════════════ */
+  function getBookmarks() {
+    try { return JSON.parse(localStorage.getItem('sm-bookmarks') || '[]'); } catch { return []; }
+  }
+  function saveBookmarks(arr) {
+    localStorage.setItem('sm-bookmarks', JSON.stringify(arr));
+  }
+  function isBookmarked(title) { return getBookmarks().includes(title); }
+
+  function toggleBookmark(btn) {
+    const card  = btn.closest('.card');
+    const title = card?.dataset.title || document.getElementById('r-bar-title').textContent;
+    let bm = getBookmarks();
+    if (bm.includes(title)) {
+      bm = bm.filter(t => t !== title);
+      btn.textContent = '♡';
+      btn.classList.remove('saved');
+    } else {
+      bm.push(title);
+      btn.textContent = '♥';
+      btn.classList.add('saved');
+      toast('Bookmarked');
+    }
+    saveBookmarks(bm);
+    syncBookmarkStates();
+  }
+
+  function syncBookmarkStates() {
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+      const title = btn.closest('.card')?.dataset.title;
+      if (!title) return;
+      if (isBookmarked(title)) { btn.textContent = '♥'; btn.classList.add('saved'); }
+      else { btn.textContent = '♡'; btn.classList.remove('saved'); }
+    });
+  }
+  syncBookmarkStates();
+
+  /* Reader bookmark button */
+  document.getElementById('r-bookmark-btn').addEventListener('click', function() {
+    const title = document.getElementById('r-bar-title').textContent;
+    let bm = getBookmarks();
+    if (bm.includes(title)) {
+      bm = bm.filter(t => t !== title);
+      this.textContent = '♡'; this.classList.remove('saved');
+    } else {
+      bm.push(title);
+      this.textContent = '♥'; this.classList.add('saved');
+      toast('Bookmarked');
+    }
+    saveBookmarks(bm);
+    syncBookmarkStates();
+  });
+
+  /* ══════════════════════════════════════
+     THEME & FONT SIZE
+  ══════════════════════════════════════ */
+  let currentTheme = 'dark';
+  document.querySelectorAll('.r-theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.r-theme-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const reader = document.getElementById('reader');
+      reader.classList.remove('theme-sepia','theme-light');
+      currentTheme = btn.dataset.theme;
+      if (currentTheme !== 'dark') reader.classList.add('theme-' + currentTheme);
+    });
+  });
+
+  let fontSize = 1.05;
+  document.getElementById('font-up').addEventListener('click', () => {
+    fontSize = Math.min(1.4, fontSize + 0.05);
+    document.getElementById('reader').style.setProperty('--fs', fontSize + 'rem');
+  });
+  document.getElementById('font-down').addEventListener('click', () => {
+    fontSize = Math.max(0.85, fontSize - 0.05);
+    document.getElementById('reader').style.setProperty('--fs', fontSize + 'rem');
+  });
+
+  /* ══════════════════════════════════════
+     ALL CARDS — flat list for next/prev
+  ══════════════════════════════════════ */
+  function getAllReadableCards() {
+    return Array.from(document.querySelectorAll('.card[data-file]'));
+  }
+
+  /* ══════════════════════════════════════
+     YOU MIGHT ALSO LIKE
+  ══════════════════════════════════════ */
+  function getSuggestions(currentTitle, currentTags) {
+    const tags = currentTags ? currentTags.split(',') : [];
+    const candidates = getAllReadableCards().filter(c => c.dataset.title !== currentTitle);
+    const scored = candidates.map(c => {
+      const cTags = (c.dataset.tags || '').split(',');
+      const overlap = tags.filter(t => cTags.includes(t)).length;
+      return { card: c, score: overlap };
+    }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+    return scored.slice(0, 3).map(x => x.card);
+  }
+
+  function buildAlsoLike(currentTitle, currentTags) {
+    const suggestions = getSuggestions(currentTitle, currentTags);
+    if (!suggestions.length) return '';
+    const items = suggestions.map(c => `
+      <div class="r-also-card" onclick="openReader(this)" 
+           data-file="${escHtml(c.dataset.file)}" data-type="${c.dataset.type}"
+           data-time="${escHtml(c.dataset.time)}" data-title="${escHtml(c.dataset.title)}"
+           data-tags="${escHtml(c.dataset.tags || '')}">
+        <div class="r-also-type">${c.dataset.type}</div>
+        <div class="r-also-title">${escHtml(c.dataset.title)}</div>
+      </div>`).join('');
+    return `<div class="r-also"><p class="r-also-label">You might also like</p><div class="r-also-grid">${items}</div></div>`;
+  }
+
+  /* ══════════════════════════════════════
+     NEXT / PREV
+  ══════════════════════════════════════ */
+  function buildNavButtons(currentTitle) {
+    const all   = getAllReadableCards();
+    const idx   = all.findIndex(c => c.dataset.title === currentTitle);
+    const prev  = all[idx - 1];
+    const next  = all[idx + 1];
+
+    const prevHtml = prev
+      ? `<button class="r-nav-btn" onclick="openReader(document.querySelector('[data-title=\\'${prev.dataset.title.replace(/'/g,"\\'")}\\'')[0] || getAllCardByTitle('${prev.dataset.title.replace(/'/g,"\\'")}'))"><span class="r-nav-dir">← Previous</span><span class="r-nav-title">${escHtml(prev.dataset.title)}</span></button>`
+      : `<button class="r-nav-btn" disabled><span class="r-nav-dir">← Previous</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
+
+    const nextHtml = next
+      ? `<button class="r-nav-btn" onclick="openReader(document.querySelector('[data-title=\\'${next.dataset.title.replace(/'/g,"\\'")}\\'][0] || getAllCardByTitle('${next.dataset.title.replace(/'/g,"\\'")}'))"><span class="r-nav-dir">Next →</span><span class="r-nav-title">${escHtml(next.dataset.title)}</span></button>`
+      : `<button class="r-nav-btn" disabled><span class="r-nav-dir">Next →</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
+
+    return `<div class="r-nav">${prevHtml}${nextHtml}</div>`;
+  }
+
+  function getAllCardByTitle(title) {
+    return document.querySelector(`.card[data-title="${CSS.escape(title)}"]`);
+  }
+
+  /* ══════════════════════════════════════
+     OPEN READER
+  ══════════════════════════════════════ */
+  const descriptions = {
+    'Not Lost. Just 25': "I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.",
+    'Two Timelines in One Bed': "A blunt look at the finish line myth and the comedic silence that follows when two people are secretly decades apart.",
+    'Men, Silence, and the Moment After': "On men, emotional vocabulary, and what lives in the silence after the system reboots.",
+    'Life Debugging': "An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.",
+    'Emotional Multitasking': "The tension of being caught between two worlds — the one you're in and the one you're still carrying from before.",
+    'Paying the Passion Tax': "Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.",
+    'Fireworks': "On what it means to be briefly, spectacularly seen — and then to go dark.",
+    'The Cost of Safe Words': "What we protect when we don't say things, and what we lose in the keeping.",
+    "Things I've Noticed Lately": "Small details ignored in the noise of being human. Observations from the edge of attention.",
+    'The Space Between Words': "On meaning, silence, and what gets lost in the gap where communication fails.",
+    'Your Voice': "Why the thing that makes you strange is the only thing worth amplifying.",
+    'How I Love You': "The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.",
+    'The Scary Part of Being Loved': "Transitioning from survival to safety, and the terror of finally believing someone when they stay.",
+    'When Someone Feels Like Home': "On the quiet miracle of recognising someone. Choosing every page of a story that stretches long.",
+    'Eloping': "A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.",
+    'Let Get Away': "To the one I was too unsure to keep. A poem about hesitation and the weight of the almost.",
+    'Salt and Surrender': "When dawn arrives, we'll keep the quiet. On the way tenderness makes us undone.",
+    'Almost, Always': "A book about choices and the paths we almost took. Everything we nearly were.",
+    'Unspoken Word': "A story about secrets and hidden truths — the words we swallow and the ones that escape without permission.",
+  };
+
   async function openReader(card) {
+    if (!card || !card.dataset) return;
     const file  = card.dataset.file;
     const title = card.dataset.title;
     const type  = card.dataset.type;
-    const time  = card.dataset.time;
+    const tags  = card.dataset.tags || '';
 
-    document.getElementById('r-tag').textContent = type === 'poem' ? 'Poem' : 'Article';
+    document.getElementById('r-tag').textContent = type === 'poem' ? 'Poem' : type === 'book' ? 'Book' : 'Article';
     document.getElementById('r-bar-title').textContent = title;
     document.getElementById('r-share-btn').onclick = () => shareDoc(title);
     document.getElementById('r-prog').style.width = '0%';
 
-    const inner = document.getElementById('r-inner');
+    // Bookmark state
+    const bkBtn = document.getElementById('r-bookmark-btn');
+    if (isBookmarked(title)) { bkBtn.textContent = '♥'; bkBtn.classList.add('saved'); }
+    else { bkBtn.textContent = '♡'; bkBtn.classList.remove('saved'); }
 
-    // Header stays the same regardless
+    const inner = document.getElementById('r-inner');
     const header = `
-      <p class="r-eyebrow">${time} · Sharon Mutanu</p>
-      <h1 class="r-title">${title}</h1>
+      <p class="r-eyebrow" id="r-eyebrow-line">Loading… · Sharon Mutanu</p>
+      <h1 class="r-title">${escHtml(title)}</h1>
       <div class="r-byline">
         <span>Sharon Mutanu</span>
         <span class="r-dot"></span>
-        <span>${time}</span>
+        <span class="r-readtime" id="r-readtime">calculating…</span>
       </div>
     `;
 
-    // Show loading state
     inner.innerHTML = header + `
       <div class="r-loading">
         <div class="r-loading-bar"><div class="r-loading-fill"></div></div>
-        <p>Preparing article</p>
+        <p>Preparing piece</p>
       </div>
     `;
 
     document.getElementById('reader').classList.add('open');
     document.getElementById('r-scroll').scrollTop = 0;
     document.body.style.overflow = 'hidden';
-    // Update meta tags for social sharing preview
-const descriptions = {
-  'Not Lost. Just 25': "I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.",
-  'Two Timelines in One Bed': "A blunt look at the finish line myth and the comedic silence that follows when two people are secretly decades apart.",
-  'Men, Silence, and the Moment After': "On men, emotional vocabulary, and what lives in the silence after the system reboots.",
-  'Life Debugging': "An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.",
-  'Emotional Multitasking': "The tension of being caught between two worlds — the one you're in and the one you're still carrying from before.",
-  'Paying the Passion Tax': "Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.",
-  'Fireworks': "On what it means to be briefly, spectacularly seen — and then to go dark.",
-  'The Cost of Safe Words': "What we protect when we don't say things, and what we lose in the keeping.",
-  "Things I've Noticed Lately": "Small details ignored in the noise of being human. Observations from the edge of attention.",
-  'The Space Between Words': "On meaning, silence, and what gets lost in the gap where communication fails.",
-  'Your Voice': "Why the thing that makes you strange is the only thing worth amplifying.",
-  'How I Love You': "The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.",
-  'The Scary Part of Being Loved': "Transitioning from survival to safety, and the terror of finally believing someone when they stay.",
-  'When Someone Feels Like Home': "On the quiet miracle of recognising someone. Choosing every page of a story that stretches long.",
-  'Eloping': "A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.",
-  'Let Get Away': "To the one I was too unsure to keep. A poem about hesitation and the weight of the almost.",
-  'Salt and Surrender': "When dawn arrives, we'll keep the quiet. On the way tenderness makes us undone.",
-  'Almost, Always': "A book about choices and the paths we almost took. Everything we nearly were.",
-  'Unspoken Word': "A story about secrets and hidden truths — the words we swallow and the ones that escape without permission.",
-};
 
-const slug = slugify(title);
-const shareUrl = window.location.origin + window.location.pathname + '#' + slug;
-const desc = descriptions[title] || 'A piece by Sharon Mutanu.';
-
-document.querySelector('meta[property="og:title"]').setAttribute('content', title + ' · Sharon Mutanu');
-document.querySelector('meta[property="og:description"]').setAttribute('content', desc);
-document.querySelector('meta[property="og:url"]').setAttribute('content', shareUrl);
-document.querySelector('meta[name="twitter:title"]').setAttribute('content', title + ' · Sharon Mutanu');
-document.querySelector('meta[name="twitter:description"]').setAttribute('content', desc);
-
-// Update the browser URL bar too (so copy-pasting the URL also works)
-history.replaceState(null, '', '#' + slug);
-    
+    // Update meta + URL
+    const slug     = slugify(title);
+    const shareUrl = window.location.origin + window.location.pathname + '#' + slug;
+    const desc     = descriptions[title] || 'A piece by Sharon Mutanu.';
+    document.querySelector('meta[property="og:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+    document.querySelector('meta[property="og:description"]').setAttribute('content', desc);
+    document.querySelector('meta[property="og:url"]').setAttribute('content', shareUrl);
+    document.querySelector('meta[name="twitter:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+    document.querySelector('meta[name="twitter:description"]').setAttribute('content', desc);
+    history.replaceState(null, '', '#' + slug);
 
     try {
-      const rawText = await extractTextFromPDF(file);
-      const bodyHtml = formatAsArticle(rawText, type);
-      inner.innerHTML = header + bodyHtml + `<p class="r-sig">— Sharon Mutanu</p>`;
+      const rawText   = await extractTextFromPDF(file);
+      const wordCount = countWords(rawText);
+      const readTime  = calcReadTime(wordCount);
+      const bodyHtml  = formatAsArticle(rawText, type);
+      const alsoHtml  = buildAlsoLike(title, tags);
+      const navHtml   = buildNavButtons(title);
+
+      document.getElementById('r-eyebrow-line').textContent = readTime + ' · Sharon Mutanu';
+      document.getElementById('r-readtime').textContent = readTime;
+
+      inner.innerHTML = header.replace('Loading…', readTime).replace('calculating…', readTime)
+        + bodyHtml
+        + `<p class="r-sig">— Sharon Mutanu</p>`
+        + alsoHtml
+        + navHtml;
+
+      // Re-wire nav buttons after injection
+      inner.querySelectorAll('.r-nav-btn:not([disabled])').forEach(btn => {
+        const targetTitle = btn.querySelector('.r-nav-title')?.textContent;
+        if (!targetTitle || targetTitle === '—') return;
+        btn.onclick = () => {
+          const target = getAllCardByTitle(targetTitle);
+          if (target) openReader(target);
+        };
+      });
+
+      // Re-wire also-like cards
+      inner.querySelectorAll('.r-also-card').forEach(ac => {
+        ac.onclick = () => {
+          const target = getAllCardByTitle(ac.dataset.title);
+          if (target) openReader(target);
+        };
+      });
+
     } catch (err) {
       inner.innerHTML = header + `<p style="color:var(--muted);font-size:0.85rem;margin-top:2rem;">Couldn't load this piece. Make sure the PDF is in the same folder as this file.</p>`;
     }
@@ -472,137 +913,205 @@ history.replaceState(null, '', '#' + slug);
     document.getElementById('reader').classList.remove('open');
     document.body.style.overflow = '';
     history.replaceState(null, '', window.location.pathname);
-document.querySelector('meta[property="og:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
-document.querySelector('meta[property="og:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
-document.querySelector('meta[property="og:url"]').setAttribute('content', 'https://sharonlivingcanvas.netlify.app/writing.html');
-document.querySelector('meta[name="twitter:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
-document.querySelector('meta[name="twitter:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
+    document.querySelector('meta[property="og:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+    document.querySelector('meta[property="og:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
+    document.querySelector('meta[property="og:url"]').setAttribute('content', 'https://sharonlivingcanvas.netlify.app/writing.html');
+    document.querySelector('meta[name="twitter:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+    document.querySelector('meta[name="twitter:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
   }
 
   document.getElementById('r-scroll').addEventListener('scroll', e => {
-    const el = e.target;
+    const el  = e.target;
     const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
     document.getElementById('r-prog').style.width = Math.round(pct) + '%';
   });
 
-  /* ── Card click handlers ── */
+  /* ══════════════════════════════════════
+     CARD CLICKS
+  ══════════════════════════════════════ */
   document.querySelectorAll('.card[data-file]').forEach(card => {
     card.addEventListener('click', e => {
-      if (e.target.classList.contains('btn-share') || e.target.classList.contains('btn-ext')) return;
+      if (e.target.classList.contains('btn-share') ||
+          e.target.classList.contains('btn-ext') ||
+          e.target.classList.contains('btn-bookmark')) return;
       openReader(card);
     });
     card.querySelector('.btn-read')?.addEventListener('click', e => {
-      e.stopPropagation();
-      openReader(card);
+      e.stopPropagation(); openReader(card);
     });
   });
 
-  /* ── Tabs ── */
+  /* ══════════════════════════════════════
+     TABS (desktop + mobile)
+  ══════════════════════════════════════ */
   const tabMeta = {
     articles: { eye: '11 Pieces',  title: 'Essays on <em>living</em>,<br>honestly' },
     poems:    { eye: '6 Poems',    title: 'Words for the <em>feeling</em><br>you can\'t name' },
     books:    { eye: '2 Books',    title: 'Longer things,<br><em>slowly</em> made' },
   };
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      const t = btn.dataset.target;
-      document.getElementById('col-' + t).classList.add('active');
-      document.getElementById('hero-eye').textContent = tabMeta[t].eye;
-      document.getElementById('hero-title').innerHTML = tabMeta[t].title;
+
+  function switchTab(target) {
+    document.querySelectorAll('.tab-btn,.mobile-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.target === target);
     });
+    document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
+    document.getElementById('col-' + target).classList.add('active');
+    document.getElementById('hero-eye').textContent  = tabMeta[target].eye;
+    document.getElementById('hero-title').innerHTML  = tabMeta[target].title;
+    applyFilters();
+  }
+
+  document.querySelectorAll('.tab-btn, .mobile-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.target));
   });
 
-  /* ── Share ── */
-function shareDoc(title) {
-  const slug = slugify(title);
-  const url = window.location.origin + window.location.pathname + '#' + slug;
-  const text = `"${title}" by Sharon Mutanu\n${url}`;
-  if (navigator.share) {
-    navigator.share({ title, text: `"${title}" by Sharon Mutanu`, url }).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(url).then(() => toast('Link copied'));
-  } else {
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-  }
-}
-function openFromHash() {
-  const hash = window.location.hash.slice(1);
-  if (!hash) return;
-  const all = document.querySelectorAll('.card[data-file]');
-  for (const card of all) {
-    if (slugify(card.dataset.title) === hash) {
-      const collection = card.closest('.collection');
-      if (collection) {
-        const tabId = collection.id.replace('col-', '');
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
-        const matchingTab = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
-        if (matchingTab) matchingTab.classList.add('active');
-        collection.classList.add('active');
-        document.getElementById('hero-eye').textContent = tabMeta[tabId].eye;
-        document.getElementById('hero-title').innerHTML = tabMeta[tabId].title;
-      }
-      openReader(card);
-      break;
+  /* ══════════════════════════════════════
+     SHARE + HASH ROUTING
+  ══════════════════════════════════════ */
+  function shareDoc(title) {
+    const slug = slugify(title);
+    const url  = window.location.origin + window.location.pathname + '#' + slug;
+    const text = `"${title}" by Sharon Mutanu\n${url}`;
+    if (navigator.share) {
+      navigator.share({ title, text: `"${title}" by Sharon Mutanu`, url }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => toast('Link copied'));
+    } else {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
     }
   }
-}
 
-window.addEventListener('DOMContentLoaded', openFromHash);
-window.addEventListener('hashchange', openFromHash);
-  function toast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
+  function openFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const all = document.querySelectorAll('.card[data-file]');
+    for (const card of all) {
+      if (slugify(card.dataset.title) === hash) {
+        const collection = card.closest('.collection');
+        if (collection) {
+          const tabId = collection.id.replace('col-', '');
+          switchTab(tabId);
+        }
+        openReader(card);
+        break;
+      }
+    }
   }
 
+  window.addEventListener('DOMContentLoaded', openFromHash);
+  window.addEventListener('hashchange', openFromHash);
+
+  /* ══════════════════════════════════════
+     HIGHLIGHT TO SHARE QUOTE
+  ══════════════════════════════════════ */
+  const quoteBtn = document.getElementById('quote-share-btn');
+
+  document.getElementById('r-scroll').addEventListener('mouseup', () => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) { quoteBtn.style.display = 'none'; return; }
+    const text = sel.toString().trim();
+    if (text.length < 10 || text.length > 300) { quoteBtn.style.display = 'none'; return; }
+
+    const range = sel.getRangeAt(0);
+    const rect  = range.getBoundingClientRect();
+    quoteBtn.style.display = 'block';
+    quoteBtn.style.top  = (rect.top + window.scrollY - 38) + 'px';
+    quoteBtn.style.left = (rect.left + rect.width / 2) + 'px';
+
+    quoteBtn.onclick = () => {
+      const title = document.getElementById('r-bar-title').textContent;
+      generateQuoteCard(text, title);
+      quoteBtn.style.display = 'none';
+      sel.removeAllRanges();
+    };
+  });
+
+  document.addEventListener('mousedown', e => {
+    if (e.target !== quoteBtn) quoteBtn.style.display = 'none';
+  });
+
+  function generateQuoteCard(quote, title) {
+    const canvas = document.getElementById('quote-canvas');
+    const ctx    = canvas.getContext('2d');
+    const W = 1080, H = 1080;
+
+    // Background
+    ctx.fillStyle = '#080808';
+    ctx.fillRect(0, 0, W, H);
+
+    // Gold accent line
+    ctx.fillStyle = '#d4af37';
+    ctx.fillRect(80, 160, 3, H - 320);
+
+    // Quote text
+    ctx.fillStyle = '#e4e0d8';
+    ctx.font = 'italic 52px Georgia, serif';
+    ctx.textAlign = 'left';
+    const words = quote.split(' ');
+    let line = '', y = 220, lineH = 72;
+    for (const word of words) {
+      const test = line + (line ? ' ' : '') + word;
+      if (ctx.measureText(test).width > W - 220) {
+        ctx.fillText(line, 120, y); y += lineH; line = word;
+      } else { line = test; }
+    }
+    if (line) ctx.fillText(line, 120, y);
+
+    // Attribution
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText('— ' + title, 120, H - 160);
+    ctx.fillStyle = '#6a6760';
+    ctx.font = '22px "Courier New", monospace';
+    ctx.fillText('Sharon Mutanu · sharonlivingcanvas.netlify.app', 120, H - 110);
+
+    // Share or download
+    canvas.toBlob(blob => {
+      const url  = URL.createObjectURL(blob);
+      const file = new File([blob], 'quote.png', { type: 'image/png' });
+      if (navigator.canShare?.({ files: [file] })) {
+        navigator.share({ files: [file], title: `"${title}" — Sharon Mutanu` }).catch(() => {});
+      } else {
+        const a = document.createElement('a');
+        a.href = url; a.download = 'quote.png'; a.click();
+        toast('Quote card downloaded');
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════
+     KEYBOARD
+  ══════════════════════════════════════ */
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader(); });
 
-  /* ── PARTICLES ── */
+  /* ══════════════════════════════════════
+     PARTICLES
+  ══════════════════════════════════════ */
   (function() {
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let pts = [];
-
-    function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     function init() {
-      resize();
-      pts = [];
+      resize(); pts = [];
       for (let i = 0; i < 65; i++) {
-        pts.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: Math.random() * 1.4 + 0.4,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: (Math.random() - 0.5) * 0.3,
-          o: Math.random() * 0.45 + 0.08,
-        });
+        pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+          r: Math.random()*1.4+0.4, vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+          o: Math.random()*.45+.08 });
       }
     }
-
     function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+        if (p.x<0||p.x>canvas.width) p.vx*=-1;
+        if (p.y<0||p.y>canvas.height) p.vy*=-1;
         ctx.globalAlpha = p.o;
         ctx.fillStyle = '#d4af37';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
       }
       requestAnimationFrame(draw);
     }
-
     window.addEventListener('resize', init);
     init(); draw();
   })();
