@@ -307,6 +307,11 @@
 
 <script>
   /* ── PDF.js setup ── */
+  function slugify(title) {
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
@@ -512,10 +517,6 @@ document.querySelector('meta[name="twitter:description"]').setAttribute('content
   });
 
   /* ── Share ── */
- function slugify(title) {
-  return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-
 function shareDoc(title) {
   const slug = slugify(title);
   const url = window.location.origin + window.location.pathname + '#' + slug;
