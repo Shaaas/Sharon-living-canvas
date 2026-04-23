@@ -418,7 +418,7 @@
     .reader-inner {
       max-width: 680px;
       margin: 0 auto;
-      padding: 4rem 2rem 8rem;
+      padding: 4.5rem 2rem 8rem;
     }
 
     .reader-eyebrow {
@@ -432,7 +432,7 @@
 
     .reader-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-size: clamp(2.6rem, 6vw, 3.8rem);
       font-weight: 400;
       line-height: 1.15;
       color: #fff;
@@ -459,9 +459,9 @@
 
     /* Article body */
     .reader-body {
-      font-size: 1.05rem;
-      line-height: 1.9;
-      color: #c8c4bc;
+      font-size: 1.22rem;
+      line-height: 2;
+      color: #d4d0c8;
     }
 
     .reader-body p { margin-bottom: 1.6em; }
@@ -479,8 +479,8 @@
     /* Poem body — tighter, indented, no dropcap */
     .reader-body.poem {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.25rem;
-      line-height: 2;
+      font-size: 1.5rem;
+      line-height: 2.1;
       font-style: italic;
     }
 
@@ -504,6 +504,29 @@
       font-style: italic;
       color: var(--gold);
       line-height: 1.5;
+    }
+
+    /* Placeholder */
+    .reader-placeholder {
+      padding: 4rem 0 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .reader-placeholder-line {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .reader-placeholder-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 420px;
     }
 
     /* Reader footer */
@@ -955,7 +978,7 @@
         </div>
       `;
     } else {
-      // PDF canvas fallback
+      // No text added yet — clean placeholder
       inner.innerHTML = `
         <p class="reader-eyebrow">${time} · Sharon Mutanu</p>
         <h1 class="reader-title">${title}</h1>
@@ -964,10 +987,13 @@
           <span class="reader-byline-dot"></span>
           <span>${time}</span>
         </div>
-        <div id="pdf-canvas-area"></div>
+        <div class="reader-placeholder">
+          <p class="reader-placeholder-line">This piece lives in a PDF for now.</p>
+          <p class="reader-placeholder-sub">Download it to read the full thing — or check back when the web version is up.</p>
+          <button class="btn-dl" style="margin-top:1.5rem;" onclick="downloadFile('${file}')">Download PDF ↓</button>
+        </div>
         <div class="reader-footer">
           <span class="reader-footer-sig">— Sharon Mutanu</span>
-          <button class="btn-dl" onclick="downloadFile('${file}')">Download PDF ↓</button>
         </div>
       `;
       renderPDF(file);
