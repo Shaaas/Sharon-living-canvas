@@ -15,11 +15,9 @@
   <meta name="twitter:description" content="Essays, poems, and books on living — honestly." />
   <meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-<script>
-  const sb = window.supabase.createClient(URL, KEY);
-</script>
   <style>
     :root {
       --gold: #d4af37;
@@ -597,9 +595,6 @@
 <div id="toast"></div>
 
 <script>
-    const sb_URL  = 'https://qpodmlgmorfuwcjenvvg.sb.co';
-  const sb_ANON = 'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq';
-  const sb = window.sb.createClient(sb_URL, sb_ANON);
   /* ══════════════════════════════════════
      HELPERS
   ══════════════════════════════════════ */
@@ -980,7 +975,7 @@
         + alsoHtml
         + navHtml;
 
-      // Load likes + comments from sb
+      // Load likes + comments from Supabase
       loadReactions(slugify(title));
 
       // FIX: wire nav buttons via data-nav-title (no fragile inline onclick strings)
@@ -1171,9 +1166,12 @@
   }
 
   /* ══════════════════════════════════════
-     sb — replace these two values with yours
-     from: sb.com → your project → Settings → API
+     SUPABASE
   ══════════════════════════════════════ */
+  const sb = window.supabase.createClient(
+    'https://qpodmlgmorfuwcjenvvg.sb.co',
+    'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq'
+  );
 
   function getAnonId() {
     let id = localStorage.getItem('sm-anon-id');
@@ -1244,7 +1242,7 @@
 
     if (!sb) {
       likeCount.textContent = '—';
-      list.innerHTML = `<p class="comments-empty">Connect sb to enable likes & comments.</p>`;
+      list.innerHTML = `<p class="comments-empty">Connect Supabase to enable likes & comments.</p>`;
       return;
     }
 
@@ -1265,7 +1263,7 @@
   }
 
   async function toggleLike(slug) {
-    if (!sb) { toast('Set up sb to enable likes'); return; }
+    if (!sb) { toast('Set up Supabase to enable likes'); return; }
     const anonId    = getAnonId();
     const likeBtn   = document.getElementById(`like-btn-${slug}`);
     const likeCount = document.getElementById(`like-count-${slug}`);
@@ -1285,7 +1283,7 @@
   }
 
   async function submitComment(slug) {
-    if (!sb) { toast('Set up sb to enable comments'); return; }
+    if (!sb) { toast('Set up Supabase to enable comments'); return; }
     const input = document.getElementById(`comment-input-${slug}`);
     const body  = input.value.trim();
     if (!body) return;
