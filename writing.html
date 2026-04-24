@@ -16,7 +16,7 @@
   <meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@sb/sb-js"></script>
 
   <style>
     :root {
@@ -975,7 +975,7 @@
         + alsoHtml
         + navHtml;
 
-      // Load likes + comments from Supabase
+      // Load likes + comments from sb
       loadReactions(slugify(title));
 
       // FIX: wire nav buttons via data-nav-title (no fragile inline onclick strings)
@@ -1166,11 +1166,11 @@
   }
 
   /* ══════════════════════════════════════
-     SUPABASE — replace these two values with yours
-     from: supabase.com → your project → Settings → API
+     sb — replace these two values with yours
+     from: sb.com → your project → Settings → API
   ══════════════════════════════════════ */
-  const SUPABASE_URL  = 'https://qpodmlgmorfuwcjenvvg.supabase.co';
-  const SUPABASE_ANON = 'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq';
+  const sb_URL  = 'https://qpodmlgmorfuwcjenvvg.sb.co';
+  const sb_ANON = 'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq';
 
   function getAnonId() {
     let id = localStorage.getItem('sm-anon-id');
@@ -1239,21 +1239,21 @@
     const list      = document.getElementById(`comment-list-${slug}`);
     if (!likeBtn || !list) return;
 
-    if (!supabase) {
+    if (!sb) {
       likeCount.textContent = '—';
-      list.innerHTML = `<p class="comments-empty">Connect Supabase to enable likes & comments.</p>`;
+      list.innerHTML = `<p class="comments-empty">Connect sb to enable likes & comments.</p>`;
       return;
     }
 
     const anonId = getAnonId();
 
-    const { count } = await supabase.from('likes').select('*', { count: 'exact', head: true }).eq('piece_slug', slug);
+    const { count } = await sb.from('likes').select('*', { count: 'exact', head: true }).eq('piece_slug', slug);
     likeCount.textContent = count ?? 0;
 
-    const { data: myLike } = await supabase.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+    const { data: myLike } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
     if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
 
-    const { data: comments } = await supabase.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
+    const { data: comments } = await sb.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
     if (!comments || comments.length === 0) {
       list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
     } else {
@@ -1262,27 +1262,27 @@
   }
 
   async function toggleLike(slug) {
-    if (!supabase) { toast('Set up Supabase to enable likes'); return; }
+    if (!sb) { toast('Set up sb to enable likes'); return; }
     const anonId    = getAnonId();
     const likeBtn   = document.getElementById(`like-btn-${slug}`);
     const likeCount = document.getElementById(`like-count-${slug}`);
     const heart     = likeBtn.querySelector('.like-heart');
 
-    const { data: existing } = await supabase.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+    const { data: existing } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
 
     if (existing) {
-      await supabase.from('likes').delete().eq('id', existing.id);
+      await sb.from('likes').delete().eq('id', existing.id);
       likeBtn.classList.remove('liked'); heart.textContent = '♡';
       likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
     } else {
-      await supabase.from('likes').insert({ piece_slug: slug, anon_id: anonId });
+      await sb.from('likes').insert({ piece_slug: slug, anon_id: anonId });
       likeBtn.classList.add('liked'); heart.textContent = '♥';
       likeCount.textContent = parseInt(likeCount.textContent) + 1;
     }
   }
 
   async function submitComment(slug) {
-    if (!supabase) { toast('Set up Supabase to enable comments'); return; }
+    if (!sb) { toast('Set up sb to enable comments'); return; }
     const input = document.getElementById(`comment-input-${slug}`);
     const body  = input.value.trim();
     if (!body) return;
@@ -1290,7 +1290,7 @@
     const btn = input.closest('.comment-form').querySelector('.comment-submit');
     btn.disabled = true; btn.textContent = 'Posting…';
 
-    const { data, error } = await supabase.from('comments').insert({
+    const { data, error } = await sb.from('comments').insert({
       piece_slug: slug,
       body,
       anon_id:    getAnonId(),
