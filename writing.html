@@ -77,12 +77,13 @@
       content: '';
       position: fixed; inset: 0;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      pointer-events: none; z-index: 0;
+      pointer-events: none; z-index: 1;
     }
 
-    .glow-g { position: fixed; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%); top: -250px; left: -150px; pointer-events: none; z-index: 0; }
-    .glow-b { position: fixed; width: 550px; height: 550px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%); bottom: -150px; right: -100px; pointer-events: none; z-index: 0; }
-    #particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    /* FIX: raised z-index so glows and canvas render above the body background */
+    .glow-g { position: fixed; width: 700px; height: 700px; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 70%); top: -250px; left: -150px; pointer-events: none; z-index: 1; }
+    .glow-b { position: fixed; width: 550px; height: 550px; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,0.04) 0%, transparent 70%); bottom: -150px; right: -100px; pointer-events: none; z-index: 1; }
+    #particle-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
 
     /* LEAVE QUIETLY */
     .leave-quietly {
@@ -116,7 +117,7 @@
     @media (max-width: 600px) { .nav-tabs { display: none; } }
 
     /* HERO */
-    .hero { padding: 3.5rem 2.5rem 1.5rem; position: relative; z-index: 1; }
+    .hero { padding: 3.5rem 2.5rem 1.5rem; position: relative; z-index: 2; }
     .hero-eye { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.7rem; }
     .hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 400; line-height: 1.1; }
     .hero-title em { font-style: italic; color: var(--gold); }
@@ -124,7 +125,7 @@
     /* SEARCH + FILTER BAR */
     .filter-bar {
       padding: 1rem 2.5rem 1.5rem;
-      position: relative; z-index: 1;
+      position: relative; z-index: 2;
       display: flex; flex-direction: column; gap: 0.75rem;
     }
     .search-wrap {
@@ -166,7 +167,7 @@
       display: none; padding: 3rem 2.5rem;
       font-family: 'DM Mono', monospace; font-size: 0.62rem;
       letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;
-      position: relative; z-index: 1;
+      position: relative; z-index: 2;
     }
 
     /* GRID */
@@ -177,7 +178,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       border-top: 1px solid var(--line);
-      position: relative; z-index: 1;
+      position: relative; z-index: 2;
     }
 
     /* CARD */
@@ -595,7 +596,7 @@
 
 <script>
   /* ══════════════════════════════════════
-     HELPERS — defined first so everything below can use them
+     HELPERS
   ══════════════════════════════════════ */
   function slugify(title) {
     return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -831,6 +832,10 @@
     return Array.from(document.querySelectorAll('.card[data-file]'));
   }
 
+  function getAllCardByTitle(title) {
+    return document.querySelector(`.card[data-title="${CSS.escape(title)}"]`);
+  }
+
   /* ══════════════════════════════════════
      YOU MIGHT ALSO LIKE
   ══════════════════════════════════════ */
@@ -849,10 +854,7 @@
     const suggestions = getSuggestions(currentTitle, currentTags);
     if (!suggestions.length) return '';
     const items = suggestions.map(c => `
-      <div class="r-also-card" onclick="openReader(this)" 
-           data-file="${escHtml(c.dataset.file)}" data-type="${c.dataset.type}"
-           data-time="${escHtml(c.dataset.time)}" data-title="${escHtml(c.dataset.title)}"
-           data-tags="${escHtml(c.dataset.tags || '')}">
+      <div class="r-also-card" data-also-title="${escHtml(c.dataset.title)}">
         <div class="r-also-type">${c.dataset.type}</div>
         <div class="r-also-title">${escHtml(c.dataset.title)}</div>
       </div>`).join('');
@@ -860,27 +862,24 @@
   }
 
   /* ══════════════════════════════════════
-     NEXT / PREV
+     NEXT / PREV — FIX: use data-nav-title
+     instead of fragile inline onclick strings
   ══════════════════════════════════════ */
   function buildNavButtons(currentTitle) {
-    const all   = getAllReadableCards();
-    const idx   = all.findIndex(c => c.dataset.title === currentTitle);
-    const prev  = all[idx - 1];
-    const next  = all[idx + 1];
+    const all  = getAllReadableCards();
+    const idx  = all.findIndex(c => c.dataset.title === currentTitle);
+    const prev = all[idx - 1];
+    const next = all[idx + 1];
 
     const prevHtml = prev
-      ? `<button class="r-nav-btn" onclick="openReader(document.querySelector('[data-title=\\'${prev.dataset.title.replace(/'/g,"\\'")}\\'')[0] || getAllCardByTitle('${prev.dataset.title.replace(/'/g,"\\'")}'))"><span class="r-nav-dir">← Previous</span><span class="r-nav-title">${escHtml(prev.dataset.title)}</span></button>`
+      ? `<button class="r-nav-btn" data-nav-title="${escHtml(prev.dataset.title)}"><span class="r-nav-dir">← Previous</span><span class="r-nav-title">${escHtml(prev.dataset.title)}</span></button>`
       : `<button class="r-nav-btn" disabled><span class="r-nav-dir">← Previous</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
 
     const nextHtml = next
-      ? `<button class="r-nav-btn" onclick="openReader(document.querySelector('[data-title=\\'${next.dataset.title.replace(/'/g,"\\'")}\\'][0] || getAllCardByTitle('${next.dataset.title.replace(/'/g,"\\'")}'))"><span class="r-nav-dir">Next →</span><span class="r-nav-title">${escHtml(next.dataset.title)}</span></button>`
+      ? `<button class="r-nav-btn" data-nav-title="${escHtml(next.dataset.title)}"><span class="r-nav-dir">Next →</span><span class="r-nav-title">${escHtml(next.dataset.title)}</span></button>`
       : `<button class="r-nav-btn" disabled><span class="r-nav-dir">Next →</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
 
     return `<div class="r-nav">${prevHtml}${nextHtml}</div>`;
-  }
-
-  function getAllCardByTitle(title) {
-    return document.querySelector(`.card[data-title="${CSS.escape(title)}"]`);
   }
 
   /* ══════════════════════════════════════
@@ -979,20 +978,19 @@
       // Load likes + comments from Supabase
       loadReactions(slugify(title));
 
-      // Re-wire nav buttons after injection
-      inner.querySelectorAll('.r-nav-btn:not([disabled])').forEach(btn => {
-        const targetTitle = btn.querySelector('.r-nav-title')?.textContent;
-        if (!targetTitle || targetTitle === '—') return;
+      // FIX: wire nav buttons via data-nav-title (no fragile inline onclick strings)
+      inner.querySelectorAll('.r-nav-btn[data-nav-title]').forEach(btn => {
+        const targetTitle = btn.dataset.navTitle;
         btn.onclick = () => {
           const target = getAllCardByTitle(targetTitle);
           if (target) openReader(target);
         };
       });
 
-      // Re-wire also-like cards
-      inner.querySelectorAll('.r-also-card').forEach(ac => {
+      // Wire also-like cards
+      inner.querySelectorAll('.r-also-card[data-also-title]').forEach(ac => {
         ac.onclick = () => {
-          const target = getAllCardByTitle(ac.dataset.title);
+          const target = getAllCardByTitle(ac.dataset.alsoTitle);
           if (target) openReader(target);
         };
       });
@@ -1128,15 +1126,12 @@
     const ctx    = canvas.getContext('2d');
     const W = 1080, H = 1080;
 
-    // Background
     ctx.fillStyle = '#080808';
     ctx.fillRect(0, 0, W, H);
 
-    // Gold accent line
     ctx.fillStyle = '#d4af37';
     ctx.fillRect(80, 160, 3, H - 320);
 
-    // Quote text
     ctx.fillStyle = '#e4e0d8';
     ctx.font = 'italic 52px Georgia, serif';
     ctx.textAlign = 'left';
@@ -1150,7 +1145,6 @@
     }
     if (line) ctx.fillText(line, 120, y);
 
-    // Attribution
     ctx.fillStyle = '#d4af37';
     ctx.font = '28px "Courier New", monospace';
     ctx.fillText('— ' + title, 120, H - 160);
@@ -1158,7 +1152,6 @@
     ctx.font = '22px "Courier New", monospace';
     ctx.fillText('Sharon Mutanu · sharonlivingcanvas.netlify.app', 120, H - 110);
 
-    // Share or download
     canvas.toBlob(blob => {
       const url  = URL.createObjectURL(blob);
       const file = new File([blob], 'quote.png', { type: 'image/png' });
@@ -1176,25 +1169,22 @@
      SUPABASE — replace these two values with yours
      from: supabase.com → your project → Settings → API
   ══════════════════════════════════════ */
-  const SUPABASE_URL  = 'YOUR_SUPABASE_URL';   // e.g. https://xxxx.supabase.co
-  const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+  const SUPABASE_URL  = 'https://qpodmlgmorfuwcjenvvg.supabase.co';
+  const SUPABASE_ANON = 'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq';
 
   const supabase = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
     : null;
 
-  /* ── Anon identity (persisted per browser) ── */
   function getAnonId() {
     let id = localStorage.getItem('sm-anon-id');
     if (!id) { id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2); localStorage.setItem('sm-anon-id', id); }
     return id;
   }
   function getAnonLabel() {
-    // deterministic readable name from id, e.g. "Reader #a3f2"
     return 'Reader #' + getAnonId().slice(0, 4);
   }
 
-  /* ── Build reactions section HTML ── */
   function buildReactionsHTML(slug) {
     return `
       <div class="r-reactions" id="reactions-${slug}">
@@ -1222,7 +1212,6 @@
       </div>`;
   }
 
-  /* ── Format relative time ── */
   function relativeTime(dateStr) {
     const diff = Date.now() - new Date(dateStr).getTime();
     const m = Math.floor(diff / 60000);
@@ -1235,7 +1224,6 @@
     return new Date(dateStr).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
   }
 
-  /* ── Render a single comment ── */
   function commentHTML(c) {
     const initial = (c.anon_label || 'R').charAt(c.anon_label.indexOf('#') + 1).toUpperCase();
     return `
@@ -1249,7 +1237,6 @@
       </div>`;
   }
 
-  /* ── Load likes + comments for a piece ── */
   async function loadReactions(slug) {
     const likeBtn   = document.getElementById(`like-btn-${slug}`);
     const likeCount = document.getElementById(`like-count-${slug}`);
@@ -1264,15 +1251,12 @@
 
     const anonId = getAnonId();
 
-    // Likes count
     const { count } = await supabase.from('likes').select('*', { count: 'exact', head: true }).eq('piece_slug', slug);
     likeCount.textContent = count ?? 0;
 
-    // Did this user already like?
     const { data: myLike } = await supabase.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
     if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
 
-    // Comments
     const { data: comments } = await supabase.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
     if (!comments || comments.length === 0) {
       list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
@@ -1281,7 +1265,6 @@
     }
   }
 
-  /* ── Toggle like ── */
   async function toggleLike(slug) {
     if (!supabase) { toast('Set up Supabase to enable likes'); return; }
     const anonId    = getAnonId();
@@ -1302,7 +1285,6 @@
     }
   }
 
-  /* ── Submit comment ── */
   async function submitComment(slug) {
     if (!supabase) { toast('Set up Supabase to enable comments'); return; }
     const input = document.getElementById(`comment-input-${slug}`);
