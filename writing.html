@@ -16,6 +16,7 @@
   <meta name="twitter:image"       content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root {
@@ -359,6 +360,94 @@
 
     /* QUOTE SHARE CANVAS (hidden) */
     #quote-canvas { display: none; }
+
+    /* ── LIKES & COMMENTS ── */
+    .r-reactions {
+      margin-top: 3rem; padding-top: 2.5rem;
+      border-top: 1px solid var(--line);
+    }
+    .r-reactions-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .r-reactions-label {
+      font-family: 'DM Mono', monospace; font-size: 0.54rem;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted);
+    }
+
+    /* Like button */
+    .like-btn {
+      display: flex; align-items: center; gap: 8px;
+      background: none; border: 1px solid var(--line-h);
+      padding: 8px 18px; border-radius: 1px; cursor: pointer;
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.1em; color: var(--muted);
+      transition: all 0.2s;
+    }
+    .like-btn:hover { border-color: #e05c7a; color: #e05c7a; }
+    .like-btn.liked { border-color: #e05c7a; color: #e05c7a; background: rgba(224,92,122,0.08); }
+    .like-btn .like-heart { font-size: 1rem; line-height: 1; transition: transform 0.2s; }
+    .like-btn:hover .like-heart,
+    .like-btn.liked .like-heart { transform: scale(1.25); }
+    .like-count { font-size: 0.68rem; }
+
+    /* Comment form */
+    .comment-form { margin-bottom: 2rem; }
+    .comment-textarea {
+      width: 100%; background: var(--surface);
+      border: 1px solid var(--line-h); border-radius: 1px;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem; line-height: 1.6; font-weight: 300;
+      padding: 12px 14px; resize: none; outline: none;
+      transition: border-color 0.2s; min-height: 80px;
+    }
+    .comment-textarea::placeholder { color: var(--muted); }
+    .comment-textarea:focus { border-color: var(--gold-dim); }
+    .comment-form-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 8px; flex-wrap: wrap; gap: 8px;
+    }
+    .comment-char { font-family: 'DM Mono', monospace; font-size: 0.5rem;
+      letter-spacing: 0.1em; color: var(--muted); }
+    .comment-submit {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--gold); color: #000; border: none;
+      padding: 8px 20px; border-radius: 1px; cursor: pointer;
+      font-weight: 500; transition: background 0.2s;
+    }
+    .comment-submit:hover { background: #e8c540; }
+    .comment-submit:disabled { opacity: 0.5; cursor: default; }
+
+    /* Comment list */
+    .comment-list { display: flex; flex-direction: column; gap: 0; }
+    .comment-item {
+      padding: 1.25rem 0; border-bottom: 1px solid var(--line);
+      animation: fadeSlide 0.3s ease;
+    }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .comment-item:last-child { border-bottom: none; }
+    .comment-meta {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem;
+    }
+    .comment-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--gold-dim); border: 1px solid var(--gold-dim);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 0.85rem;
+      color: var(--gold); flex-shrink: 0;
+    }
+    .comment-anon { font-family: 'DM Mono', monospace; font-size: 0.56rem;
+      letter-spacing: 0.1em; color: var(--muted); }
+    .comment-time { font-family: 'DM Mono', monospace; font-size: 0.5rem;
+      letter-spacing: 0.08em; color: var(--dim); }
+    .comment-body { font-size: 0.88rem; line-height: 1.65; color: var(--prose-color); }
+
+    .comments-loading { font-family: 'DM Mono', monospace; font-size: 0.56rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+      padding: 1rem 0; }
+    .comments-empty { font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-size: 1rem; color: var(--muted); padding: 1rem 0; }
 
     /* MOBILE BOTTOM NAV */
     .mobile-nav {
@@ -883,8 +972,12 @@
       inner.innerHTML = header.replace('Loading…', readTime).replace('calculating…', readTime)
         + bodyHtml
         + `<p class="r-sig">— Sharon Mutanu</p>`
+        + buildReactionsHTML(slugify(title))
         + alsoHtml
         + navHtml;
+
+      // Load likes + comments from Supabase
+      loadReactions(slugify(title));
 
       // Re-wire nav buttons after injection
       inner.querySelectorAll('.r-nav-btn:not([disabled])').forEach(btn => {
@@ -1077,6 +1170,167 @@
         toast('Quote card downloaded');
       }
     });
+  }
+
+  /* ══════════════════════════════════════
+     SUPABASE — replace these two values with yours
+     from: supabase.com → your project → Settings → API
+  ══════════════════════════════════════ */
+  const SUPABASE_URL  = 'https://qpodmlgmorfuwcjenvvg.supabase.co/rest/v1/';   // e.g. https://xxxx.supabase.co
+  const SUPABASE_ANON = 'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq';
+
+  const supabase = (SUPABASE_URL !== 'YOUR_SUPABASE_URL')
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON)
+    : null;
+
+  /* ── Anon identity (persisted per browser) ── */
+  function getAnonId() {
+    let id = localStorage.getItem('sm-anon-id');
+    if (!id) { id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2); localStorage.setItem('sm-anon-id', id); }
+    return id;
+  }
+  function getAnonLabel() {
+    // deterministic readable name from id, e.g. "Reader #a3f2"
+    return 'Reader #' + getAnonId().slice(0, 4);
+  }
+
+  /* ── Build reactions section HTML ── */
+  function buildReactionsHTML(slug) {
+    return `
+      <div class="r-reactions" id="reactions-${slug}">
+        <div class="r-reactions-header">
+          <span class="r-reactions-label">Reactions</span>
+          <button class="like-btn" id="like-btn-${slug}" onclick="toggleLike('${slug}')">
+            <span class="like-heart">♡</span>
+            <span class="like-count" id="like-count-${slug}">—</span>
+          </button>
+        </div>
+
+        <div class="comment-form">
+          <textarea class="comment-textarea" id="comment-input-${slug}"
+            placeholder="Leave a thought…" maxlength="500"
+            oninput="document.getElementById('comment-chars-${slug}').textContent = this.value.length + ' / 500'"></textarea>
+          <div class="comment-form-footer">
+            <span class="comment-char" id="comment-chars-${slug}">0 / 500</span>
+            <button class="comment-submit" onclick="submitComment('${slug}')">Post anonymously</button>
+          </div>
+        </div>
+
+        <div class="comment-list" id="comment-list-${slug}">
+          <p class="comments-loading">Loading comments…</p>
+        </div>
+      </div>`;
+  }
+
+  /* ── Format relative time ── */
+  function relativeTime(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 1)  return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    return new Date(dateStr).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  }
+
+  /* ── Render a single comment ── */
+  function commentHTML(c) {
+    const initial = (c.anon_label || 'R').charAt(c.anon_label.indexOf('#') + 1).toUpperCase();
+    return `
+      <div class="comment-item">
+        <div class="comment-meta">
+          <div class="comment-avatar">${initial}</div>
+          <span class="comment-anon">${escHtml(c.anon_label || 'Anonymous')}</span>
+          <span class="comment-time">${relativeTime(c.created_at)}</span>
+        </div>
+        <div class="comment-body">${escHtml(c.body)}</div>
+      </div>`;
+  }
+
+  /* ── Load likes + comments for a piece ── */
+  async function loadReactions(slug) {
+    const likeBtn   = document.getElementById(`like-btn-${slug}`);
+    const likeCount = document.getElementById(`like-count-${slug}`);
+    const list      = document.getElementById(`comment-list-${slug}`);
+    if (!likeBtn || !list) return;
+
+    if (!supabase) {
+      likeCount.textContent = '—';
+      list.innerHTML = `<p class="comments-empty">Connect Supabase to enable likes & comments.</p>`;
+      return;
+    }
+
+    const anonId = getAnonId();
+
+    // Likes count
+    const { count } = await supabase.from('likes').select('*', { count: 'exact', head: true }).eq('piece_slug', slug);
+    likeCount.textContent = count ?? 0;
+
+    // Did this user already like?
+    const { data: myLike } = await supabase.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+    if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
+
+    // Comments
+    const { data: comments } = await supabase.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
+    if (!comments || comments.length === 0) {
+      list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
+    } else {
+      list.innerHTML = comments.map(commentHTML).join('');
+    }
+  }
+
+  /* ── Toggle like ── */
+  async function toggleLike(slug) {
+    if (!supabase) { toast('Set up Supabase to enable likes'); return; }
+    const anonId    = getAnonId();
+    const likeBtn   = document.getElementById(`like-btn-${slug}`);
+    const likeCount = document.getElementById(`like-count-${slug}`);
+    const heart     = likeBtn.querySelector('.like-heart');
+
+    const { data: existing } = await supabase.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+
+    if (existing) {
+      await supabase.from('likes').delete().eq('id', existing.id);
+      likeBtn.classList.remove('liked'); heart.textContent = '♡';
+      likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
+    } else {
+      await supabase.from('likes').insert({ piece_slug: slug, anon_id: anonId });
+      likeBtn.classList.add('liked'); heart.textContent = '♥';
+      likeCount.textContent = parseInt(likeCount.textContent) + 1;
+    }
+  }
+
+  /* ── Submit comment ── */
+  async function submitComment(slug) {
+    if (!supabase) { toast('Set up Supabase to enable comments'); return; }
+    const input = document.getElementById(`comment-input-${slug}`);
+    const body  = input.value.trim();
+    if (!body) return;
+
+    const btn = input.closest('.comment-form').querySelector('.comment-submit');
+    btn.disabled = true; btn.textContent = 'Posting…';
+
+    const { data, error } = await supabase.from('comments').insert({
+      piece_slug: slug,
+      body,
+      anon_id:    getAnonId(),
+      anon_label: getAnonLabel(),
+    }).select().single();
+
+    btn.disabled = false; btn.textContent = 'Post anonymously';
+
+    if (error) { toast('Could not post — try again'); return; }
+
+    input.value = '';
+    document.getElementById(`comment-chars-${slug}`).textContent = '0 / 500';
+
+    const list = document.getElementById(`comment-list-${slug}`);
+    const empty = list.querySelector('.comments-empty, .comments-loading');
+    if (empty) empty.remove();
+    list.insertAdjacentHTML('beforeend', commentHTML(data));
+    toast('Comment posted ✦');
   }
 
   /* ══════════════════════════════════════
