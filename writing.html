@@ -969,7 +969,6 @@
 
     try {
       const rawText   = await extractTextFromPDF(file);
-      const rawText = await extractTextFromPDF(file);
 console.log(JSON.stringify(rawText.slice(0, 2000)));
       const wordCount = countWords(rawText);
       const readTime  = calcReadTime(wordCount);
