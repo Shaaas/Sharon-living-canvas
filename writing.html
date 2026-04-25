@@ -648,7 +648,7 @@
   /* ══════════════════════════════════════
      FORMAT
   ══════════════════════════════════════ */
-  function formatAsArticle(rawText, type) {
+ function formatAsArticle(rawText, type) {
     const lines = rawText.split('\n').map(l => l.trim())
       .filter((l, i, arr) => !(l === '' && arr[i-1] === ''));
 
@@ -666,15 +666,24 @@
       return `<div class="r-body poem">${html}</div>`;
     }
 
+    // Articles — split on blank lines, keep all paragraphs including short ones
     const paragraphs = [];
     let current = [];
     for (const line of lines) {
-      if (line === '') { if (current.length) { paragraphs.push(current.join(' ')); current = []; } }
-      else current.push(line);
+      if (line === '') {
+        if (current.length) { paragraphs.push(current.join(' ')); current = []; }
+      } else {
+        current.push(line);
+      }
     }
     if (current.length) paragraphs.push(current.join(' '));
 
-    const body = paragraphs.filter(p => p.length > 40).map(p => `<p>${escHtml(p)}</p>`).join('');
+    // Only filter out truly empty strings, not short paragraphs
+    const body = paragraphs
+      .filter(p => p.trim().length > 0)
+      .map(p => `<p>${escHtml(p)}</p>`)
+      .join('');
+
     return `<div class="r-body">${body}</div>`;
   }
 
