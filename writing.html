@@ -1300,7 +1300,7 @@
 
     btn.disabled = false; btn.textContent = 'Post anonymously';
 
-    if (error) { toast('Could not post — try again'); return; }
+    if (error) { console.log(error); toast('Could not post — try again'); return; }
 
     input.value = '';
     document.getElementById(`comment-chars-${slug}`).textContent = '0 / 500';
