@@ -1310,7 +1310,8 @@
       </div>`;
   }
 
-  async function loadReactions(slug) {
+ async function loadReactions(slug) {
+    console.log('loading reactions for slug:', slug);
     const likeBtn   = document.getElementById(`like-btn-${slug}`);
     const likeCount = document.getElementById(`like-count-${slug}`);
     const list      = document.getElementById(`comment-list-${slug}`);
