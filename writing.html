@@ -1331,7 +1331,7 @@
     const { data: myLike } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
     if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
 
-    const { data: comments, error: cErr } = await sb.from('comments').select('*')
+  const { data: comments, error: cErr } = await sb.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
     if (cErr) { console.log('comments error:', cErr); }
     if (!comments || comments.length === 0) {
       list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
