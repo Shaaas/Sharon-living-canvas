@@ -450,6 +450,35 @@
     .comments-empty { font-family: 'Cormorant Garamond', serif; font-style: italic;
       font-size: 1rem; color: var(--muted); padding: 1rem 0; }
 
+    /* AUTHOR comment */
+    .comment-item.author-comment { background: var(--gold-glow); border-left: 2px solid var(--gold); padding-left: 1rem; }
+    .comment-author-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.46rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: #000; background: var(--gold);
+      padding: 2px 7px; border-radius: 1px; margin-left: 4px; flex-shrink: 0;
+    }
+    .comment-avatar.author-avatar { background: var(--gold); color: #000; border-color: var(--gold); }
+
+    /* REPLY */
+    .comment-reply { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
+    .comment-reply-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 0.4rem; }
+    .comment-reply-label { font-family: 'DM Mono', monospace; font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+    .comment-reply-body { font-size: 0.85rem; line-height: 1.6; color: var(--prose-color); font-style: italic; }
+
+    /* MOBILE READER CONTROLS */
+    .r-mobile-controls {
+      display: none;
+      padding: 10px 1rem;
+      background: rgba(8,8,8,0.96);
+      border-bottom: 1px solid var(--line);
+      gap: 8px; align-items: center; justify-content: space-between;
+    }
+    .theme-sepia .r-mobile-controls, .theme-light .r-mobile-controls { background: rgba(245,240,232,0.97); }
+    .r-mobile-controls .r-theme-btn { width: 20px; height: 20px; }
+    @media (max-width: 600px) {
+      .r-mobile-controls { display: flex; }
+    }
+
     /* MOBILE BOTTOM NAV */
     .mobile-nav {
       display: none;
@@ -516,18 +545,17 @@
 <!-- ARTICLES -->
 <div class="collection active" id="col-articles">
   <div class="grid">
-    <div class="card" data-file="The Delusions We Carried Into 25.pdf" data-type="article" data-time="8 MIN READ" data-title="The Delusions We Carried Into 25" data-tags="identity,growing-up,humour"><div class="card-meta"><span class="card-badge">article</span></div><h3>The Delusions We Carried Into 25</h3><p>An honest look at relationships, careers, and the expectations we carry into 25, and how they quietly unravel into something less perfect but more real.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Not Lost. Just 25.pdf" data-type="article" data-time="5 MIN READ" data-title="Not Lost. Just 25" data-tags="identity,growing-up,politics"><div class="card-meta"><span class="card-badge">article</span></div><h3>Not Lost. Just 25</h3><p>I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Two Timelines in One Bed.pdf" data-type="article" data-time="5 MIN READ" data-title="Two Timelines in One Bed" data-tags="love,relationships,humour"><div class="card-meta"><span class="card-badge">article</span></div><h3>Two Timelines in One Bed</h3><p>A blunt look at the "finish line" myth and the comedic silence that follows when two people are technically together but secretly decades apart.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Men, Silence, and the Moment After.pdf" data-type="article" data-time="7 MIN READ" data-title="Men, Silence, and the Moment After" data-tags="relationships,grief,identity"><div class="card-meta"><span class="card-badge">article</span></div><h3>Men, Silence, and the Moment After</h3><p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog". On men, emotional vocabulary, and what lives in the silence.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-type="article" data-time="6 MIN READ" data-title="Life Debugging" data-tags="identity,humour,growing-up"><div class="card-meta"><span class="card-badge">article</span></div><h3>Life Debugging</h3><p>An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Emotional Multitasking.pdf" data-type="article" data-time="4 MIN READ" data-title="Emotional Multitasking" data-tags="grief,identity,growing-up"><div class="card-meta"><span class="card-badge">article</span></div><h3>Emotional Multitasking</h3><p>The tension of being caught between two worlds, the one you're in and the one you're still carrying from before.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Paying the Passion Tax.pdf" data-type="article" data-time="5 MIN READ" data-title="Paying the Passion Tax" data-tags="love,identity,grief"><div class="card-meta"><span class="card-badge">article</span></div><h3>Paying the Passion Tax</h3><p>Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Fireworks.pdf" data-type="article" data-time="3 MIN READ" data-title="Fireworks" data-tags="love,grief,identity"><div class="card-meta">><span class="card-badge">article</span></div><h3>Fireworks</h3><p>A short reflection on ignition and temporary light, on what it means to be briefly, spectacularly seen, and then to go dark.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="The cost of Safe words.pdf" data-type="article" data-time="5 MIN READ" data-title="The Cost of Safe Words" data-tags="relationships,grief,identity"><div class="card-meta"><span class="card-badge">article</span></div><h3>The Cost of Safe Words</h3><p>The safety found in silence and withheld words. What we protect when we don't say things, and what we lose in the keeping.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Things I've Noticed lately.pdf" data-type="article" data-time="4 MIN READ" data-title="Things I've Noticed Lately" data-tags="humour,growing-up,identity"><div class="card-meta"><span class="card-badge">article</span></div><h3>Things I've Noticed Lately</h3><p>Small details ignored in the noise of being human. A collection of observations from the edge of attention.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="The space between words and meaning.pdf" data-type="article" data-time="6 MIN READ" data-title="The Space Between Words" data-tags="relationships,grief,identity"><div class="card-meta"><span class="card-badge">article</span></div><h3>The Space Between Words</h3><p>The gap where communication fails and something truer takes its place. On meaning, silence, and what gets lost in translation.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
-    <div class="card" data-file="Your voice (1).pdf" data-type="article" data-time="3 MIN READ" data-title="Your Voice" data-tags="identity,growing-up,humour"><div class="card-meta"><span class="card-badge">article</span></div><h3>Your Voice</h3><p>Finding your unique sound in a crowded world. On why the thing that makes you strange is the only thing worth amplifying.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Not Lost. Just 25.pdf" data-type="article" data-time="5 MIN READ" data-title="Not Lost. Just 25" data-tags="identity,growing-up,politics"><div class="card-meta"><span>01 / 11</span><span class="card-badge">article</span></div><h3>Not Lost. Just 25</h3><p>I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Two Timelines in One Bed.pdf" data-type="article" data-time="5 MIN READ" data-title="Two Timelines in One Bed" data-tags="love,relationships,humour"><div class="card-meta"><span>02 / 11</span><span class="card-badge">article</span></div><h3>Two Timelines in One Bed</h3><p>A blunt look at the "finish line" myth and the comedic silence that follows when two people are technically together but secretly decades apart.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Men, Silence, and the Moment After.pdf" data-type="article" data-time="7 MIN READ" data-title="Men, Silence, and the Moment After" data-tags="relationships,grief,identity"><div class="card-meta"><span>03 / 11</span><span class="card-badge">article</span></div><h3>Men, Silence, and the Moment After</h3><p>The system reboot from "Epic Romance" to "Local Hardware Store Catalog". On men, emotional vocabulary, and what lives in the silence.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Why Humans are Bad at Debugging Their Own Lives.pdf" data-type="article" data-time="6 MIN READ" data-title="Life Debugging" data-tags="identity,humour,growing-up"><div class="card-meta"><span>04 / 11</span><span class="card-badge">article</span></div><h3>Life Debugging</h3><p>An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Emotional Multitasking.pdf" data-type="article" data-time="4 MIN READ" data-title="Emotional Multitasking" data-tags="grief,identity,growing-up"><div class="card-meta"><span>05 / 11</span><span class="card-badge">article</span></div><h3>Emotional Multitasking</h3><p>The tension of being caught between two worlds, the one you're in and the one you're still carrying from before.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Paying the Passion Tax.pdf" data-type="article" data-time="5 MIN READ" data-title="Paying the Passion Tax" data-tags="love,identity,grief"><div class="card-meta"><span>06 / 11</span><span class="card-badge">article</span></div><h3>Paying the Passion Tax</h3><p>Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Fireworks.pdf" data-type="article" data-time="3 MIN READ" data-title="Fireworks" data-tags="love,grief,identity"><div class="card-meta"><span>07 / 11</span><span class="card-badge">article</span></div><h3>Fireworks</h3><p>A short reflection on ignition and temporary light, on what it means to be briefly, spectacularly seen, and then to go dark.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="The cost of Safe words.pdf" data-type="article" data-time="5 MIN READ" data-title="The Cost of Safe Words" data-tags="relationships,grief,identity"><div class="card-meta"><span>08 / 11</span><span class="card-badge">article</span></div><h3>The Cost of Safe Words</h3><p>The safety found in silence and withheld words. What we protect when we don't say things, and what we lose in the keeping.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Things I've Noticed lately.pdf" data-type="article" data-time="4 MIN READ" data-title="Things I've Noticed Lately" data-tags="humour,growing-up,identity"><div class="card-meta"><span>09 / 11</span><span class="card-badge">article</span></div><h3>Things I've Noticed Lately</h3><p>Small details ignored in the noise of being human. A collection of observations from the edge of attention.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="The space between words and meaning.pdf" data-type="article" data-time="6 MIN READ" data-title="The Space Between Words" data-tags="relationships,grief,identity"><div class="card-meta"><span>10 / 11</span><span class="card-badge">article</span></div><h3>The Space Between Words</h3><p>The gap where communication fails and something truer takes its place. On meaning, silence, and what gets lost in translation.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
+    <div class="card" data-file="Your voice (1).pdf" data-type="article" data-time="3 MIN READ" data-title="Your Voice" data-tags="identity,growing-up,humour"><div class="card-meta"><span>11 / 11</span><span class="card-badge">article</span></div><h3>Your Voice</h3><p>Finding your unique sound in a crowded world. On why the thing that makes you strange is the only thing worth amplifying.</p><div class="card-tags"></div><div class="card-foot"><button class="btn-read">Read</button><button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">♡</button></div></div>
   </div>
 </div>
 
@@ -573,6 +601,17 @@
     </div>
   </div>
   <div class="r-progress"><div class="r-progress-fill" id="r-prog"></div></div>
+  <div class="r-mobile-controls">
+    <div style="display:flex;gap:4px;align-items:center;">
+      <button class="r-theme-btn active" data-theme="dark" title="Dark"></button>
+      <button class="r-theme-btn" data-theme="sepia" title="Sepia"></button>
+      <button class="r-theme-btn" data-theme="light" title="Light"></button>
+    </div>
+    <div style="display:flex;gap:4px;align-items:center;">
+      <button class="r-font-btn" id="font-down-m">A−</button>
+      <button class="r-font-btn" id="font-up-m">A+</button>
+    </div>
+  </div>
   <div class="r-scroll" id="r-scroll">
     <div class="r-inner" id="r-inner"></div>
   </div>
@@ -648,7 +687,7 @@
   /* ══════════════════════════════════════
      FORMAT
   ══════════════════════════════════════ */
-function formatAsArticle(rawText, type) {
+  function formatAsArticle(rawText, type) {
     const lines = rawText.split('\n').map(l => l.trim())
       .filter((l, i, arr) => !(l === '' && arr[i-1] === ''));
 
@@ -666,24 +705,15 @@ function formatAsArticle(rawText, type) {
       return `<div class="r-body poem">${html}</div>`;
     }
 
-    // Join all lines into one clean string
-    const cleaned = rawText
-      .replace(/\n/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-    // Split at sentence boundaries then group into paragraphs of ~3 sentences
-    const sentences = cleaned.split(/(?<=[.?!])\s+(?=[A-Z])/);
     const paragraphs = [];
-    for (let i = 0; i < sentences.length; i += 3) {
-      paragraphs.push(sentences.slice(i, i + 3).join(' '));
+    let current = [];
+    for (const line of lines) {
+      if (line === '') { if (current.length) { paragraphs.push(current.join(' ')); current = []; } }
+      else current.push(line);
     }
+    if (current.length) paragraphs.push(current.join(' '));
 
-    const body = paragraphs
-      .filter(p => p.trim().length > 0)
-      .map(p => `<p>${escHtml(p.trim())}</p>`)
-      .join('');
-
+    const body = paragraphs.filter(p => p.length > 40).map(p => `<p>${escHtml(p)}</p>`).join('');
     return `<div class="r-body">${body}</div>`;
   }
 
@@ -817,23 +847,35 @@ function formatAsArticle(rawText, type) {
   document.querySelectorAll('.r-theme-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.r-theme-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      document.querySelectorAll(`.r-theme-btn[data-theme="${btn.dataset.theme}"]`).forEach(b => b.classList.add('active'));
       const reader = document.getElementById('reader');
       reader.classList.remove('theme-sepia','theme-light');
       currentTheme = btn.dataset.theme;
       if (currentTheme !== 'dark') reader.classList.add('theme-' + currentTheme);
+      localStorage.setItem('sm-theme', currentTheme);
     });
   });
 
-  let fontSize = 1.05;
-  document.getElementById('font-up').addEventListener('click', () => {
-    fontSize = Math.min(1.4, fontSize + 0.05);
+  // Restore saved theme
+  const savedTheme = localStorage.getItem('sm-theme');
+  if (savedTheme && savedTheme !== 'dark') {
+    document.getElementById('reader').classList.add('theme-' + savedTheme);
+    document.querySelectorAll('.r-theme-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll(`.r-theme-btn[data-theme="${savedTheme}"]`).forEach(b => b.classList.add('active'));
+    currentTheme = savedTheme;
+  }
+
+  let fontSize = parseFloat(localStorage.getItem('sm-fontsize') || '1.05');
+  function applyFontSize() {
     document.getElementById('reader').style.setProperty('--fs', fontSize + 'rem');
-  });
-  document.getElementById('font-down').addEventListener('click', () => {
-    fontSize = Math.max(0.85, fontSize - 0.05);
-    document.getElementById('reader').style.setProperty('--fs', fontSize + 'rem');
-  });
+    localStorage.setItem('sm-fontsize', fontSize);
+  }
+  applyFontSize();
+
+  document.getElementById('font-up').addEventListener('click', () => { fontSize = Math.min(1.4, fontSize + 0.05); applyFontSize(); });
+  document.getElementById('font-down').addEventListener('click', () => { fontSize = Math.max(0.85, fontSize - 0.05); applyFontSize(); });
+  document.getElementById('font-up-m').addEventListener('click', () => { fontSize = Math.min(1.4, fontSize + 0.05); applyFontSize(); });
+  document.getElementById('font-down-m').addEventListener('click', () => { fontSize = Math.max(0.85, fontSize - 0.05); applyFontSize(); });
 
   /* ══════════════════════════════════════
      ALL CARDS — flat list for next/prev
@@ -969,7 +1011,6 @@ function formatAsArticle(rawText, type) {
 
     try {
       const rawText   = await extractTextFromPDF(file);
-console.log(JSON.stringify(rawText.slice(0, 2000)));
       const wordCount = countWords(rawText);
       const readTime  = calcReadTime(wordCount);
       const bodyHtml  = formatAsArticle(rawText, type);
@@ -1180,7 +1221,7 @@ console.log(JSON.stringify(rawText.slice(0, 2000)));
      SUPABASE
   ══════════════════════════════════════ */
   const sb = window.supabase.createClient(
-    'https://qpodmlgmorfuwcjenvvg.supabase.co',
+    'https://qpodmlgmorfuwcjenvvg.sb.co',
     'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq'
   );
 
@@ -1233,15 +1274,30 @@ console.log(JSON.stringify(rawText.slice(0, 2000)));
   }
 
   function commentHTML(c) {
-    const initial = (c.anon_label || 'R').charAt(c.anon_label.indexOf('#') + 1).toUpperCase();
+    const isAuthor = c.is_author === true;
+    const initial  = isAuthor ? 'S' : (c.anon_label || 'R').charAt((c.anon_label || '').indexOf('#') + 1).toUpperCase();
+    const label    = isAuthor ? 'Sharon' : escHtml(c.anon_label || 'Anonymous');
+    const badge    = isAuthor ? `<span class="comment-author-badge">Author</span>` : '';
+    const avatarClass = isAuthor ? 'comment-avatar author-avatar' : 'comment-avatar';
+
+    const replyHTML = c.reply_body ? `
+      <div class="comment-reply">
+        <div class="comment-reply-meta">
+          <span class="comment-reply-label">✦ Sharon replied</span>
+          <span class="comment-time">${c.reply_at ? relativeTime(c.reply_at) : ''}</span>
+        </div>
+        <div class="comment-reply-body">${escHtml(c.reply_body)}</div>
+      </div>` : '';
+
     return `
-      <div class="comment-item">
+      <div class="comment-item${isAuthor ? ' author-comment' : ''}">
         <div class="comment-meta">
-          <div class="comment-avatar">${initial}</div>
-          <span class="comment-anon">${escHtml(c.anon_label || 'Anonymous')}</span>
+          <div class="${avatarClass}">${initial}</div>
+          <span class="comment-anon">${label}</span>${badge}
           <span class="comment-time">${relativeTime(c.created_at)}</span>
         </div>
         <div class="comment-body">${escHtml(c.body)}</div>
+        ${replyHTML}
       </div>`;
   }
 
@@ -1311,7 +1367,7 @@ console.log(JSON.stringify(rawText.slice(0, 2000)));
 
     btn.disabled = false; btn.textContent = 'Post anonymously';
 
-    if (error) { console.log(error); toast('Could not post — try again'); return; }
+    if (error) { toast('Could not post — try again'); return; }
 
     input.value = '';
     document.getElementById(`comment-chars-${slug}`).textContent = '0 / 500';
