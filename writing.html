@@ -1277,7 +1277,7 @@
 
   function commentHTML(c) {
     const isAuthor = c.is_author === true;
-    const initial  = isAuthor ? 'S' : (c.anon_label || 'R').charAt((c.anon_label || '').indexOf('#') + 1).toUpperCase();
+    const initial  = isAuthor ? 'S' : (c.anon_label && c.anon_label.includes('#') ? c.anon_label.charAt(c.anon_label.indexOf('#') + 1) : (c.anon_label || 'R').charAt(0)).toUpperCase();
     const label    = isAuthor ? 'Sharon' : escHtml(c.anon_label || 'Anonymous');
     const badge    = isAuthor ? `<span class="comment-author-badge">Author</span>` : '';
     const avatarClass = isAuthor ? 'comment-avatar author-avatar' : 'comment-avatar';
@@ -1323,7 +1323,8 @@
     const { data: myLike } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
     if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
 
-    const { data: comments } = await sb.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
+    const { data: comments, error: cErr } = await sb.from('comments').select('*')
+    if (cErr) { console.log('comments error:', cErr); }
     if (!comments || comments.length === 0) {
       list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
     } else {
