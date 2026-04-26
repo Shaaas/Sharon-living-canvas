@@ -706,15 +706,22 @@
       return `<div class="r-body poem">${html}</div>`;
     }
 
-    const paragraphs = [];
-    let current = [];
-    for (const line of lines) {
-      if (line === '') { if (current.length) { paragraphs.push(current.join(' ')); current = []; } }
-      else current.push(line);
-    }
-    if (current.length) paragraphs.push(current.join(' '));
+    const cleaned = rawText
+      .replace(/\n/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
 
-    const body = paragraphs.filter(p => p.length > 40).map(p => `<p>${escHtml(p)}</p>`).join('');
+    const sentences = cleaned.split(/(?<=[.?!])\s+(?=[A-Z])/);
+    const paragraphs = [];
+    for (let i = 0; i < sentences.length; i += 3) {
+      paragraphs.push(sentences.slice(i, i + 3).join(' '));
+    }
+
+    const body = paragraphs
+      .filter(p => p.trim().length > 0)
+      .map(p => `<p>${escHtml(p.trim())}</p>`)
+      .join('');
+
     return `<div class="r-body">${body}</div>`;
   }
 
