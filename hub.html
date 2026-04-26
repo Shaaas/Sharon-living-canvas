@@ -267,15 +267,85 @@
     }
 
     /* ── MOBILE ── */
+    /* ── GREETING ── */
+    .greeting {
+      position: relative; z-index: 2;
+      text-align: center; padding: 0 2.5rem 0.5rem;
+      opacity: 0; animation: fadeUp 1s ease 0s forwards;
+    }
+    .greeting-text {
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .greeting-text span { color: var(--gold); }
+
+    /* ── ROTATING QUOTE ── */
+    .quote-strip {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 3rem 2.5rem 3.5rem;
+      opacity: 0; animation: fadeUp 1s ease 1.3s forwards;
+    }
+    .quote-mark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem; line-height: 0.5;
+      color: var(--gold-dim); display: block;
+      margin-bottom: 1rem; user-select: none;
+    }
+    .quote-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-style: italic; font-weight: 300;
+      color: var(--muted); line-height: 1.6;
+      max-width: 600px; margin: 0 auto 1rem;
+      transition: opacity 0.6s ease;
+    }
+    .quote-source {
+      font-family: 'DM Mono', monospace; font-size: 0.5rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* ── NOW STRIP ── */
+    .now-strip {
+      position: relative; z-index: 2;
+      border-top: 1px solid var(--line);
+      padding: 2rem 2.5rem;
+      display: flex; gap: 3rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 1s ease 1.5s forwards;
+    }
+    .now-item { display: flex; flex-direction: column; gap: 0.3rem; }
+    .now-label {
+      font-family: 'DM Mono', monospace; font-size: 0.48rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--dim);
+    }
+    .now-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-style: italic;
+      color: var(--muted);
+    }
+    .now-value em { color: var(--text); font-style: normal; }
+
+    /* ── CURSOR TRAIL ── */
+    .trail-dot {
+      position: fixed; border-radius: 50%;
+      background: var(--gold); pointer-events: none;
+      z-index: 9998; transform: translate(-50%, -50%);
+    }
+
     @media (max-width: 600px) {
       .header { padding: 3.5rem 1.25rem 2rem; }
+      .greeting { padding: 0 1.25rem 0.5rem; }
       .divider { padding: 0 1.25rem; }
-      .portals { margin-bottom: 4rem; }
+      .portals { margin-bottom: 0; }
       .portal { padding: 2rem 1.25rem; }
-      .footer { padding: 0 1.25rem 3rem; }
+      .quote-strip { padding: 2.5rem 1.25rem; }
+      .now-strip { padding: 1.5rem 1.25rem; gap: 1.5rem; }
+      .footer { padding: 1.5rem 1.25rem 3rem; }
     }
   </style>
-</head>
 <body>
 
 <div class="orb orb-g"></div>
@@ -283,6 +353,11 @@
 <canvas id="particle-canvas"></canvas>
 <div id="cursor"></div>
 <div id="cursor-ring"></div>
+
+<!-- GREETING -->
+<div class="greeting">
+  <p class="greeting-text" id="greeting-text">Welcome — <span id="greeting-time"></span></p>
+</div>
 
 <!-- HEADER -->
 <header class="header">
@@ -340,6 +415,29 @@
 
 </section>
 
+<!-- ROTATING QUOTE -->
+<div class="quote-strip">
+  <span class="quote-mark">"</span>
+  <p class="quote-text" id="quote-text"></p>
+  <p class="quote-source" id="quote-source"></p>
+</div>
+
+<!-- NOW STRIP -->
+<div class="now-strip">
+  <div class="now-item">
+    <span class="now-label">Currently writing</span>
+    <span class="now-value"><em>The Delusions We Carried Into 25</em></span>
+  </div>
+  <div class="now-item">
+    <span class="now-label">Currently reading</span>
+    <span class="now-value"><em>Americanah</em> — Chimamanda Ngozi Adichie</span>
+  </div>
+  <div class="now-item">
+    <span class="now-label">Currently listening</span>
+    <span class="now-value"><em>Older</em> — Sasha Alex Sloan</span>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <span class="footer-sig">— Sharon Mutanu, Nairobi</span>
@@ -351,23 +449,70 @@
 </footer>
 
 <script>
+  /* ── GREETING ── */
+  const hour = new Date().getHours();
+  const greetings = {
+    dawn:    { label: 'It\'s early. The world is still half-asleep.', range: [4, 6] },
+    morning: { label: 'Good morning. Glad you\'re here.', range: [6, 12] },
+    noon:    { label: 'Afternoon. Take a breath before you choose.', range: [12, 17] },
+    evening: { label: 'Good evening. The best hours for reading.', range: [17, 21] },
+    night:   { label: 'Late night. You\'re in the right place.', range: [21, 24] },
+    midnight:{ label: 'Can\'t sleep either? Come in.', range: [0, 4] },
+  };
+
+  const greeting = Object.values(greetings).find(g => hour >= g.range[0] && hour < g.range[1]);
+  const greetingEl = document.getElementById('greeting-text');
+  if (greetingEl && greeting) greetingEl.textContent = greeting.label;
+
+  /* ── ROTATING QUOTES ── */
+  const quotes = [
+    { text: 'I didn\'t care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.', source: 'Not Lost. Just 25' },
+    { text: 'Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.', source: 'Paying the Passion Tax' },
+    { text: 'The gap where communication fails and something truer takes its place.', source: 'The Space Between Words' },
+    { text: 'On what it means to be briefly, spectacularly seen — and then to go dark.', source: 'Fireworks' },
+    { text: 'The tension of being caught between two worlds — the one you\'re in and the one you\'re still carrying from before.', source: 'Emotional Multitasking' },
+    { text: 'What we protect when we don\'t say things, and what we lose in the keeping.', source: 'The Cost of Safe Words' },
+    { text: 'Why the thing that makes you strange is the only thing worth amplifying.', source: 'Your Voice' },
+    { text: 'The internal version of growing up — when the beliefs you held about love and work start dissolving quietly, like sugar in hot tea.', source: 'The Delusions We Carried Into 25' },
+  ];
+
+  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  const quoteTextEl = document.getElementById('quote-text');
+  const quoteSourceEl = document.getElementById('quote-source');
+  if (quoteTextEl) quoteTextEl.textContent = randomQuote.text;
+  if (quoteSourceEl) quoteSourceEl.textContent = '— ' + randomQuote.source;
+
   /* ── CURSOR ── */
   const cur = document.getElementById('cursor');
   const ring = document.getElementById('cursor-ring');
-  let mx = 0, my = 0;
 
   document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cur.style.left  = mx + 'px';
-    cur.style.top   = my + 'px';
-    ring.style.left = mx + 'px';
-    ring.style.top  = my + 'px';
+    cur.style.left  = e.clientX + 'px';
+    cur.style.top   = e.clientY + 'px';
+    ring.style.left = e.clientX + 'px';
+    ring.style.top  = e.clientY + 'px';
+    spawnTrail(e.clientX, e.clientY);
   });
 
   document.querySelectorAll('.portal:not(.soon)').forEach(p => {
     p.addEventListener('mouseenter', () => ring.classList.add('expand'));
     p.addEventListener('mouseleave', () => ring.classList.remove('expand'));
   });
+
+  /* ── CURSOR TRAIL ── */
+  function spawnTrail(x, y) {
+    const dot = document.createElement('div');
+    dot.className = 'trail-dot';
+    const size = Math.random() * 3 + 1.5;
+    dot.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;opacity:${Math.random() * 0.4 + 0.1}`;
+    document.body.appendChild(dot);
+    setTimeout(() => {
+      dot.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      dot.style.opacity = '0';
+      dot.style.transform = `translate(-50%, -50%) scale(0)`;
+    }, 30);
+    setTimeout(() => dot.remove(), 700);
+  }
 
   /* ── PORTAL CLICKS ── */
   document.querySelectorAll('.portal:not(.soon)').forEach(portal => {
@@ -378,6 +523,12 @@
         window.location.href = portal.dataset.target;
       }, 500);
     });
+  });
+
+  /* ── KEYBOARD SHORTCUTS ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === '1') document.querySelector('[data-target="writing.html"]')?.click();
+    if (e.key === '2') document.querySelector('[data-target="music.html"]')?.click();
   });
 
   /* ── PARTICLES ── */
