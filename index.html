@@ -3,15 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <title>Sharon Mutanu | Writer & Developer</title>
-  <link rel="canonical" href="https://yourdomain.com/" />
-<meta property="og:title" content="Sharon Mutanu | Writer & Developer">
-<meta property="og:description" content="Explore the digital world of Sharon Mutanu. Words, Code, and Presence.">
-<meta property="og:image" content="https://shaaas.github.io/Sharon-living-canvas/me.png">
-<meta property="og:type" content="website">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <meta name="description" content="Portfolio of Sharon Mutanu - Building worlds with words and code.">
+  <meta name="description" content="Sharon Mutanu is a writer and developer exploring identity, relationships, and the code of living. Read essays, poems, and experiments.">
   
+  <meta property="og:title" content="Sharon Mutanu | Writer & Developer">
+  <meta property="og:description" content="Essays on living honestly. Poems on love. Code that explores. Based in Nairobi.">
+  <meta property="og:image" content="https://shaaas.github.io/Sharon-living-canvas/me.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sharonlivingcanvas.netlify.app/">
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sharon Mutanu | Writer & Developer">
+  <meta name="twitter:description" content="Essays on living honestly. Poems on love. Code that explores.">
+  <meta name="twitter:image" content="https://shaaas.github.io/Sharon-living-canvas/me.png">
+  
+  <link rel="canonical" href="https://sharonlivingcanvas.netlify.app/" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
@@ -24,7 +30,6 @@
       background: #0a0a0a; 
       overflow-x: hidden; 
     }
-
     canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; }
 
     .hero { 
@@ -32,15 +37,14 @@
       flex-direction: column; 
       justify-content: center; 
       align-items: center; 
-      min-height: 100vh; /* Changed to min-height for better spacing */
+      min-height: 100vh;
       text-align: center; 
       position: relative; 
       z-index: 1;
-      padding: 40px 20px; /* Added vertical padding */
+      padding: 40px 20px;
       box-sizing: border-box;
     }
 
-    /* Profile Pic */
     .profile-wrap { margin-bottom: 2rem; position: relative; }
     .profile-img {
       width: 150px; height: 150px; border-radius: 50%; border: 3px solid #d4af37;
@@ -63,31 +67,35 @@
     .hero h1 {
       font-family: 'Playfair Display', serif;
       font-size: clamp(2rem, 6vw, 3.5rem);
-      margin: 0 0 1.5rem 0; /* Space below heading */
+      margin: 0 0 1.5rem 0;
       background: linear-gradient(to right, #d4af37, #fdf5e6, #d4af37);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    /* Typewriter Spacing */
-    .typewriter {
-      font-size: 1.1rem; 
-      min-height: 1.5em; 
-      margin-bottom: 4rem; /* More space between writing and buttons */
-      color: #cfd3da; 
-      letter-spacing: 2px; 
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #cfd3da;
+      letter-spacing: 2px;
       text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 300;
     }
-    .cursor { animation: blink 0.7s infinite; color: #d4af37; }
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-    /* Symmetrical Buttons */
+    .hero-desc {
+      font-size: 1rem;
+      color: #a0a0a0;
+      max-width: 500px;
+      margin-bottom: 4rem;
+      line-height: 1.6;
+    }
+
     .hero-btns { 
       display: flex; 
       gap: 2rem; 
       justify-content: center; 
       flex-wrap: wrap;
-      margin-bottom: 4rem; /* Space between buttons and icons */
+      margin-bottom: 4rem;
     }
 
     .portal-btn, .portfolio-btn {
@@ -102,12 +110,11 @@
     .portfolio-btn { background: transparent; color: #d4af37; }
     .portal-btn:hover, .portfolio-btn:hover { box-shadow: 0 0 20px #d4af37; transform: translateY(-3px); }
 
-    /* Social Icons - Fixed Positioning */
     .social-links {
       display: flex;
       gap: 2.5rem;
       justify-content: center;
-      margin-top: auto; /* Pushes to bottom in flex column */
+      margin-top: auto;
       padding-bottom: 2rem;
     }
 
@@ -121,7 +128,7 @@
 
     @media (max-width: 480px) {
       .hero-btns { flex-direction: column; gap: 1rem; }
-      .typewriter { margin-bottom: 2.5rem; font-size: 0.9rem; }
+      .hero-desc { font-size: 0.9rem; }
       .hero h1 { font-size: 2rem; }
     }
   </style>
@@ -136,42 +143,32 @@
       </div>
 
       <div class="hero-name">Sharon Mutanu</div>
-      <h1>I build worlds with words & code.</h1>
+      <h1>Words & Code</h1>
       
-      <div class="typewriter"><span id="type-text"></span><span class="cursor">|</span></div>
+      <div class="hero-subtitle">Writer | Developer | Explorer</div>
+      <div class="hero-desc">
+        Essays on identity, love, and living honestly. 
+        Code that thinks. Experiments at the edge of what's possible.
+      </div>
 
       <div class="hero-btns">
-        <button class="portal-btn" id="enterHubBtn">Enter the Hub</button>
-        <button class="portfolio-btn" id="portfolioBtn">Portfolio</button>
+        <button class="portal-btn" id="enterHubBtn">Read Essays</button>
+        <button class="portfolio-btn" id="portfolioBtn">About Me</button>
       </div>
 
       <div class="social-links">
-        <a href="https://www.instagram.com/sha.ta.nu" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
-        <a href="mailto:mutanu.sharon@yahoo.com"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://www.instagram.com/sha.ta.nu" target="_blank" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://www.linkedin.com/in/sharonmutanu" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="mailto:mutanu.sharon@yahoo.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
       </div>
     </section>
   </main>
 
   <script>
-    // Typewriter Logic
-    const text = "Writing • Technology • Presence";
-    let i = 0;
-    function typeWriter() {
-      if (i < text.length) {
-        document.getElementById("type-text").innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeWriter, 100);
-      }
-    }
-    window.onload = typeWriter;
-  
-    document.getElementById('enterHubBtn').onclick = () => window.location.href = 'hub.html';
-    document.getElementById('portfolioBtn').onclick = () => window.location.href = 'portfolio.html';
+    document.getElementById('enterHubBtn').onclick = () => window.location.href = 'writing.html';
+    document.getElementById('portfolioBtn').onclick = () => window.location.href = 'about.html';
   </script>
 
   <script src="sketch.js"></script>
-  <script src="main.js"></script>
-  <script src="portal.js"></script>
 </body>
 </html>

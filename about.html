@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Sharon Mutanu</title>
+  <meta name="description" content="Sharon Mutanu is a writer and developer from Nairobi exploring identity, technology, and the human condition.">
+  <meta property="og:title" content="About Sharon Mutanu" />
+  <meta property="og:description" content="A writer and developer building worlds with words and code." />
+  <meta property="og:image" content="https://shaaas.github.io/Sharon-living-canvas/me.png" />
+  <meta property="og:url" content="https://sharonlivingcanvas.netlify.app/about.html" />
+  <link rel="canonical" href="https://sharonlivingcanvas.netlify.app/about.html" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #d4af37;
+      --black: #030303;
+      --surface: #0a0a0a;
+      --line: rgba(255,255,255,0.05);
+      --text: #e4e0d8;
+      --muted: #5a5855;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .back-btn {
+      position: fixed; top: 1.5rem; left: 1.75rem;
+      z-index: 100;
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Mono', monospace; font-size: 0.54rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 8px 16px; border-radius: 1px;
+      transition: color 0.25s, border-color 0.25s;
+      background: rgba(3,3,3,0.7);
+      backdrop-filter: blur(8px);
+    }
+    .back-btn:hover { color: var(--gold); border-color: rgba(212,175,55,0.2); }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 6rem 2.5rem 4rem; }
+
+    .hero-section {
+      display: flex; gap: 3rem; align-items: flex-start; margin-bottom: 4rem;
+    }
+
+    .bio-img {
+      width: 200px; height: 200px; border-radius: 8px;
+      object-fit: cover; border: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+
+    .bio-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem; font-weight: 400; line-height: 1.1;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .bio-text .subtitle {
+      font-size: 1rem; color: var(--muted); margin-bottom: 2rem;
+      font-style: italic;
+    }
+
+    .bio-text p {
+      font-size: 1rem; line-height: 1.8; margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .section { margin-bottom: 4rem; }
+    .section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem; font-weight: 400; margin-bottom: 1.5rem;
+      color: var(--gold);
+      border-bottom: 1px solid var(--line); padding-bottom: 1rem;
+    }
+
+    .section p { font-size: 0.95rem; line-height: 1.8; margin-bottom: 1rem; color: var(--text); }
+
+    .skills-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem; margin-top: 1.5rem;
+    }
+
+    .skill-item h3 {
+      font-family: 'DM Mono', monospace; font-size: 0.7rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+
+    .skill-item p { font-size: 0.9rem; color: var(--muted); }
+
+    .cta-section {
+      padding: 2.5rem; background: var(--surface);
+      border: 1px solid var(--line); border-radius: 4px;
+      text-align: center;
+    }
+
+    .cta-section h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; margin-bottom: 1rem; color: var(--text);
+    }
+
+    .cta-section p { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Mono', monospace; font-size: 0.58rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--gold); color: #000;
+      border: none; padding: 12px 28px; border-radius: 2px;
+      cursor: pointer; font-weight: 500; transition: 0.2s;
+    }
+    .cta-btn:hover { background: #e8c540; }
+
+    .footer {
+      padding: 3rem 2.5rem; text-align: center;
+      border-top: 1px solid var(--line);
+      color: var(--muted); font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .hero-section { flex-direction: column; align-items: center; text-align: center; }
+      .bio-img { width: 150px; height: 150px; }
+      .bio-text h1 { font-size: 2rem; }
+      .container { padding: 4rem 1.5rem 2rem; }
+      .back-btn { top: 1rem; left: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+<a class="back-btn" href="index.html">← Home</a>
+
+<div class="container">
+
+  <div class="hero-section">
+    <img src="https://shaaas.github.io/Sharon-living-canvas/me.png" alt="Sharon Mutanu" class="bio-img">
+    <div class="bio-text">
+      <h1>Sharon Mutanu</h1>
+      <p class="subtitle">Writer & Developer, Nairobi</p>
+      <p>I write about identity, relationships, and what it means to be human in the age of technology. I code because it's another form of writing — logic, precision, and poetry all at once.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>My Work</h2>
+    <p>
+      I create in two worlds. As a writer, I explore love, growing up, grief, and the small absurdities of being human. 
+      My essays and poems are honest reflections on living — not advice, just observations from someone living through it.
+    </p>
+    <p>
+      As a developer, I build interactive experiences that blur the line between code and art. 
+      I'm interested in how technology can tell stories, create presence, and make people feel something.
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>What I'm Interested In</h2>
+    <div class="skills-grid">
+      <div class="skill-item">
+        <h3>Writing</h3>
+        <p>Essays • Poetry • Storytelling • Identity narratives</p>
+      </div>
+      <div class="skill-item">
+        <h3>Web Development</h3>
+        <p>Full-stack • Creative tech • Interactive design</p>
+      </div>
+      <div class="skill-item">
+        <h3>Digital Experiences</h3>
+        <p>Immersive interfaces • Data visualization • Code art</p>
+      </div>
+      <div class="skill-item">
+        <h3>Philosophy</h3>
+        <p>Technology & being • Consciousness • Human condition</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Currently</h2>
+    <p>Reading: <em>Americanah</em> by Chimamanda Ngozi Adichie</p>
+    <p>Working on: Short essays about the 20s, identity, and belonging</p>
+    <p>Building: Interactive data visualizations for storytelling</p>
+  </div>
+
+  <div class="cta-section">
+    <h3>Let's Talk</h3>
+    <p>Want to collaborate, share thoughts, or just chat? I'd love to hear from you.</p>
+    <a href="mailto:mutanu.sharon@yahoo.com" class="cta-btn">Send me an email</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>© 2024 Sharon Mutanu • <a href="https://instagram.com/sha.ta.nu" style="color: var(--gold); text-decoration: none;">Instagram</a> • <a href="https://linkedin.com/in/sharonmutanu" style="color: var(--gold); text-decoration: none;">LinkedIn</a></p>
+</div>
+
+</body>
+</html>
