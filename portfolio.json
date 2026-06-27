@@ -1,0 +1,85 @@
+{
+  "projects": [
+    {
+      "title": "United Boda Transport",
+      "tags": ["Association", "Premium UI"],
+      "description": "Custom high-end website for a transport association.",
+      "links": [
+        {"text": "Explore Site", "url": "https://www.ubta.co.ke/"}
+      ]
+    },
+    {
+      "title": "Soma Health",
+      "tags": ["Health-Tech", "Patient Portal", "SaaS"],
+      "description": "A comprehensive healthcare management platform designed to bridge the gap between patients and providers through streamlined communication and digital record-keeping.",
+      "links": [
+        {"text": "View Platform", "url": "https://somahealthapp.netlify.app/"},
+        {"text": "Documentation", "url": "#"}
+      ]
+    },
+    {
+      "title": "Chic Fashion House",
+      "tags": ["E-Commerce", "UI/UX"],
+      "description": "A stylish e-commerce platform built for high-end clothing collections, focusing on visual storytelling.",
+      "links": [
+        {"text": "Explore Site", "url": "https://chicfashionhouse.netlify.app/"}
+      ]
+    },
+    {
+      "title": "Velora Airlines",
+      "tags": ["Booking System", "Javascript"],
+      "description": "A complex booking interface designed for a fictional airline, emphasizing user flow and speed.",
+      "links": [
+        {"text": "Explore Site", "url": "https://veloraairlines.netlify.app/"}
+      ]
+    },
+    {
+      "title": "La Belle Cuisine",
+      "tags": ["Culinary", "Responsive"],
+      "description": "A recipe and menu showcase featuring clean typography and appetizing layout structures.",
+      "links": [
+        {"text": "Explore Site", "url": "https://labellecuisine.netlify.app/"}
+      ]
+    },
+    {
+      "title": "Luxeestates",
+      "tags": ["Real Estate", "Premium UI"],
+      "description": "High-end real estate listing site with a focus on luxury properties and interactive galleries.",
+      "links": [
+        {"text": "Explore Site", "url": "https://luxeestates.netlify.app/"}
+      ]
+    },
+    {
+      "title": "Velora Analytics",
+      "tags": ["SaaS", "Dashboard"],
+      "description": "A modern analytics dashboard for SaaS products, visualizing data in a clean, dark-mode interface.",
+      "links": [
+        {"text": "Explore Site", "url": "https://velora-saas-analytics-dashboard.netlify.app/"}
+      ]
+    },
+    {
+      "title": "Progress Logic System",
+      "tags": ["Web Utility", "Data UI", "Javascript"],
+      "description": "A specialized portal designed to capture and visualize project metrics, streamlining the feedback loop between developers and users.",
+      "links": [
+        {"text": "Demo", "url": "https://shaaas.github.io/experimental-portal-progress/"}
+      ]
+    },
+    {
+      "title": "Aether Weather",
+      "tags": ["API Integration", "Real-Time", "Live Data"],
+      "description": "A sleek weather interface that fetches live meteorological data globally. Features dynamic background transitions based on current conditions.",
+      "links": [
+        {"text": "Launch App", "url": "https://aethereather.netlify.app/"}
+      ]
+    },
+    {
+      "title": "Liyai Maina",
+      "tags": ["HTML", "Portfolio"],
+      "description": "A modern portfolio showcasing design and development work with clean, responsive layouts.",
+      "links": [
+        {"text": "Explore Site", "url": "https://liyaiportfolio.netlify.app/"}
+      ]
+    }
+  ]
+}

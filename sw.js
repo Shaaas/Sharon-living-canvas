@@ -1,4 +1,4 @@
-const CACHE = 'sharon-v1';
+const CACHE = 'sharon-v2';
 const urls = [
   '/',
   '/index.html',

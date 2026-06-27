@@ -1,0 +1,6 @@
+{
+  "name": "sharon-canvas",
+  "scripts": {
+    "update-pieces": "node generate-cards.js > cards-generated.html && node rebuild-writing.js && echo '✓ All done!'"
+  }
+}

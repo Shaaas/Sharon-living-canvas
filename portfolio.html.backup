@@ -147,96 +147,94 @@
     </p>
 
     <div class="portfolio-grid">
-<div class="project-card">
+      
+      <div class="project-card">
         <h3>United Boda Transport</h3>
-        <div class="tags"><span class="tag">Association</span><span class="tag">Premium UI</span></div>
-        <p>Custom high-end website for a transport association.</p>
-        <div class="card-links">
-          <a href="https://www.ubta.co.ke/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <div class="tags"><span class="tag">Association/Sacco</span><span class="tag">Premium UI</span></div>
+        <p>Custom high-end website for an association.</p>
+        <a href="https://www.ubta.co.ke/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>Soma Health</h3>
-        <div class="tags"><span class="tag">Health-Tech</span><span class="tag">Patient Portal</span><span class="tag">SaaS</span></div>
-        <p>A comprehensive healthcare management platform designed to bridge the gap between patients and providers through streamlined communication and digital record-keeping.</p>
+        <div class="tags">
+          <span class="tag">Health-Tech</span>
+          <span class="tag">Patient Portal</span>
+          <span class="tag">SaaS</span>
+        </div>
+        <p>A comprehensive healthcare management platform designed to bridge the gap between patients and providers through
+          streamlined communication and digital record-keeping.</p>
         <div class="card-links">
-          <a href="https://somahealthapp.netlify.app/" class="view-link" target="_blank">View Platform</a><a href="#" class="view-link" target="_blank">Documentation</a>
+          <a href="https://somahealthapp.netlify.app/" class="view-link" target="_blank">View Platform</a>
+          <a href="#" class="view-link" target="_blank">Documentation</a>
         </div>
       </div>
-
       <div class="project-card">
         <h3>Chic Fashion House</h3>
         <div class="tags"><span class="tag">E-Commerce</span><span class="tag">UI/UX</span></div>
         <p>A stylish e-commerce platform built for high-end clothing collections, focusing on visual storytelling.</p>
-        <div class="card-links">
-          <a href="https://chicfashionhouse.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <a href="https://chicfashionhouse.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>Velora Airlines</h3>
         <div class="tags"><span class="tag">Booking System</span><span class="tag">Javascript</span></div>
         <p>A complex booking interface designed for a fictional airline, emphasizing user flow and speed.</p>
-        <div class="card-links">
-          <a href="https://veloraairlines.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <a href="https://veloraairlines.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>La Belle Cuisine</h3>
         <div class="tags"><span class="tag">Culinary</span><span class="tag">Responsive</span></div>
         <p>A recipe and menu showcase featuring clean typography and appetizing layout structures.</p>
-        <div class="card-links">
-          <a href="https://labellecuisine.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <a href="https://labellecuisine.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>Luxeestates</h3>
         <div class="tags"><span class="tag">Real Estate</span><span class="tag">Premium UI</span></div>
         <p>High-end real estate listing site with a focus on luxury properties and interactive galleries.</p>
-        <div class="card-links">
-          <a href="https://luxeestates.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <a href="https://luxeestates.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>Velora Analytics</h3>
         <div class="tags"><span class="tag">SaaS</span><span class="tag">Dashboard</span></div>
         <p>A modern analytics dashboard for SaaS products, visualizing data in a clean, dark-mode interface.</p>
-        <div class="card-links">
-          <a href="https://velora-saas-analytics-dashboard.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <a href="https://velora-saas-analytics-dashboard.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
 
       <div class="project-card">
         <h3>Progress Logic System</h3>
-        <div class="tags"><span class="tag">Web Utility</span><span class="tag">Data UI</span><span class="tag">Javascript</span></div>
+        <div class="tags">
+          <span class="tag">Web Utility</span>
+          <span class="tag">Data UI</span>
+          <span class="tag">JavaScript</span>
+        </div>
         <p>A specialized portal designed to capture and visualize project metrics, streamlining the feedback loop between developers and users.</p>
         <div class="card-links">
           <a href="https://shaaas.github.io/experimental-portal-progress/" class="view-link" target="_blank">Demo</a>
         </div>
       </div>
 
-      <div class="project-card">
+       <div class="project-card">
         <h3>Aether Weather</h3>
-        <div class="tags"><span class="tag">API Integration</span><span class="tag">Real-Time</span><span class="tag">Live Data</span></div>
+        <div class="tags">
+          <span class="tag">API Integration</span>
+          <span class="tag">Real-Time</span>
+          <span class="tag">Live Data</span>
+        </div>
         <p>A sleek weather interface that fetches live meteorological data globally. Features dynamic background transitions based on current conditions.</p>
         <div class="card-links">
           <a href="https://aethereather.netlify.app/" class="view-link" target="_blank">Launch App</a>
         </div>
       </div>
-
-      <div class="project-card">
-        <h3>Liyai Maina</h3>
-        <div class="tags"><span class="tag">HTML</span><span class="tag">Portfolio</span></div>
-        <p>A modern portfolio showcasing design and development work with clean, responsive layouts.</p>
-        <div class="card-links">
-          <a href="https://liyaiportfolio.netlify.app/" class="view-link" target="_blank">Explore Site</a>
-        </div>
+        <div class="project-card">
+        <h3>Liyai Maina </h3>
+        <div class="tags"><span class="tag">Html</span><span class="tag">Portfolio </span></div>
+        <p>A modern analytics dashboard for SaaS products, visualizing data in a clean, dark-mode interface.</p>
+        <a href="https://liyaiportfolio.netlify.app/" class="view-link" target="_blank">Explore Site</a>
       </div>
-
     </div>
 
     <footer class="footer">
