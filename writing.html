@@ -1502,3 +1502,42 @@
 </script>
 </body>
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const handleTouch = (e) => {
+    const btnRead = e.target.closest('.btn-read');
+    const btnShare = e.target.closest('.btn-share');
+    const card = e.target.closest('.card');
+
+    if (btnRead && card) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof openReader === 'function') openReader(card);
+      return;
+    }
+
+    if (btnShare && card) {
+      e.preventDefault();
+      e.stopPropagation();
+      const title = card.querySelector('.card-title')?.textContent || card.dataset.title;
+      const file = card.dataset.file;
+      if (navigator.share) {
+        navigator.share({ title: title, url: window.location.origin + '/' + file }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(window.location.origin + '/' + file);
+        alert('Link copied to clipboard.');
+      }
+      return;
+    }
+
+    if (card && !btnShare) {
+      e.preventDefault();
+      if (typeof openReader === 'function') openReader(card);
+    }
+  };
+
+  document.addEventListener('click', handleTouch);
+  document.addEventListener('touchend', handleTouch, { passive: false });
+});
+</script>
