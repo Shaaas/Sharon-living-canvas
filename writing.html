@@ -747,3 +747,58 @@
 </script>
 </body>
 </html>
+<script>
+// Inline Core Engine: Open and Render Pieces
+function openReader(card) {
+  const file = card.dataset.file;
+  const title = card.querySelector('.card-title')?.textContent || card.dataset.title || 'Untitled';
+  
+  // Create or grab the reader overlay element
+  let reader = document.getElementById('custom-reader-overlay');
+  if (!reader) {
+    reader = document.createElement('div');
+    reader.id = 'custom-reader-overlay';
+    reader.style = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,10,10,0.95); backdrop-filter:blur(10px); z-index:9999; display:none; overflow-y:auto; color:#f0f0f0; font-family:serif; padding:2rem; box-sizing:border-box;';
+    reader.innerHTML = `
+      <div style="max-width:700px; margin:4rem auto; position:relative;">
+        <button onclick="closeReader()" style="position:fixed; top:2rem; right:2rem; background:none; border:none; color:#999; font-size:2rem; cursor:pointer;">&times;</button>
+        <h1 id="reader-title" style="font-size:2.5rem; margin-bottom:2rem; font-family:sans-serif; color:#d4af37;"></h1>
+        <div id="reader-content" style="font-size:1.15rem; line-height:1.8; letter-spacing:0.01rem;">Loading...</div>
+      </div>
+    `;
+    document.body.appendChild(reader);
+  }
+
+  // Update headers and display the panel
+  document.getElementById('reader-title').textContent = title;
+  const contentEl = document.getElementById('reader-content');
+  contentEl.innerHTML = '<p style="color:#666;">Reading from storage...</p>';
+  reader.style.display = 'block';
+  document.body.style.overflow = 'hidden';
+
+  // Fetch the piece content
+  fetch(file)
+    .then(res => {
+      if (!res.ok) throw new Error('File not found');
+      return res.text();
+    })
+    .then(html => {
+      // If it is a full HTML page, parse out the main text or body contents
+      if (html.includes('<body')) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        html = doc.querySelector('main')?.innerHTML || doc.body.innerHTML;
+      }
+      contentEl.innerHTML = html;
+    })
+    .catch(err => {
+      contentEl.innerHTML = `<p style="color:#ea5455;">Could not load piece: ${err.message}</p>`;
+    });
+}
+
+function closeReader() {
+  const reader = document.getElementById('custom-reader-overlay');
+  if (reader) reader.style.display = 'none';
+  document.body.style.overflow = '';
+}
+</script>
