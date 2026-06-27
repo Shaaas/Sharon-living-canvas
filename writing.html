@@ -704,134 +704,840 @@
 
 <div id="toast"></div>
 
-
-  // Absolute Mobile and Desktop Touch Handler Fix
-  document.addEventListener("DOMContentLoaded", () => {
-    const handleTouch = (e) => {
-      const btnRead = e.target.closest(".btn-read");
-      const btnShare = e.target.closest(".btn-share");
-      const card = e.target.closest(".card");
-
-      if (btnRead && card) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (typeof openReader === "function") openReader(card);
-        return;
-      }
-
-      if (btnShare && card) {
-        e.preventDefault();
-        e.stopPropagation();
-        const title = card.querySelector(".card-title")?.textContent || card.dataset.title;
-        const file = card.dataset.file;
-        if (navigator.share) {
-          navigator.share({ title: title, url: window.location.origin + "/" + file }).catch(() => {});
-        } else {
-          navigator.clipboard.writeText(window.location.origin + "/" + file);
-          alert("Link copied to clipboard.");
-        }
-        return;
-      }
-
-      if (card && !btnShare) {
-        if (typeof openReader === "function") {
-          e.preventDefault();
-          openReader(card);
-        }
-      }
-    };
-
-    document.addEventListener("click", handleTouch);
-    document.addEventListener("touchend", handleTouch, { passive: false });
-  });
-</script>
-</body>
 <script>
-function openReader(card) {
-  const file = card.dataset.file;
-  const title = card.querySelector(".card-title")?.textContent || card.dataset.title || "Untitled";
-  
-  let reader = document.getElementById("custom-reader-overlay");
-  if (!reader) {
-    reader = document.createElement("div");
-    reader.id = "custom-reader-overlay";
-    reader.style = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(10,10,10,0.95); backdrop-filter:blur(10px); z-index:9999; display:none; overflow-y:auto; color:#f0f0f0; font-family:serif; padding:2rem; box-sizing:border-box;";
-    reader.innerHTML = `
-      <div style="max-width:700px; margin:4rem auto; position:relative;">
-        <button onclick="closeReader()" style="position:fixed; top:2rem; right:2rem; background:none; border:none; color:#999; font-size:2rem; cursor:pointer;">&times;</button>
-        <h1 id="reader-title" style="font-size:2.5rem; margin-bottom:2rem; font-family:sans-serif; color:#d4af37;"></h1>
-        <div id="reader-content" style="font-size:1.15rem; line-height:1.8; letter-spacing:0.01rem;">Loading...</div>
-      </div>
-    `;
-    document.body.appendChild(reader);
+  /* ══════════════════════════════════════
+     HELPERS
+  ══════════════════════════════════════ */
+  function slugify(title) {
+    return title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
   }
 
-  document.getElementById("reader-title").textContent = title;
-  const contentEl = document.getElementById("reader-content");
-  contentEl.innerHTML = "<p style='color:#666;'>Reading from storage...</p>";
-  reader.style.display = "block";
-  document.body.style.overflow = "hidden";
+  /* ══════════════════════════════════════
+     PDF.js
+  ══════════════════════════════════════ */
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-  fetch(file)
-    .then(res => {
-      if (!res.ok) throw new Error("File not found");
-      return res.text();
-    })
-    .then(html => {
-      if (html.includes("<body")) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        html = doc.querySelector("main")?.innerHTML || doc.body.innerHTML;
+  async function extractTextFromPDF(file) {
+    const pdf = await pdfjsLib.getDocument(file).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      let lastY = null, pageText = '';
+      for (const item of content.items) {
+        const y = item.transform[5];
+        if (lastY !== null && Math.abs(y - lastY) > 5) pageText += '\n';
+        pageText += item.str;
+        lastY = y;
       }
-      contentEl.innerHTML = html;
-    })
-    .catch(err => {
-      contentEl.innerHTML = `<p style="color:#ea5455;">Could not load piece: ${err.message}</p>`;
+      fullText += pageText + '\n\n';
+    }
+    return fullText;
+  }
+
+  function countWords(text) {
+    return text.trim().split(/\s+/).filter(Boolean).length;
+  }
+
+  function calcReadTime(wordCount) {
+    const mins = Math.ceil(wordCount / 220);
+    return mins <= 1 ? '1 MIN READ' : `${mins} MIN READ`;
+  }
+
+  /* ══════════════════════════════════════
+     FORMAT
+  ══════════════════════════════════════ */
+  function formatAsArticle(rawText, type) {
+    const lines = rawText.split('\n').map(l => l.trim())
+      .filter((l, i, arr) => !(l === '' && arr[i-1] === ''));
+
+    if (type === 'poem') {
+      let html = '', inStanza = false;
+      for (const line of lines) {
+        if (line === '') {
+          if (inStanza) { html += '</p><p class="break"> </p>'; inStanza = false; }
+        } else {
+          if (!inStanza) { html += '<p>'; inStanza = true; } else { html += '<br>'; }
+          html += escHtml(line);
+        }
+      }
+      if (inStanza) html += '</p>';
+      return `<div class="r-body poem">${html}</div>`;
+    }
+
+    const cleaned = rawText
+      .replace(/\n/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const sentences = cleaned.split(/(?<=[.?!])\s+(?=[A-Z])/);
+    const paragraphs = [];
+    for (let i = 0; i < sentences.length; i += 3) {
+      paragraphs.push(sentences.slice(i, i + 3).join(' '));
+    }
+
+    const body = paragraphs
+      .filter(p => p.trim().length > 0)
+      .map(p => `<p>${escHtml(p.trim())}</p>`)
+      .join('');
+
+    return `<div class="r-body">${body}</div>`;
+  }
+
+  /* ══════════════════════════════════════
+     TAGS — render on cards
+  ══════════════════════════════════════ */
+  const ALL_TAGS = ['love','grief','identity','relationships','humour','growing-up','politics'];
+
+  document.querySelectorAll('.card[data-tags]').forEach(card => {
+    const tags = card.dataset.tags.split(',');
+    const wrap = card.querySelector('.card-tags');
+    if (wrap) tags.forEach(t => {
+      const span = document.createElement('span');
+      span.className = 'card-tag';
+      span.textContent = t;
+      wrap.appendChild(span);
     });
-}
+  });
 
-function closeReader() {
-  const reader = document.getElementById("custom-reader-overlay");
-  if (reader) reader.style.display = "none";
-  document.body.style.overflow = "";
-}
+  /* ══════════════════════════════════════
+     TAG FILTER UI
+  ══════════════════════════════════════ */
+  const tagFiltersEl = document.getElementById('tag-filters');
+  let activeTag = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+  ALL_TAGS.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-pill';
+    btn.textContent = tag;
+    btn.addEventListener('click', () => {
+      if (activeTag === tag) {
+        activeTag = null;
+        btn.classList.remove('active');
+      } else {
+        tagFiltersEl.querySelectorAll('.tag-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTag = tag;
+      }
+      applyFilters();
+    });
+    tagFiltersEl.appendChild(btn);
+  });
+
+  /* ══════════════════════════════════════
+     SEARCH
+  ══════════════════════════════════════ */
+  document.getElementById('search-input').addEventListener('input', applyFilters);
+
+  function applyFilters() {
+    const query = document.getElementById('search-input').value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    document.querySelectorAll('.card').forEach(card => {
+      const title = (card.dataset.title || '').toLowerCase();
+      const desc  = (card.querySelector('p')?.textContent || '').toLowerCase();
+      const tags  = (card.dataset.tags || '').toLowerCase();
+
+      const matchesSearch = !query || title.includes(query) || desc.includes(query) || tags.includes(query);
+      const matchesTag    = !activeTag || tags.includes(activeTag);
+
+      if (matchesSearch && matchesTag) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  /* ══════════════════════════════════════
+     BOOKMARKS
+  ══════════════════════════════════════ */
+  function getBookmarks() {
+    try { return JSON.parse(localStorage.getItem('sm-bookmarks') || '[]'); } catch { return []; }
+  }
+  function saveBookmarks(arr) {
+    localStorage.setItem('sm-bookmarks', JSON.stringify(arr));
+  }
+  function isBookmarked(title) { return getBookmarks().includes(title); }
+
+  function toggleBookmark(btn) {
+    const card  = btn.closest('.card');
+    const title = card?.dataset.title || document.getElementById('r-bar-title').textContent;
+    let bm = getBookmarks();
+    if (bm.includes(title)) {
+      bm = bm.filter(t => t !== title);
+      btn.textContent = '🌟 ';
+      btn.classList.remove('saved');
+    } else {
+      bm.push(title);
+      btn.textContent = '♥';
+      btn.classList.add('saved');
+      toast('Bookmarked');
+    }
+    saveBookmarks(bm);
+    syncBookmarkStates();
+  }
+
+  function syncBookmarkStates() {
+    document.querySelectorAll('.btn-bookmark').forEach(btn => {
+      const title = btn.closest('.card')?.dataset.title;
+      if (!title) return;
+      if (isBookmarked(title)) { btn.textContent = '♥'; btn.classList.add('saved'); }
+      else { btn.textContent = '🌟 '; btn.classList.remove('saved'); }
+    });
+  }
+  syncBookmarkStates();
+
+  /* Reader bookmark button */
+  document.getElementById('r-bookmark-btn').addEventListener('click', function() {
+    const title = document.getElementById('r-bar-title').textContent;
+    let bm = getBookmarks();
+    if (bm.includes(title)) {
+      bm = bm.filter(t => t !== title);
+      this.textContent = '🌟 '; this.classList.remove('saved');
+    } else {
+      bm.push(title);
+      this.textContent = '♥'; this.classList.add('saved');
+      toast('Bookmarked');
+    }
+    saveBookmarks(bm);
+    syncBookmarkStates();
+  });
+
+  /* ══════════════════════════════════════
+     THEME & FONT SIZE
+  ══════════════════════════════════════ */
+  let currentTheme = 'dark';
+  document.querySelectorAll('.r-theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.r-theme-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll(`.r-theme-btn[data-theme="${btn.dataset.theme}"]`).forEach(b => b.classList.add('active'));
+      const reader = document.getElementById('reader');
+      reader.classList.remove('theme-sepia','theme-light');
+      currentTheme = btn.dataset.theme;
+      if (currentTheme !== 'dark') reader.classList.add('theme-' + currentTheme);
+      localStorage.setItem('sm-theme', currentTheme);
+    });
+  });
+
+  // Restore saved theme
+  const savedTheme = localStorage.getItem('sm-theme');
+  if (savedTheme && savedTheme !== 'dark') {
+    document.getElementById('reader').classList.add('theme-' + savedTheme);
+    document.querySelectorAll('.r-theme-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll(`.r-theme-btn[data-theme="${savedTheme}"]`).forEach(b => b.classList.add('active'));
+    currentTheme = savedTheme;
+  }
+
+  let fontSize = parseFloat(localStorage.getItem('sm-fontsize') || '1.05');
+  function applyFontSize() {
+    document.getElementById('reader').style.setProperty('--fs', fontSize + 'rem');
+    localStorage.setItem('sm-fontsize', fontSize);
+  }
+  applyFontSize();
+
+  document.getElementById('font-up').addEventListener('click', () => { fontSize = Math.min(1.4, fontSize + 0.05); applyFontSize(); });
+  document.getElementById('font-down').addEventListener('click', () => { fontSize = Math.max(0.85, fontSize - 0.05); applyFontSize(); });
+  document.getElementById('font-up-m').addEventListener('click', () => { fontSize = Math.min(1.4, fontSize + 0.05); applyFontSize(); });
+  document.getElementById('font-down-m').addEventListener('click', () => { fontSize = Math.max(0.85, fontSize - 0.05); applyFontSize(); });
+
+  /* ══════════════════════════════════════
+     ALL CARDS — flat list for next/prev
+  ══════════════════════════════════════ */
+  function getAllReadableCards() {
+    return Array.from(document.querySelectorAll('.card[data-file]'));
+  }
+
+  function getAllCardByTitle(title) {
+    return document.querySelector(`.card[data-title="${CSS.escape(title)}"]`);
+  }
+
+  /* ══════════════════════════════════════
+     YOU MIGHT ALSO LIKE
+  ══════════════════════════════════════ */
+  function getSuggestions(currentTitle, currentTags) {
+    const tags = currentTags ? currentTags.split(',') : [];
+    const candidates = getAllReadableCards().filter(c => c.dataset.title !== currentTitle);
+    const scored = candidates.map(c => {
+      const cTags = (c.dataset.tags || '').split(',');
+      const overlap = tags.filter(t => cTags.includes(t)).length;
+      return { card: c, score: overlap };
+    }).filter(x => x.score > 0).sort((a, b) => b.score - a.score);
+    return scored.slice(0, 3).map(x => x.card);
+  }
+
+  function buildAlsoLike(currentTitle, currentTags) {
+    const suggestions = getSuggestions(currentTitle, currentTags);
+    if (!suggestions.length) return '';
+    const items = suggestions.map(c => `
+      <div class="r-also-card" data-also-title="${escHtml(c.dataset.title)}">
+        <div class="r-also-type">${c.dataset.type}</div>
+        <div class="r-also-title">${escHtml(c.dataset.title)}</div>
+      </div>`).join('');
+    return `<div class="r-also"><p class="r-also-label">You might also like</p><div class="r-also-grid">${items}</div></div>`;
+  }
+
+  /* ══════════════════════════════════════
+     NEXT / PREV — FIX: use data-nav-title
+     instead of fragile inline onclick strings
+  ══════════════════════════════════════ */
+  function buildNavButtons(currentTitle) {
+    const all  = getAllReadableCards();
+    const idx  = all.findIndex(c => c.dataset.title === currentTitle);
+    const prev = all[idx - 1];
+    const next = all[idx + 1];
+
+    const prevHtml = prev
+      ? `<button class="r-nav-btn" data-nav-title="${escHtml(prev.dataset.title)}"><span class="r-nav-dir">← Previous</span><span class="r-nav-title">${escHtml(prev.dataset.title)}</span></button>`
+      : `<button class="r-nav-btn" disabled><span class="r-nav-dir">← Previous</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
+
+    const nextHtml = next
+      ? `<button class="r-nav-btn" data-nav-title="${escHtml(next.dataset.title)}"><span class="r-nav-dir">Next →</span><span class="r-nav-title">${escHtml(next.dataset.title)}</span></button>`
+      : `<button class="r-nav-btn" disabled><span class="r-nav-dir">Next →</span><span class="r-nav-title" style="color:var(--dim)">—</span></button>`;
+
+    return `<div class="r-nav">${prevHtml}${nextHtml}</div>`;
+  }
+
+  /* ══════════════════════════════════════
+     OPEN READER
+  ══════════════════════════════════════ */
+  const descriptions = {
+    'The Delusions We Carried Into 25': "The internal version of growing up — when the beliefs you held about love and work start dissolving quietly, like sugar in hot tea.",
+    'Not Lost. Just 25': "I didn't care about politics before. Then I turned 25 and the world started feeling like something I was supposed to have an opinion on.",
+    'Two Timelines in One Bed': "A blunt look at the finish line myth and the comedic silence that follows when two people are secretly decades apart.",
+    'Men, Silence, and the Moment After': "On men, emotional vocabulary, and what lives in the silence after the system reboots.",
+    'Life Debugging': "An analysis of our emotional glitches and faulty code, and why we are always the last to find the bug in our own system.",
+    'Emotional Multitasking': "The tension of being caught between two worlds — the one you're in and the one you're still carrying from before.",
+    'Paying the Passion Tax': "Why we walk back into collapsing buildings. On the cost of caring, and whether some rooms are worth every penny.",
+    'Fireworks': "On what it means to be briefly, spectacularly seen — and then to go dark.",
+    'The Cost of Safe Words': "What we protect when we don't say things, and what we lose in the keeping.",
+    "Things I've Noticed Lately": "Small details ignored in the noise of being human. Observations from the edge of attention.",
+    'The Space Between Words': "On meaning, silence, and what gets lost in the gap where communication fails.",
+    'Your Voice': "Why the thing that makes you strange is the only thing worth amplifying.",
+    'How I Love You': "The vulnerability of affection and the weight of the heart. Written for no one. Written for someone.",
+    'The Scary Part of Being Loved': "Transitioning from survival to safety, and the terror of finally believing someone when they stay.",
+    'When Someone Feels Like Home': "On the quiet miracle of recognising someone. Choosing every page of a story that stretches long.",
+    'Eloping': "A love that dared to leave everything behind. On choosing each other over the noise of everyone else's opinion.",
+    'Let Get Away': "To the one I was too unsure to keep. A poem about hesitation and the weight of the almost.",
+    'Salt and Surrender': "When dawn arrives, we'll keep the quiet. On the way tenderness makes us undone.",
+    'Almost, Always': "A book about choices and the paths we almost took. Everything we nearly were.",
+    'Unspoken Word': "A story about secrets and hidden truths — the words we swallow and the ones that escape without permission.",
+  };
+
+  async function openReader(card) {
+    if (!card || !card.dataset) return;
+    const file  = card.dataset.file;
+    const title = card.dataset.title;
+    const type  = card.dataset.type;
+    const tags  = card.dataset.tags || '';
+
+    document.getElementById('r-tag').textContent = type === 'poem' ? 'Poem' : type === 'book' ? 'Book' : 'Article';
+    document.getElementById('r-bar-title').textContent = title;
+    document.getElementById('r-share-btn').onclick = () => shareDoc(title);
+    document.getElementById('r-prog').style.width = '0%';
+
+    // Bookmark state
+    const bkBtn = document.getElementById('r-bookmark-btn');
+    if (isBookmarked(title)) { bkBtn.textContent = '♥'; bkBtn.classList.add('saved'); }
+    else { bkBtn.textContent = '🌟 '; bkBtn.classList.remove('saved'); }
+
+    const inner = document.getElementById('r-inner');
+    const header = `
+      <p class="r-eyebrow" id="r-eyebrow-line">Loading… · Sharon Mutanu</p>
+      <h1 class="r-title">${escHtml(title)}</h1>
+      <div class="r-byline">
+        <span>Sharon Mutanu</span>
+        <span class="r-dot"></span>
+        <span class="r-readtime" id="r-readtime">calculating…</span>
+      </div>
+    `;
+
+    inner.innerHTML = header + `
+      <div class="r-loading">
+        <div class="r-loading-bar"><div class="r-loading-fill"></div></div>
+        <p>Preparing piece</p>
+      </div>
+    `;
+
+    document.getElementById('reader').classList.add('open');
+    document.getElementById('r-scroll').scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+
+    // Update meta + URL
+    const slug     = slugify(title);
+    const shareUrl = window.location.origin + window.location.pathname + '#' + slug;
+    const desc     = descriptions[title] || 'A piece by Sharon Mutanu.';
+    document.querySelector('meta[property="og:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+    document.querySelector('meta[property="og:description"]').setAttribute('content', desc);
+    document.querySelector('meta[property="og:url"]').setAttribute('content', shareUrl);
+    document.querySelector('meta[name="twitter:title"]').setAttribute('content', title + ' · Sharon Mutanu');
+    document.querySelector('meta[name="twitter:description"]').setAttribute('content', desc);
+    history.replaceState(null, '', '#' + slug);
+
+    try {
+      const rawText   = await extractTextFromPDF(file);
+      const wordCount = countWords(rawText);
+      const readTime  = calcReadTime(wordCount);
+      const bodyHtml  = formatAsArticle(rawText, type);
+      const alsoHtml  = buildAlsoLike(title, tags);
+      const navHtml   = buildNavButtons(title);
+
+      document.getElementById('r-eyebrow-line').textContent = readTime + ' · Sharon Mutanu';
+      document.getElementById('r-readtime').textContent = readTime;
+
+      inner.innerHTML = header.replace('Loading…', readTime).replace('calculating…', readTime)
+        + bodyHtml
+        + `<p class="r-sig">— Sharon Mutanu</p>`
+        + buildReactionsHTML(slugify(title))
+        + alsoHtml
+        + navHtml;
+
+      // Load likes + comments from Supabase
+      loadReactions(slugify(title));
+
+      // FIX: wire nav buttons via data-nav-title (no fragile inline onclick strings)
+      inner.querySelectorAll('.r-nav-btn[data-nav-title]').forEach(btn => {
+        const targetTitle = btn.dataset.navTitle;
+        btn.onclick = () => {
+          const target = getAllCardByTitle(targetTitle);
+          if (target) openReader(target);
+        };
+      });
+
+      // Wire also-like cards
+      inner.querySelectorAll('.r-also-card[data-also-title]').forEach(ac => {
+        ac.onclick = () => {
+          const target = getAllCardByTitle(ac.dataset.alsoTitle);
+          if (target) openReader(target);
+        };
+      });
+
+    } catch (err) {
+      inner.innerHTML = header + `<p style="color:var(--muted);font-size:0.85rem;margin-top:2rem;">Couldn't load this piece. Make sure the PDF is in the same folder as this file.</p>`;
+    }
+  }
+
+  function closeReader() {
+    document.getElementById('reader').classList.remove('open');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname);
+    document.querySelector('meta[property="og:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+    document.querySelector('meta[property="og:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
+    document.querySelector('meta[property="og:url"]').setAttribute('content', 'https://sharonlivingcanvas.netlify.app/writing.html');
+    document.querySelector('meta[name="twitter:title"]').setAttribute('content', 'Sharon Mutanu | Writer & Developer');
+    document.querySelector('meta[name="twitter:description"]').setAttribute('content', 'Essays, poems, and books on living — honestly.');
+  }
+
+  document.getElementById('r-scroll').addEventListener('scroll', e => {
+    const el  = e.target;
+    const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+    document.getElementById('r-prog').style.width = Math.round(pct) + '%';
+  });
+
+  /* ══════════════════════════════════════
+     CARD CLICKS
+  ══════════════════════════════════════ */
+  document.querySelectorAll('.card[data-file]').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.classList.contains('btn-share') ||
+          e.target.classList.contains('btn-ext') ||
+          e.target.classList.contains('btn-bookmark')) return;
+      openReader(card);
+    });
+    card.querySelector('.btn-read')?.addEventListener('click', e => {
+      e.stopPropagation(); openReader(card);
+    });
+  });
+
+  /* ══════════════════════════════════════
+     TABS (desktop + mobile)
+  ══════════════════════════════════════ */
+  const tabMeta = {
+    articles: { eye: '11 Pieces',  title: 'Essays on <em>living</em>,<br>honestly' },
+    poems:    { eye: '6 Poems',    title: 'Words for the <em>feeling</em><br>you can\'t name' },
+    books:    { eye: '2 Books',    title: 'Longer things,<br><em>slowly</em> made' },
+  };
+
+  function switchTab(target) {
+    document.querySelectorAll('.tab-btn,.mobile-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.target === target);
+    });
+    document.querySelectorAll('.collection').forEach(c => c.classList.remove('active'));
+    document.getElementById('col-' + target).classList.add('active');
+    document.getElementById('hero-eye').textContent  = tabMeta[target].eye;
+    document.getElementById('hero-title').innerHTML  = tabMeta[target].title;
+    applyFilters();
+  }
+
+  document.querySelectorAll('.tab-btn, .mobile-tab').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.target));
+  });
+
+  /* ══════════════════════════════════════
+     SHARE + HASH ROUTING
+  ══════════════════════════════════════ */
+  function shareDoc(title) {
+    const slug = slugify(title);
+    const url  = window.location.origin + window.location.pathname + '#' + slug;
+    const text = `"${title}" by Sharon Mutanu\n${url}`;
+    if (navigator.share) {
+      navigator.share({ title, text: `"${title}" by Sharon Mutanu`, url }).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => toast('Link copied'));
+    } else {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+    }
+  }
+
+  function openFromHash() {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    const all = document.querySelectorAll('.card[data-file]');
+    for (const card of all) {
+      if (slugify(card.dataset.title) === hash) {
+        const collection = card.closest('.collection');
+        if (collection) {
+          const tabId = collection.id.replace('col-', '');
+          switchTab(tabId);
+        }
+        openReader(card);
+        break;
+      }
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', openFromHash);
+  window.addEventListener('hashchange', openFromHash);
+
+  /* ══════════════════════════════════════
+     HIGHLIGHT TO SHARE QUOTE
+  ══════════════════════════════════════ */
+  const quoteBtn = document.getElementById('quote-share-btn');
+
+  document.getElementById('r-scroll').addEventListener('mouseup', () => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed) { quoteBtn.style.display = 'none'; return; }
+    const text = sel.toString().trim();
+    if (text.length < 10 || text.length > 300) { quoteBtn.style.display = 'none'; return; }
+
+    const range = sel.getRangeAt(0);
+    const rect  = range.getBoundingClientRect();
+    quoteBtn.style.display = 'block';
+    quoteBtn.style.top  = (rect.top + window.scrollY - 38) + 'px';
+    quoteBtn.style.left = (rect.left + rect.width / 2) + 'px';
+
+    quoteBtn.onclick = () => {
+      const title = document.getElementById('r-bar-title').textContent;
+      generateQuoteCard(text, title);
+      quoteBtn.style.display = 'none';
+      sel.removeAllRanges();
+    };
+  });
+
+  document.addEventListener('mousedown', e => {
+    if (e.target !== quoteBtn) quoteBtn.style.display = 'none';
+  });
+
+  function generateQuoteCard(quote, title) {
+    const canvas = document.getElementById('quote-canvas');
+    const ctx    = canvas.getContext('2d');
+    const W = 1080, H = 1080;
+
+    ctx.fillStyle = '#080808';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = '#d4af37';
+    ctx.fillRect(80, 160, 3, H - 320);
+
+    ctx.fillStyle = '#e4e0d8';
+    ctx.font = 'italic 52px Georgia, serif';
+    ctx.textAlign = 'left';
+    const words = quote.split(' ');
+    let line = '', y = 220, lineH = 72;
+    for (const word of words) {
+      const test = line + (line ? ' ' : '') + word;
+      if (ctx.measureText(test).width > W - 220) {
+        ctx.fillText(line, 120, y); y += lineH; line = word;
+      } else { line = test; }
+    }
+    if (line) ctx.fillText(line, 120, y);
+
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '28px "Courier New", monospace';
+    ctx.fillText('— ' + title, 120, H - 160);
+    ctx.fillStyle = '#6a6760';
+    ctx.font = '22px "Courier New", monospace';
+    ctx.fillText('Sharon Mutanu · sharonlivingcanvas.netlify.app', 120, H - 110);
+
+    canvas.toBlob(blob => {
+      const url  = URL.createObjectURL(blob);
+      const file = new File([blob], 'quote.png', { type: 'image/png' });
+      if (navigator.canShare?.({ files: [file] })) {
+        navigator.share({ files: [file], title: `"${title}" — Sharon Mutanu` }).catch(() => {});
+      } else {
+        const a = document.createElement('a');
+        a.href = url; a.download = 'quote.png'; a.click();
+        toast('Quote card downloaded');
+      }
+    });
+  }
+
+  /* ══════════════════════════════════════
+     SUPABASE
+  ══════════════════════════════════════ */
+  const sb = window.supabase.createClient(
+    'https://qpodmlgmorfuwcjenvvg.supabase.co',
+    'sb_publishable_R_AKCzNIX76mkNgn0qZOfg_sb4j_teq'
+  );
+
+  function getAnonId() {
+    let id = localStorage.getItem('sm-anon-id');
+    if (!id) { id = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2); localStorage.setItem('sm-anon-id', id); }
+    return id;
+  }
+  function getAnonLabel() {
+    return 'Reader #' + getAnonId().slice(0, 4);
+  }
+
+  function buildReactionsHTML(slug) {
+    return `
+      <div class="r-reactions" id="reactions-${slug}">
+        <div class="r-reactions-header">
+          <span class="r-reactions-label">Reactions</span>
+          <button class="like-btn" id="like-btn-${slug}" onclick="toggleLike('${slug}')">
+            <span class="like-heart"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:inline-block;vertical-align:middle;">
+  <defs><linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ff6b9d;stop-opacity:1" /><stop offset="100%" style="stop-color:#e05c7a;stop-opacity:1" /></linearGradient></defs>
+  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="url(#heartGrad)"/>
+</svg></span>
+            <span class="like-count" id="like-count-${slug}">—</span>
+          </button>
+        </div>
+
+        <div class="comment-form">
+          <textarea class="comment-textarea" id="comment-input-${slug}"
+            placeholder="Leave a thought…" maxlength="500"
+            oninput="document.getElementById('comment-chars-${slug}').textContent = this.value.length + ' / 500'"></textarea>
+          <div class="comment-form-footer">
+            <span class="comment-char" id="comment-chars-${slug}">0 / 500</span>
+            <button class="comment-submit" onclick="submitComment('${slug}')">Post anonymously</button>
+          </div>
+        </div>
+
+        <div class="comment-list" id="comment-list-${slug}">
+          <p class="comments-loading">Loading comments…</p>
+        </div>
+      </div>`;
+  }
+
+  function relativeTime(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const m = Math.floor(diff / 60000);
+    if (m < 1)  return 'just now';
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 30) return `${d}d ago`;
+    return new Date(dateStr).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+  }
+
+  function commentHTML(c) {
+    const isAuthor = c.is_author === true;
+    const initial  = isAuthor ? 'S' : (c.anon_label && c.anon_label.includes('#') ? c.anon_label.charAt(c.anon_label.indexOf('#') + 1) : (c.anon_label || 'R').charAt(0)).toUpperCase();
+    const label    = isAuthor ? 'Sharon' : escHtml(c.anon_label || 'Anonymous');
+    const badge    = isAuthor ? `<span class="comment-author-badge">Author</span>` : '';
+    const avatarClass = isAuthor ? 'comment-avatar author-avatar' : 'comment-avatar';
+
+    const replyHTML = c.reply_body ? `
+      <div class="comment-reply">
+        <div class="comment-reply-meta">
+          <span class="comment-reply-label">✦ Sharon replied</span>
+          <span class="comment-time">${c.reply_at ? relativeTime(c.reply_at) : ''}</span>
+        </div>
+        <div class="comment-reply-body">${escHtml(c.reply_body)}</div>
+      </div>` : '';
+
+    return `
+      <div class="comment-item${isAuthor ? ' author-comment' : ''}">
+        <div class="comment-meta">
+          <div class="${avatarClass}">${initial}</div>
+          <span class="comment-anon">${label}</span>${badge}
+          <span class="comment-time">${relativeTime(c.created_at)}</span>
+        </div>
+        <div class="comment-body">${escHtml(c.body)}</div>
+        ${replyHTML}
+      </div>`;
+  }
+
+ async function loadReactions(slug) {
+    console.log('loading reactions for slug:', slug);
+    const likeBtn   = document.getElementById(`like-btn-${slug}`);
+    const likeCount = document.getElementById(`like-count-${slug}`);
+    const list      = document.getElementById(`comment-list-${slug}`);
+    if (!likeBtn || !list) return;
+
+    if (!sb) {
+      likeCount.textContent = '—';
+      list.innerHTML = `<p class="comments-empty">Connect Supabase to enable likes & comments.</p>`;
+      return;
+    }
+
+    const anonId = getAnonId();
+
+    const { count } = await sb.from('likes').select('*', { count: 'exact', head: true }).eq('piece_slug', slug);
+    likeCount.textContent = count ?? 0;
+
+    const { data: myLike } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+    if (myLike) { likeBtn.classList.add('liked'); likeBtn.querySelector('.like-heart').textContent = '♥'; }
+
+  const { data: comments, error: cErr } = await sb.from('comments').select('*').eq('piece_slug', slug).order('created_at', { ascending: true });
+    if (cErr) { console.log('comments error:', cErr); }
+    if (!comments || comments.length === 0) {
+      list.innerHTML = `<p class="comments-empty">Be the first to leave a thought.</p>`;
+    } else {
+      list.innerHTML = comments.map(commentHTML).join('');
+    }
+  }
+
+  async function toggleLike(slug) {
+    if (!sb) { toast('Set up Supabase to enable likes'); return; }
+    const anonId    = getAnonId();
+    const likeBtn   = document.getElementById(`like-btn-${slug}`);
+    const likeCount = document.getElementById(`like-count-${slug}`);
+    const heart     = likeBtn.querySelector('.like-heart');
+
+    const { data: existing } = await sb.from('likes').select('id').eq('piece_slug', slug).eq('anon_id', anonId).maybeSingle();
+
+    if (existing) {
+      await sb.from('likes').delete().eq('id', existing.id);
+      likeBtn.classList.remove('liked'); heart.textContent = '🌟 ';
+      likeCount.textContent = Math.max(0, parseInt(likeCount.textContent) - 1);
+    } else {
+      await sb.from('likes').insert({ piece_slug: slug, anon_id: anonId });
+      likeBtn.classList.add('liked'); heart.textContent = '♥';
+      likeCount.textContent = parseInt(likeCount.textContent) + 1;
+    }
+  }
+
+  async function submitComment(slug) {
+    if (!sb) { toast('Set up Supabase to enable comments'); return; }
+    const input = document.getElementById(`comment-input-${slug}`);
+    const body  = input.value.trim();
+    if (!body) return;
+
+    const btn = input.closest('.comment-form').querySelector('.comment-submit');
+    btn.disabled = true; btn.textContent = 'Posting…';
+
+    const { data, error } = await sb.from('comments').insert({
+      piece_slug: slug,
+      body,
+      anon_id:    getAnonId(),
+      anon_label: getAnonLabel(),
+    }).select().single();
+
+    btn.disabled = false; btn.textContent = 'Post anonymously';
+
+    if (error) { toast('Could not post — try again'); return; }
+
+    input.value = '';
+    document.getElementById(`comment-chars-${slug}`).textContent = '0 / 500';
+
+    const list = document.getElementById(`comment-list-${slug}`);
+    const empty = list.querySelector('.comments-empty, .comments-loading');
+    if (empty) empty.remove();
+    list.insertAdjacentHTML('beforeend', commentHTML(data));
+    toast('Comment posted ✦');
+  }
+
+  /* ══════════════════════════════════════
+     KEYBOARD
+  ══════════════════════════════════════ */
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeReader(); });
+
+  /* ══════════════════════════════════════
+     PARTICLES
+  ══════════════════════════════════════ */
+  (function() {
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let pts = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function init() {
+      resize(); pts = [];
+      for (let i = 0; i < 65; i++) {
+        pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+          r: Math.random()*1.4+0.4, vx: (Math.random()-.5)*.3, vy: (Math.random()-.5)*.3,
+          o: Math.random()*.45+.08 });
+      }
+    }
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x<0||p.x>canvas.width) p.vx*=-1;
+        if (p.y<0||p.y>canvas.height) p.vy*=-1;
+        ctx.globalAlpha = p.o;
+        ctx.fillStyle = '#d4af37';
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+      }
+      requestAnimationFrame(draw);
+    }
+    window.addEventListener('resize', init);
+    init(); draw();
+  })();
+
+</script>
+</body>
+</html>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
   const handleTouch = (e) => {
-    const btnRead = e.target.closest(".btn-read");
-    const btnShare = e.target.closest(".btn-share");
-    const card = e.target.closest(".card");
+    const btnRead = e.target.closest('.btn-read');
+    const btnShare = e.target.closest('.btn-share');
+    const card = e.target.closest('.card');
 
     if (btnRead && card) {
       e.preventDefault();
       e.stopPropagation();
-      openReader(card);
+      if (typeof openReader === 'function') openReader(card);
       return;
     }
 
     if (btnShare && card) {
       e.preventDefault();
       e.stopPropagation();
-      const title = card.querySelector(".card-title")?.textContent || card.dataset.title;
+      const title = card.querySelector('.card-title')?.textContent || card.dataset.title;
       const file = card.dataset.file;
       if (navigator.share) {
-        navigator.share({ title: title, url: window.location.origin + "/" + file }).catch(() => {});
+        navigator.share({ title: title, url: window.location.origin + '/' + file }).catch(() => {});
       } else {
-        navigator.clipboard.writeText(window.location.origin + "/" + file);
-        alert("Link copied to clipboard.");
+        navigator.clipboard.writeText(window.location.origin + '/' + file);
+        alert('Link copied to clipboard.');
       }
       return;
     }
 
     if (card && !btnShare) {
       e.preventDefault();
-      openReader(card);
+      if (typeof openReader === 'function') openReader(card);
     }
   };
 
-  document.addEventListener("click", handleTouch);
-  document.addEventListener("touchend", handleTouch, { passive: false });
+  document.addEventListener('click', handleTouch);
+  document.addEventListener('touchend', handleTouch, { passive: false });
 });
 </script>
-</body>
-</html>
