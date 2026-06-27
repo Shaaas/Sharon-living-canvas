@@ -1432,22 +1432,6 @@
     }
   }
 
-  async function submitComment(slug) {
-    if (!sb) { toast('Set up Supabase to enable comments'); return; }
-    const input = document.getElementById(`comment-input-${slug}`);
-    const body  = input.value.trim();
-    if (!body) return;
-
-    const btn = input.closest('.comment-form').querySelector('.comment-submit');
-    btn.disabled = true; btn.textContent = 'Posting…';
-
-    const { data, error } = await sb.from('comments').insert({
-      piece_slug: slug,
-      body,
-      anon_id:    getAnonId(),
-      anon_label: getAnonLabel(),
-    }).select().single();
-
     btn.disabled = false; btn.textContent = 'Post anonymously';
 
     if (error) { toast('Could not post — try again'); return; }
