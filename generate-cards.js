@@ -2,6 +2,14 @@ const fs = require('fs');
 
 const data = JSON.parse(fs.readFileSync('pieces.json', 'utf8'));
 
+function sortByDate(arr) {
+  return [...arr].sort((a, b) => {
+    const da = a.date ? new Date(a.date) : new Date('1900-01-01');
+    const db = b.date ? new Date(b.date) : new Date('1900-01-01');
+    return db - da;
+  });
+}
+
 function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
@@ -25,7 +33,7 @@ function generateCard(piece, type) {
 console.log('<!-- ARTICLES -->');
 console.log('<div class="collection active" id="col-articles">');
 console.log('  <div class="grid">');
-data.articles.forEach(p => console.log(generateCard(p, 'article')));
+sortByDate(data.articles).forEach(p => console.log(generateCard(p, 'article')));
 console.log('  </div>');
 console.log('</div>');
 console.log('');
@@ -33,7 +41,7 @@ console.log('');
 console.log('<!-- POEMS -->');
 console.log('<div class="collection" id="col-poems">');
 console.log('  <div class="grid">');
-data.poems.forEach(p => console.log(generateCard(p, 'poem')));
+sortByDate(data.poems).forEach(p => console.log(generateCard(p, 'poem')));
 console.log('  </div>');
 console.log('</div>');
 console.log('');
@@ -41,6 +49,6 @@ console.log('');
 console.log('<!-- BOOKS -->');
 console.log('<div class="collection" id="col-books">');
 console.log('  <div class="grid">');
-data.books.forEach(p => console.log(generateCard(p, 'article')));
+sortByDate(data.books).forEach(p => console.log(generateCard(p, 'article')));
 console.log('  </div>');
 console.log('</div>');

@@ -3,13 +3,14 @@
     {
       "file": "The Art of Pushing Emotional Buttons.pdf",
       "title": "The Art of Pushing Emotional Buttons",
-      "description": "On the quiet, deliberate ways people learn exactly which words will land \u2014 and what it costs to know someone that well.",
+      "description": "On the quiet, deliberate ways people learn exactly which words will land, and what it costs to know someone that well.",
       "tags": [
         "relationships",
         "identity",
         "humour"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-07-07"
     },
     {
       "file": "Understanding Is Not Releasing.pdf",
@@ -19,7 +20,8 @@
         "identity",
         "growing-up"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-21"
     },
     {
       "file": "When You Outgrow The Version Your Parents Remember.pdf",
@@ -29,7 +31,8 @@
         "identity",
         "growing-up"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-22"
     },
     {
       "file": "The Day \"Can I\" Becomes, I'm Doing This.pdf",
@@ -39,7 +42,8 @@
         "identity",
         "growing-up"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-23"
     },
     {
       "file": "The Quiet Rebellion of Growing Up.pdf",
@@ -49,7 +53,8 @@
         "identity",
         "growing-up"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-24"
     },
     {
       "file": "The Delusions We Carried Into 25.pdf",
@@ -60,7 +65,8 @@
         "growing-up",
         "relationships"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-25"
     },
     {
       "file": "Not Lost. Just 25.pdf",
@@ -71,7 +77,8 @@
         "growing-up",
         "politics"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-26"
     },
     {
       "file": "Two Timelines in One Bed.pdf",
@@ -82,7 +89,8 @@
         "relationships",
         "humour"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-06-27"
     },
     {
       "file": "Men, Silence, and the Moment After.pdf",
@@ -93,7 +101,8 @@
         "grief",
         "identity"
       ],
-      "time": "7 MIN READ"
+      "time": "7 MIN READ",
+      "date": "2026-06-28"
     },
     {
       "file": "Why Humans are Bad at Debugging Their Own Lives.pdf",
@@ -104,7 +113,8 @@
         "humour",
         "growing-up"
       ],
-      "time": "6 MIN READ"
+      "time": "6 MIN READ",
+      "date": "2026-06-29"
     },
     {
       "file": "Emotional Multitasking.pdf",
@@ -115,7 +125,8 @@
         "identity",
         "growing-up"
       ],
-      "time": "4 MIN READ"
+      "time": "4 MIN READ",
+      "date": "2026-06-30"
     },
     {
       "file": "Paying the Passion Tax.pdf",
@@ -126,7 +137,8 @@
         "identity",
         "grief"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-07-01"
     },
     {
       "file": "Fireworks.pdf",
@@ -137,7 +149,8 @@
         "grief",
         "identity"
       ],
-      "time": "3 MIN READ"
+      "time": "3 MIN READ",
+      "date": "2026-07-02"
     },
     {
       "file": "The cost of Safe words.pdf",
@@ -148,7 +161,8 @@
         "grief",
         "identity"
       ],
-      "time": "5 MIN READ"
+      "time": "5 MIN READ",
+      "date": "2026-07-03"
     },
     {
       "file": "Things I've Noticed lately.pdf",
@@ -159,7 +173,8 @@
         "growing-up",
         "identity"
       ],
-      "time": "4 MIN READ"
+      "time": "4 MIN READ",
+      "date": "2026-07-04"
     },
     {
       "file": "The space between words and meaning.pdf",
@@ -170,7 +185,8 @@
         "grief",
         "identity"
       ],
-      "time": "6 MIN READ"
+      "time": "6 MIN READ",
+      "date": "2026-07-05"
     },
     {
       "file": "Your voice (1).pdf",
@@ -181,7 +197,8 @@
         "growing-up",
         "humour"
       ],
-      "time": "3 MIN READ"
+      "time": "3 MIN READ",
+      "date": "2026-07-06"
     }
   ],
   "poems": [
@@ -193,7 +210,8 @@
         "love",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-06-29"
     },
     {
       "file": "Unfamiliar Air.pdf",
@@ -203,7 +221,8 @@
         "love",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-06-30"
     },
     {
       "file": "How I love you.pdf",
@@ -213,7 +232,8 @@
         "love",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-07-01"
     },
     {
       "file": "Survival to Safety.pdf",
@@ -224,7 +244,8 @@
         "grief",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-07-02"
     },
     {
       "file": "Homecoming Found.pdf",
@@ -234,7 +255,8 @@
         "love",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-07-03"
     },
     {
       "file": "Eloping story.pdf",
@@ -245,7 +267,8 @@
         "relationships",
         "identity"
       ],
-      "time": "3 MIN READ"
+      "time": "3 MIN READ",
+      "date": "2026-07-04"
     },
     {
       "file": "the one I let get away.pdf",
@@ -256,7 +279,8 @@
         "grief",
         "relationships"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-07-05"
     },
     {
       "file": "Document 20.pdf",
@@ -266,7 +290,8 @@
         "love",
         "grief"
       ],
-      "time": "2 MIN READ"
+      "time": "2 MIN READ",
+      "date": "2026-07-06"
     }
   ],
   "books": [
@@ -280,7 +305,8 @@
         "grief"
       ],
       "time": "Long Read",
-      "external": false
+      "external": false,
+      "date": "2026-07-05"
     },
     {
       "file": null,
@@ -292,7 +318,8 @@
       ],
       "time": "Long Read",
       "external": true,
-      "externalUrl": "https://www.wattpad.com/story/393043044-secrets-they-kept"
+      "externalUrl": "https://www.wattpad.com/story/393043044-secrets-they-kept",
+      "date": "2026-07-06"
     }
   ]
 }
