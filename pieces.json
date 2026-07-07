@@ -1,6 +1,17 @@
 {
   "articles": [
     {
+      "file": "The Art of Pushing Emotional Buttons.pdf",
+      "title": "The Art of Pushing Emotional Buttons",
+      "description": "On the quiet, deliberate ways people learn exactly which words will land \u2014 and what it costs to know someone that well.",
+      "tags": [
+        "relationships",
+        "identity",
+        "humour"
+      ],
+      "time": "5 MIN READ"
+    },
+    {
       "file": "Understanding Is Not Releasing.pdf",
       "title": "Understanding Is Not Releasing",
       "description": "A reflection on how self awareness can quietly become a form of control, where emotions are fully understood but rarely fully felt.",
@@ -171,17 +182,6 @@
         "humour"
       ],
       "time": "3 MIN READ"
-    },
-    {
-      "file": "The Art of Pushing Emotional Buttons.pdf",
-      "title": "The Art of Pushing Emotional Buttons",
-      "description": "On the quiet, deliberate ways people learn exactly which words will land \u2014 and what it costs to know someone that well.",
-      "tags": [
-        "relationships",
-        "identity",
-        "humour"
-      ],
-      "time": "5 MIN READ"
     }
   ],
   "poems": [
