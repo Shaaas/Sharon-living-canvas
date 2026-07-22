@@ -27,7 +27,7 @@ function generateCard(piece, type) {
     ? `<button class="btn-ext" onclick="window.open('${escapeHtml(piece.externalUrl)}','_blank')">Read on Wattpad ↗</button>`
     : `<button class="btn-read">Read</button>`;
 
-  return `    <div class="card" ${file} data-type="${type}" data-time="${escapeHtml(piece.time)}" data-title="${escapeHtml(piece.title)}" ${tagsAttr}><div class="card-meta"><span class="card-badge">${type}</span></div><h3>${escapeHtml(piece.title)}</h3><p>${escapeHtml(piece.description)}</p><div class="card-tags">${tagsList}</div><div class="card-foot">${button}<button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)">🌟 </button></div></div>`;
+  return `    <div class="card" ${file} data-type="${type}" data-time="${escapeHtml(piece.time)}" data-title="${escapeHtml(piece.title)}" ${tagsAttr}><div class="card-meta"><span class="card-badge">${type}</span></div><h3>${escapeHtml(piece.title)}</h3><p>${escapeHtml(piece.description)}</p><div class="card-tags">${tagsList}</div><div class="card-foot">${button}<button class="btn-share" onclick="event.stopPropagation();shareDoc(this.closest('.card').dataset.title)">Share</button><button class="btn-bookmark" onclick="event.stopPropagation();toggleBookmark(this)"><svg width="14" height="14" viewBox="0 0 24 24" style="vertical-align:middle"><path d="M5 2h14a1 1 0 0 1 1 1v19l-8-5-8 5V3a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div></div>`;
 }
 
 console.log('<!-- ARTICLES -->');
