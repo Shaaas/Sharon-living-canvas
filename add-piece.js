@@ -41,7 +41,7 @@ const ask = (q) => new Promise((resolve) => rl.question(q, resolve));
   }
   const cleanDescription = description.replace(/—|–/g, ',');
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toISOString();
 
   const entry = { file, title, description: cleanDescription, tags, time, date: today };
   if (section === 'books') {
