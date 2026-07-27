@@ -1168,7 +1168,21 @@
      CARD CLICKS
   ══════════════════════════════════════ */
   document.querySelectorAll('.card[data-file]').forEach(card => {
+    let touchStartX = 0, touchStartY = 0, touchMoved = false;
+    card.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchMoved = false;
+    }, { passive: true });
+    card.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      if (Math.abs(t.clientX - touchStartX) > 10 || Math.abs(t.clientY - touchStartY) > 10) {
+        touchMoved = true;
+      }
+    }, { passive: true });
     card.addEventListener('click', e => {
+      if (touchMoved) { touchMoved = false; return; }
       if (e.target.classList.contains('btn-share') ||
           e.target.classList.contains('btn-ext') ||
           e.target.classList.contains('btn-bookmark')) return;
