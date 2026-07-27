@@ -1536,7 +1536,27 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const handleTouch = (e) => {
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+const TAP_MOVE_THRESHOLD = 10;
+const TAP_TIME_THRESHOLD = 500;
+
+document.addEventListener('touchstart', (e) => {
+  const t = e.touches[0];
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+  touchStartTime = Date.now();
+}, { passive: true });
+
+const handleTouch = (e) => {
+    if (e.type === 'touchend') {
+      const t = e.changedTouches[0];
+      const dx = Math.abs(t.clientX - touchStartX);
+      const dy = Math.abs(t.clientY - touchStartY);
+      const dt = Date.now() - touchStartTime;
+      if (dx > TAP_MOVE_THRESHOLD || dy > TAP_MOVE_THRESHOLD || dt > TAP_TIME_THRESHOLD) {
+        return;
+      }
+    }
     const btnRead = e.target.closest('.btn-read');
     const btnShare = e.target.closest('.btn-share');
     const card = e.target.closest('.card');
