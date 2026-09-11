@@ -1,5 +1,17 @@
 {
   "articles": [
+      {
+      "file": "It Was Only a Text. So Why Did I Spiral_.pdf",
+      "title": "It Was Only a Text. So Why Did I Spiral?",
+      "description": "A personal look at rejection sensitivity, self diagnosis, and the strange ways our minds can turn a simple text into an emotional crisis. From discovering mental health language online to growing up around generations who were taught to simply “get on with it,” this explores what it means to understand ourselves without turning every human experience into a diagnosis.",
+      "tags": [
+        "relationships",
+        "identity",
+        "humour"
+      ],
+      "time": "10 MIN READ",
+      "date": "2026-09-10"
+    },
     {
       "file": "The Art of Pushing Emotional Buttons.pdf",
       "title": "The Art of Pushing Emotional Buttons",
@@ -325,6 +337,18 @@
       "time": "8 MIN READ",
       "date": "2026-09-11T14:09:10.255Z"
     }
+    {
+      "file": "How Stupid Another Human Being Can Make You Feel.pdf",
+      "title": "How Stupid Another Human Being Can Make You Feel",
+      "description": "A brutally honest look at betrayal, misplaced trust and the humiliating moment you realize you weren't crazy. You were simply believing the wrong person.",
+      "tags": [
+        "relationships",
+        "identity",
+        "humour"
+      ],
+      "time": "7 MIN READ",
+      "date": "2026-08-30"
+    },
   ],
   "poems": [
     {
