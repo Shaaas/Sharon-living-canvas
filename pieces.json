@@ -1,6 +1,6 @@
 {
   "articles": [
-      {
+    {
       "file": "It Was Only a Text. So Why Did I Spiral_.pdf",
       "title": "It Was Only a Text. So Why Did I Spiral?",
       "description": "A personal look at rejection sensitivity, self diagnosis, and the strange ways our minds can turn a simple text into an emotional crisis. From discovering mental health language online to growing up around generations who were taught to simply “get on with it,” this explores what it means to understand ourselves without turning every human experience into a diagnosis.",
@@ -336,7 +336,7 @@
       ],
       "time": "8 MIN READ",
       "date": "2026-09-11T14:09:10.255Z"
-    }
+    },
     {
       "file": "How Stupid Another Human Being Can Make You Feel.pdf",
       "title": "How Stupid Another Human Being Can Make You Feel",
@@ -349,6 +349,18 @@
       "time": "7 MIN READ",
       "date": "2026-08-30"
     },
+    {
+      "file": "Can We Please Talk About What We're Actually Doing.pdf",
+      "title": "Can We Please Talk About What We're Actually Doing?",
+      "description": "Modern dating has given us more relationship labels than anyone knows what to do with, yet somehow we still can't manage a basic conversation about what we're actually doing. Monogamy, casual dating, situationships, open relationships, polyamory, and everything in between can work when everyone involved understands the arrangement. The real problem starts when ambiguity becomes an excuse for secrecy. You don't need a label to owe someone honesty. You need enough information to decide whether the relationship you're participating in is one you actually want.",
+      "tags": [
+        "love",
+        "relationships",
+        "growing up"
+      ],
+      "time": "12 MIN READ",
+      "date": "2026-09-17T18:33:39.562Z"
+    }
   ],
   "poems": [
     {
