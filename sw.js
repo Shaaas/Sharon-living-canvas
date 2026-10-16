@@ -1,4 +1,4 @@
-const CACHE = 'sharon-v3';
+const CACHE = 'sharon-v4';
 const urls = [
   '/',
   '/index.html',
@@ -24,9 +24,22 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const isPage = req.mode === 'navigate' || (req.headers.get('accept') || '').includes('text/html');
+  if (isPage) {
+    e.respondWith(
+      fetch(req)
+        .then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req).then(r => r || caches.match('/index.html')))
+    );
+    return;
+  }
   e.respondWith(
-    caches.match(e.request)
-      .then(r => r || fetch(e.request))
-      .catch(() => caches.match('/index.html'))
+    caches.match(req).then(r => r || fetch(req)).catch(() => caches.match('/index.html'))
   );
 });
