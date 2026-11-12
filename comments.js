@@ -1,3 +1,6 @@
+/* comments.js: replies, emoji reactions and an anonymous / named toggle.
+   Loaded after the main script in writing.html, so it replaces buildReactionsHTML,
+   loadReactions and toggleLike. */
 (function () {
   'use strict';
 
@@ -7,6 +10,7 @@
   const NAME_KEY = 'sm-comment-name';
   const HEART_SVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:inline-block;vertical-align:middle;"><defs><linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#ff6b9d;stop-opacity:1" /><stop offset="100%" style="stop-color:#e05c7a;stop-opacity:1" /></linearGradient></defs><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="url(#heartGrad)"/></svg>`;
   const state = {};
+  let isAuthor = false;
 
   const lsGet = (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } };
   const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
@@ -14,6 +18,7 @@
   const getName = () => (lsGet(NAME_KEY) || '').trim();
 
   function identity() {
+    if (isAuthor) return { label: 'Sharon', author: true };
     if (getMode() === 'name') {
       const name = getName();
       if (name.length < 2 || name.length > 24 || BLOCKED_NAME.test(name)) return null;
@@ -29,7 +34,7 @@
     return (i >= 0 ? l.charAt(i + 1) : l.charAt(0)).toUpperCase();
   }
 
-  function reactionBar(slug, id, rx, canReply) {
+  function reactionBar(slug, id, rx, replyTo, c) {
     const s = escHtml(slug);
     const me = getAnonId();
     const mine = new Set();
@@ -45,13 +50,17 @@
     const picker = EMOJIS.map((e) =>
       `<button type="button" class="cm-emo" data-act="react" data-slug="${s}" data-id="${id}" data-emoji="${e}">${e}</button>`
     ).join('');
-    const replyBtn = canReply
-      ? `<button type="button" class="cm-reply-btn" data-act="reply" data-slug="${s}" data-id="${id}">Reply</button>`
+    const replyBtn = `<button type="button" class="cm-reply-btn" data-act="reply" data-slug="${s}" data-id="${replyTo}">Reply</button>`;
+    const liked = c.author_liked === true;
+    const authorLike = liked ? '<span class="cm-authorlike">♥ Sharon liked this</span>' : '';
+    const authorTools = isAuthor
+      ? `<button type="button" class="cm-reply-btn" data-act="alike" data-slug="${s}" data-id="${id}">${liked ? 'Unlike' : 'Like as author'}</button>` +
+        `<button type="button" class="cm-reply-btn cm-del" data-act="del" data-slug="${s}" data-id="${id}">Delete</button>`
       : '';
-    return `<div class="cm-actions">${pills}<button type="button" class="cm-add" data-act="picker" aria-label="Add reaction">☺</button><span class="cm-picker">${picker}</span>${replyBtn}</div>`;
+    return `<div class="cm-actions">${pills}<button type="button" class="cm-add" data-act="picker" aria-label="Add reaction">☺</button><span class="cm-picker">${picker}</span>${replyBtn}${authorLike}${authorTools}</div>`;
   }
 
-  function commentHTML(c, ctx, isReply) {
+  function commentHTML(c, ctx, isReply, parentId) {
     const { slug, rx, byParent } = ctx;
     const s = escHtml(slug);
     const id = String(c.id);
@@ -69,7 +78,7 @@
         <div class="comment-reply-body">${escHtml(c.reply_body)}</div>
       </div>` : '';
 
-    const kids = isReply ? '' : (byParent[id] || []).map((k) => commentHTML(k, ctx, true)).join('');
+    const kids = isReply ? '' : (byParent[id] || []).map((k) => commentHTML(k, ctx, true, id)).join('');
     const replyForm = isReply ? '' : `
       <div class="cm-replyform" id="cm-reply-${id}" hidden>
         <textarea class="comment-textarea" id="cm-reply-input-${id}" maxlength="500" placeholder="Write a reply…"></textarea>
@@ -88,7 +97,7 @@
         </div>
         <div class="comment-body">${escHtml(c.body)}</div>
         ${legacy}
-        ${reactionBar(slug, id, rx, !isReply)}
+        ${reactionBar(slug, id, rx, isReply ? parentId : id, c)}
         ${replyForm}
         ${kids ? `<div class="cm-replies">${kids}</div>` : ''}
       </div>`;
@@ -145,6 +154,7 @@
         <div class="comment-list" id="comment-list-${slug}">
           <p class="comments-loading">Loading comments…</p>
         </div>
+        <div class="cm-auth" id="cm-auth-${slug}"></div>
       </div>`;
   };
 
@@ -172,6 +182,8 @@
       if (!r.error) rx = r.data || [];
     }
     state[slug] = { comments: comments || [], rx };
+    await checkSession();
+    renderAuth(slug);
     render(slug);
   }
   window.loadReactions = load;
@@ -195,6 +207,80 @@
   }
   window.toggleLike = toggleLike;
 
+  async function checkSession() {
+    try {
+      const { data } = await sb.auth.getSession();
+      isAuthor = !!(data && data.session);
+    } catch (e) { isAuthor = false; }
+  }
+
+  function renderAuth(slug) {
+    const box = document.getElementById(`cm-auth-${slug}`);
+    const wrap = document.getElementById(`reactions-${slug}`);
+    if (!box) return;
+    const s = escHtml(slug);
+    if (isAuthor) {
+      box.innerHTML = `<span class="cm-authnote">Signed in as author</span> <button type="button" class="cm-link" data-act="signout" data-slug="${s}">Sign out</button>`;
+    } else {
+      box.innerHTML = `<button type="button" class="cm-link" data-act="authform" data-slug="${s}">Author sign in</button>
+        <form class="cm-authform" id="cm-authform-${s}" data-act-form="signin" data-slug="${s}" hidden>
+          <input type="email" id="cm-auth-email-${s}" placeholder="Email" autocomplete="username">
+          <input type="password" id="cm-auth-pass-${s}" placeholder="Password" autocomplete="current-password">
+          <button type="submit" class="comment-submit">Sign in</button>
+        </form>`;
+    }
+    if (wrap) {
+      const cid = wrap.querySelector('.cid');
+      if (cid) cid.hidden = isAuthor;
+      const sendBtn = wrap.querySelector('.comment-submit[data-act="send"]');
+      if (sendBtn) sendBtn.textContent = isAuthor ? 'Post as Sharon' : (getMode() === 'name' ? 'Post' : 'Post anonymously');
+    }
+  }
+
+  async function signIn(slug) {
+    const email = document.getElementById(`cm-auth-email-${slug}`).value.trim();
+    const pass = document.getElementById(`cm-auth-pass-${slug}`).value;
+    if (!email || !pass) return;
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) { toast('Sign in failed'); return; }
+    isAuthor = true;
+    toast('Welcome back, Sharon ✦');
+    Object.keys(state).forEach((k) => { renderAuth(k); render(k); });
+  }
+
+  async function signOut() {
+    await sb.auth.signOut();
+    isAuthor = false;
+    toast('Signed out');
+    Object.keys(state).forEach((k) => { renderAuth(k); render(k); });
+  }
+
+  async function authorLike(slug, id) {
+    const st = state[slug];
+    const c = st && st.comments.find((x) => String(x.id) === String(id));
+    if (!c) return;
+    const next = !(c.author_liked === true);
+    const { data, error } = await sb.from('comments').update({ author_liked: next }).eq('id', c.id).select();
+    if (error || !data || !data.length) { toast('Could not update (are you signed in?)'); return; }
+    c.author_liked = next;
+    render(slug);
+  }
+
+  async function removeComment(slug, id) {
+    const st = state[slug];
+    if (!st) return;
+    if (!window.confirm('Delete this comment and any replies to it?')) return;
+    const ids = [String(id)].concat(st.comments.filter((c) => String(c.parent_id) === String(id)).map((c) => String(c.id)));
+    const del = await sb.from('comments').delete().eq('id', id);
+    if (del.error) { toast('Could not delete'); return; }
+    await sb.from('comments').delete().eq('parent_id', String(id));
+    await sb.from('comment_reactions').delete().in('comment_id', ids);
+    st.comments = st.comments.filter((c) => !ids.includes(String(c.id)));
+    st.rx = st.rx.filter((x) => !ids.includes(x.comment_id));
+    render(slug);
+    toast('Deleted');
+  }
+
   async function post(slug, body, parentId, btn) {
     const idn = identity();
     if (!idn) { toast('Choose another name (2 to 24 characters)'); return false; }
@@ -206,6 +292,7 @@
       anon_label: idn.label,
       parent_id: parentId ? String(parentId) : null,
     };
+    if (idn.author) row.is_author = true;
     const { data, error } = await sb.from('comments').insert(row).select().single();
     btn.disabled = false;
     if (error) { toast('Could not post, try again'); return false; }
@@ -243,11 +330,19 @@
     const input = wrap.querySelector('.cid-name');
     input.hidden = mode !== 'name';
     if (mode === 'name') input.focus();
-    wrap.querySelector('.comment-submit[data-act="send"]').textContent = mode === 'name' ? 'Post' : 'Post anonymously';
+    wrap.querySelector('.comment-submit[data-act="send"]').textContent = isAuthor ? 'Post as Sharon' : (mode === 'name' ? 'Post' : 'Post anonymously');
   }
 
   document.addEventListener('input', (e) => {
     if (e.target.classList && e.target.classList.contains('cid-name')) lsSet(NAME_KEY, e.target.value);
+  });
+
+  document.addEventListener('submit', (e) => {
+    const f = e.target;
+    if (f && f.dataset && f.dataset.actForm === 'signin') {
+      e.preventDefault();
+      signIn(f.dataset.slug);
+    }
   });
 
   document.addEventListener('click', async (e) => {
@@ -260,6 +355,14 @@
     if (act === 'like') { toggleLike(slug); return; }
     if (act === 'mode') { setMode(slug, el.dataset.mode); return; }
     if (act === 'react') { react(slug, id, el.dataset.emoji); return; }
+    if (act === 'authform') {
+      const f = document.getElementById(`cm-authform-${slug}`);
+      if (f) { f.hidden = !f.hidden; if (!f.hidden) f.querySelector('input').focus(); }
+      return;
+    }
+    if (act === 'signout') { signOut(); return; }
+    if (act === 'alike') { authorLike(slug, id); return; }
+    if (act === 'del') { removeComment(slug, id); return; }
     if (act === 'picker') {
       el.parentElement.querySelector('.cm-picker').classList.toggle('open');
       return;
@@ -270,7 +373,7 @@
       form.hidden = !form.hidden;
       if (!form.hidden) {
         const idn = identity();
-        form.querySelector('.cm-as').textContent = idn ? `Replying as ${idn.label}` : 'Add a name above to reply by name';
+        form.querySelector('.cm-as').textContent = idn ? `Replying as ${idn.label}${idn.author ? ' (Author)' : ''}` : 'Add a name above to reply by name';
         form.querySelector('textarea').focus();
       }
       return;
@@ -313,6 +416,13 @@
     .cm-as{font-size:.7rem;color:var(--muted,#8a8a8a)}
     .cm-replies{margin-top:.8rem;margin-left:1.1rem;padding-left:1rem;border-left:1px solid var(--line,rgba(255,255,255,.12))}
     .cm-reply{margin-top:.6rem}
+    .cm-auth{margin-top:2rem;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted,#8a8a8a)}
+    .cm-link{font:inherit;background:none;border:0;color:inherit;opacity:.6;cursor:pointer;text-decoration:underline;padding:0}
+    .cm-authform{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.7rem}
+    .cm-authform[hidden]{display:none}
+    .cm-authform input{font:inherit;font-size:.85rem;padding:.4rem .6rem;background:transparent;color:inherit;border:1px solid var(--line,rgba(255,255,255,.12));border-radius:1px}
+    .cm-authorlike{font-size:.75rem;color:#e05c7a}
+    .cm-del{color:#e05c7a}
     .like-btn .like-heart svg{opacity:.55;transition:opacity .2s,transform .2s}
     .like-btn.liked .like-heart svg{opacity:1;transform:scale(1.1)}
   `;
